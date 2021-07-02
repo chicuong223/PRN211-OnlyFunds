@@ -1,0 +1,32 @@
+﻿@model IEnumerable<BusinessObjects.Post>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+@foreach (var item in Model)
+{
+    <div class="border rounded my-3 w-50 mx-auto">
+        <a asp-action="Details" asp-route-id="@item.PostId">
+            <div>
+                <p class="border-bottom p-3 text-break">@item.PostTitle</p>
+                <div class="overflow-auto">
+                    <p class="p-3 text-break">@item.PostDescription</p>
+                </div>
+            </div>
+        </a>
+    </div>
+
+}
+<div class="container">
+    @for (int i = 1; i <= ViewBag.end; i++)
+    {
+        <a asp-action="GetPostByUser" asp-route-username="@ViewBag.user" asp-route-page="@i">@i</a>
+    }
+</div>

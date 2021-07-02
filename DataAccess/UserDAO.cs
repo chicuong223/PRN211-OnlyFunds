@@ -23,5 +23,22 @@ namespace DataAccess
             }
             return user;
         }
+
+        public User GetUserByUsername(string username)
+        {
+            User user = null;
+            try
+            {
+                using var context = new PRN211_OnlyFundsContext();
+                user = (from u in context.Users.ToList()
+                            where u.Username.Equals(username)
+                            select u).Single();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return user;
+        }
     }
 }

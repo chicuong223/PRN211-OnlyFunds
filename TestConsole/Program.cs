@@ -3,6 +3,7 @@ using DataAccess;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 
 namespace TestConsole
 {
@@ -11,10 +12,12 @@ namespace TestConsole
         static void Main(string[] args)
         {
             var context = new PRN211_OnlyFundsContext();
-            SqlConnection cnn = (SqlConnection)context.Database.GetDbConnection();
-            Console.WriteLine(cnn);
+
             UserDAO dao = new UserDAO();
-            Console.WriteLine(dao.CheckLogin("chicuong", "12345"));
+            User user = dao.GetUserByUsername("chicuong");
+            PostDAO postDAO = new PostDAO();
+            List<Post> postList = postDAO.GetPostsByUser(user, 1);
+            postList.ForEach(p => Console.WriteLine(p.PostDescription));
         }
     }
 }
