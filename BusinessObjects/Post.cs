@@ -10,8 +10,9 @@ namespace BusinessObjects
         public Post()
         {
             Bookmarks = new HashSet<Bookmark>();
-            CategoryMaps = new HashSet<CategoryMap>();
             Comments = new HashSet<Comment>();
+            PostCategoryMaps = new HashSet<PostCategoryMap>();
+            PostReports = new HashSet<PostReport>();
         }
 
         public int PostId { get; set; }
@@ -23,7 +24,8 @@ namespace BusinessObjects
 
         public virtual User UploaderUsernameNavigation { get; set; }
         public virtual ICollection<Bookmark> Bookmarks { get; set; }
-        public virtual ICollection<CategoryMap> CategoryMaps { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
+        public virtual ICollection<PostCategoryMap> PostCategoryMaps { get; set; }
+        public virtual ICollection<PostReport> PostReports { get; set; }
     }
 }

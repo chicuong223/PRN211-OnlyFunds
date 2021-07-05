@@ -9,12 +9,14 @@ namespace BusinessObjects
     {
         public Category()
         {
-            CategoryMaps = new HashSet<CategoryMap>();
+            PostCategoryMaps = new HashSet<PostCategoryMap>();
+            UserCategoryMaps = new HashSet<UserCategoryMap>();
         }
 
         public int CategoryId { get; set; }
         public string CategoryName { get; set; }
 
-        public virtual ICollection<CategoryMap> CategoryMaps { get; set; }
+        public virtual ICollection<PostCategoryMap> PostCategoryMaps { get; set; }
+        public virtual ICollection<UserCategoryMap> UserCategoryMaps { get; set; }
     }
 }

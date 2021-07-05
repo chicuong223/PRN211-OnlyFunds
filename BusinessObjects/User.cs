@@ -11,8 +11,8 @@ namespace BusinessObjects
         {
             Bookmarks = new HashSet<Bookmark>();
             Comments = new HashSet<Comment>();
-            PostReports = new HashSet<PostReport>();
             Posts = new HashSet<Post>();
+            UserCategoryMaps = new HashSet<UserCategoryMap>();
         }
 
         public string Username { get; set; }
@@ -24,7 +24,7 @@ namespace BusinessObjects
 
         public virtual ICollection<Bookmark> Bookmarks { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
-        public virtual ICollection<PostReport> PostReports { get; set; }
         public virtual ICollection<Post> Posts { get; set; }
+        public virtual ICollection<UserCategoryMap> UserCategoryMaps { get; set; }
     }
 }

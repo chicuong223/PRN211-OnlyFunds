@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using OnlyFundsWeb.Models;
+using OnlyFundsWeb;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
