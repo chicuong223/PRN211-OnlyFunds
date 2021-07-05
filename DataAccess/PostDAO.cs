@@ -26,48 +26,62 @@ namespace DataAccess
                 return instance;
             }
         }
+
+        public int CountPostsByUser(User user)
+        {
+            try
+            {
+                using var context = new PRN211_OnlyFundsContext();
+                int count = context.Posts.Where(post => post.UploaderUsername.Equals(user.Username)).Count();
+                return count;
+            }
+            catch
+            {
+                throw new Exception("Error counting posts");
+            }
+        }
         public List<Post> GetPostsByUser(User user, int pageIndex)
         {
             List<Post> posts = new List<Post>();
             try
             {
                 using var context = new PRN211_OnlyFundsContext();
-            SqlConnection con = (SqlConnection)context.Database.GetDbConnection();
-            string SQL = "SELECT * FROM \n"
-                + "(SELECT ROW_NUMBER() OVER (ORDER BY PostId DESC) AS r, \n"
-                + " * FROM Post WHERE UploaderUsername = @username) as x \n"
-                + "WHERE x.r BETWEEN @index*3-(3-1) AND @index*3";
-            SqlCommand cmd = new SqlCommand(SQL, con);
-            cmd.Parameters.AddWithValue("@username", user.Username);
-            cmd.Parameters.AddWithValue("@index", pageIndex);
-            if (con.State == ConnectionState.Closed)
-            {
-                con.Open();
-            }
-            SqlDataReader reader = cmd.ExecuteReader();
-            while (reader.HasRows)
-            {
-                while (reader.Read())
+                SqlConnection con = (SqlConnection)context.Database.GetDbConnection();
+                string SQL = "SELECT * FROM \n"
+                    + "(SELECT ROW_NUMBER() OVER(ORDER BY PostId DESC) AS r, * \n"
+                    + "FROM Post WHERE UploaderUsername = @username) as x \n"
+                    + "where x.r between @index * 3 - (3 - 1) AND 3 * @index";
+                SqlCommand cmd = new SqlCommand(SQL, con);
+                cmd.Parameters.AddWithValue("@username", user.Username);
+                cmd.Parameters.AddWithValue("@index", pageIndex);
+                if (con.State == ConnectionState.Closed)
                 {
-                    int postID = reader.GetInt32(1);
-                    string title = reader.GetString(2);
-                    string desc = reader.GetString(3);
-                    string fileURL = reader.GetString(4);
-                    string uploaderUsername = reader.GetString(5);
-                    DateTime date = reader.GetDateTime(6);
-                    Post post = new Post
-                    {
-                        PostId = postID,
-                        PostTitle = title,
-                        PostDescription = desc,
-                        FileUrl = fileURL,
-                        UploadDate = date,
-                        UploaderUsernameNavigation = user
-                    };
-                    posts.Add(post);
+                    con.Open();
                 }
-                reader.NextResult();
-            }
+                SqlDataReader reader = cmd.ExecuteReader();
+                while (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        int postID = reader.GetInt32(1);
+                        string title = reader.GetString(2);
+                        string desc = reader.GetString(3);
+                        string fileURL = reader.GetString(4);
+                        string uploaderUsername = reader.GetString(5);
+                        DateTime date = reader.GetDateTime(6);
+                        Post post = new Post
+                        {
+                            PostId = postID,
+                            PostTitle = title,
+                            PostDescription = desc,
+                            FileUrl = fileURL,
+                            UploadDate = date,
+                            UploaderUsernameNavigation = user
+                        };
+                        posts.Add(post);
+                    }
+                    reader.NextResult();
+                }
             }
             catch (Exception ex)
             {

@@ -5,11 +5,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Posts</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 @foreach (var item in Model)
 {
     <div class="border rounded my-3 w-50 mx-auto">
@@ -24,9 +21,9 @@
     </div>
 
 }
-<div class="container">
-    @for (int i = 1; i <= ViewBag.end; i++)
+<div class="text-center font-weight-bold">
+    @for (int index = 1; index <= ViewBag.end; index++)
     {
-        <a asp-action="GetPostByUser" asp-route-username="@ViewBag.user" asp-route-page="@i">@i</a>
+        <a asp-action="GetPostByUser" asp-route-username="@ViewBag.user" asp-route-page="@index">@index</a>
     }
 </div>

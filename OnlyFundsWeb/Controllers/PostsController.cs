@@ -38,7 +38,6 @@ namespace OnlyFundsWeb.Controllers
             {
                 file.CopyTo(stream);
             }
-
             return fileName;
         }
         // GET: PostsController
@@ -47,7 +46,7 @@ namespace OnlyFundsWeb.Controllers
             return View();
         }
 
-        public ActionResult GetPostByUser(string username, int? pageIndex)
+        public ActionResult GetPostByUser(string username, int? page)
         {
             try
             {
@@ -61,15 +60,18 @@ namespace OnlyFundsWeb.Controllers
                 {
                     return NotFound();
                 }
-                if (pageIndex == null)
-                    pageIndex = 1;
-                List<Post> postList = postDAO.GetPostsByUser(user, pageIndex.Value);
-                int count = postList.Count();
-                int end = count / 3;
+                if (page == null)
+                    page = 1;
+                List<Post> postList = postDAO.GetPostsByUser(user, page.Value);
+                int pageSize = 3;
+                int count = postDAO.CountPostsByUser(user);
+                int end = count / pageSize;
                 if (count % 3 != 0)
-                    end++;
+                {
+                    end = end + 1;
+                }
                 ViewBag.end = end;
-                ViewBag.user = username;
+                ViewBag.user = user.Username;
                 return View("Index", postList);
             }
             catch (Exception ex)
@@ -80,9 +82,23 @@ namespace OnlyFundsWeb.Controllers
         }
 
         // GET: PostsController/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(int? id)
         {
-            return View();
+            try
+            {
+                if(id == null)
+                {
+                    return NotFound();
+                }
+                Post post = postDAO.GetPostByID(id.Value);
+                if (post == null)
+                    return NotFound();
+                return View(post);
+            }
+            catch
+            {
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         // GET: PostsController/Create
@@ -108,7 +124,7 @@ namespace OnlyFundsWeb.Controllers
                 post.UploadDate = DateTime.Now;
                 post.FileUrl = fileName;
                 postDAO.InsertPost(post);
-                return RedirectToAction(nameof(Index), new { username = post.UploaderUsername });
+                return RedirectToAction(nameof(GetPostByUser), new { username = post.UploaderUsername });
             }
             catch (Exception ex)
             {
