@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 
 #nullable disable
 
-namespace BusinessObjects
+namespace BusinessObjects.Models
 {
     public partial class PRN211_OnlyFunds_CopyContext : DbContext
     {
@@ -23,8 +23,10 @@ namespace BusinessObjects
         public virtual DbSet<Bookmark> Bookmarks { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
+        public virtual DbSet<CommentLike> CommentLikes { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<PostCategoryMap> PostCategoryMaps { get; set; }
+        public virtual DbSet<PostLike> PostLikes { get; set; }
         public virtual DbSet<PostReport> PostReports { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserCategoryMap> UserCategoryMaps { get; set; }
@@ -133,6 +135,30 @@ namespace BusinessObjects
                     .HasConstraintName("FK__Comment__Usernam__245D67DE");
             });
 
+            modelBuilder.Entity<CommentLike>(entity =>
+            {
+                entity.HasKey(e => new { e.CommentId, e.Username })
+                    .HasName("PK__CommentL__86821794294302F6");
+
+                entity.ToTable("CommentLike");
+
+                entity.Property(e => e.Username)
+                    .HasMaxLength(32)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Comment)
+                    .WithMany(p => p.CommentLikes)
+                    .HasForeignKey(d => d.CommentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__CommentLi__Comme__3C34F16F");
+
+                entity.HasOne(d => d.UsernameNavigation)
+                    .WithMany(p => p.CommentLikes)
+                    .HasForeignKey(d => d.Username)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__CommentLi__Usern__3B40CD36");
+            });
+
             modelBuilder.Entity<Post>(entity =>
             {
                 entity.ToTable("Post");
@@ -176,6 +202,28 @@ namespace BusinessObjects
                     .WithMany(p => p.PostCategoryMaps)
                     .HasForeignKey(d => d.PostId)
                     .HasConstraintName("FK__PostCateg__PostI__2180FB33");
+            });
+
+            modelBuilder.Entity<PostLike>(entity =>
+            {
+                entity.HasKey(e => new { e.PostId, e.Username })
+                    .HasName("PK__PostLike__EF24A8469F10202F");
+
+                entity.ToTable("PostLike");
+
+                entity.Property(e => e.Username)
+                    .HasMaxLength(32)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.Post)
+                    .WithMany(p => p.PostLikes)
+                    .HasForeignKey(d => d.PostId)
+                    .HasConstraintName("FK__PostLike__PostId__2CF2ADDF");
+
+                entity.HasOne(d => d.UsernameNavigation)
+                    .WithMany(p => p.PostLikes)
+                    .HasForeignKey(d => d.Username)
+                    .HasConstraintName("FK__PostLike__Userna__2BFE89A6");
             });
 
             modelBuilder.Entity<PostReport>(entity =>

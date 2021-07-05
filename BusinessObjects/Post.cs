@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace BusinessObjects
+namespace BusinessObjects.Models
 {
     public partial class Post
     {
@@ -12,6 +12,7 @@ namespace BusinessObjects
             Bookmarks = new HashSet<Bookmark>();
             Comments = new HashSet<Comment>();
             PostCategoryMaps = new HashSet<PostCategoryMap>();
+            PostLikes = new HashSet<PostLike>();
             PostReports = new HashSet<PostReport>();
         }
 
@@ -26,6 +27,7 @@ namespace BusinessObjects
         public virtual ICollection<Bookmark> Bookmarks { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public virtual ICollection<PostCategoryMap> PostCategoryMaps { get; set; }
+        public virtual ICollection<PostLike> PostLikes { get; set; }
         public virtual ICollection<PostReport> PostReports { get; set; }
     }
 }

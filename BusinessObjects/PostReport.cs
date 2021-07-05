@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace BusinessObjects
+namespace BusinessObjects.Models
 {
     public partial class PostReport
     {

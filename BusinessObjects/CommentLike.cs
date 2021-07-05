@@ -5,12 +5,12 @@ using System.Collections.Generic;
 
 namespace BusinessObjects.Models
 {
-    public partial class Bookmark
+    public partial class CommentLike
     {
-        public int PostId { get; set; }
+        public int CommentId { get; set; }
         public string Username { get; set; }
 
-        public virtual Post Post { get; set; }
+        public virtual Comment Comment { get; set; }
         public virtual User UsernameNavigation { get; set; }
     }
 }

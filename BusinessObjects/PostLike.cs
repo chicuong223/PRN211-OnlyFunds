@@ -5,12 +5,12 @@ using System.Collections.Generic;
 
 namespace BusinessObjects.Models
 {
-    public partial class PostCategoryMap
+    public partial class PostLike
     {
         public int PostId { get; set; }
-        public int CategoryId { get; set; }
+        public string Username { get; set; }
 
-        public virtual Category Category { get; set; }
         public virtual Post Post { get; set; }
+        public virtual User UsernameNavigation { get; set; }
     }
 }
