@@ -146,7 +146,7 @@ namespace DataAccess
                 throw;
             }
         }
-        public IEnumerable<User> GetUsers()
+        public IEnumerable<User> GetUsers(int pageIndex)
         {
             var users = new List<User>();
             try
