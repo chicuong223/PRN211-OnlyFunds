@@ -13,6 +13,6 @@ namespace BusinessObjects
         public string ReportDescription { get; set; }
         public DateTime? ReportDate { get; set; }
 
-        public virtual User ReporterUsernameNavigation { get; set; }
+        public virtual Post Post { get; set; }
     }
 }

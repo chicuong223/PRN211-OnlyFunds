@@ -1,6 +1,6 @@
 using System;
 
-namespace OnlyFundsWeb.Models
+namespace OnlyFundsWeb
 {
     public class ErrorViewModel
     {
