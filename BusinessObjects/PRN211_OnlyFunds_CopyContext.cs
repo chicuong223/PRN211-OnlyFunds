@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 
 #nullable disable
 
-namespace BusinessObjects.Models
+namespace BusinessObjects
 {
     public partial class PRN211_OnlyFunds_CopyContext : DbContext
     {

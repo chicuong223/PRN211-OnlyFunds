@@ -31,7 +31,7 @@ namespace DataAccess
         {
             try
             {
-                using var context = new PRN211_OnlyFundsContext();
+                using var context = new PRN211_OnlyFunds_CopyContext();
                 int count = context.Posts.Where(post => post.UploaderUsername.Equals(user.Username)).Count();
                 return count;
             }
@@ -45,7 +45,7 @@ namespace DataAccess
             List<Post> posts = new List<Post>();
             try
             {
-                using var context = new PRN211_OnlyFundsContext();
+                using var context = new PRN211_OnlyFunds_CopyContext();
                 SqlConnection con = (SqlConnection)context.Database.GetDbConnection();
                 string SQL = "SELECT * FROM \n"
                     + "(SELECT ROW_NUMBER() OVER(ORDER BY PostId DESC) AS r, * \n"
@@ -94,7 +94,7 @@ namespace DataAccess
         {
             try
             {
-                using var context = new PRN211_OnlyFundsContext();
+                using var context = new PRN211_OnlyFunds_CopyContext();
                 context.Posts.Add(post);
                 context.SaveChanges();
             }
@@ -113,7 +113,7 @@ namespace DataAccess
                 {
                     throw new Exception("This post does not exist");
                 }
-                using var context = new PRN211_OnlyFundsContext();
+                using var context = new PRN211_OnlyFunds_CopyContext();
                 context.Posts.Remove(post);
                 context.SaveChanges();
             }
@@ -128,7 +128,7 @@ namespace DataAccess
             Post post = null;
             try
             {
-                using var context = new PRN211_OnlyFundsContext();
+                using var context = new PRN211_OnlyFunds_CopyContext();
                 post = context.Posts.Find(postID);
             }
             catch

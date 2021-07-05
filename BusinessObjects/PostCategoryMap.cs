@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 #nullable disable
 
-namespace BusinessObjects.Models
+namespace BusinessObjects
 {
     public partial class PostCategoryMap
     {

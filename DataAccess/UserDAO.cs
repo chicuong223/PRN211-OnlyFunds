@@ -14,7 +14,7 @@ namespace DataAccess
             User user = null;
             try
             {
-                using var context = new PRN211_OnlyFundsContext();
+                using var context = new PRN211_OnlyFunds_CopyContext();
                 user = (User)context.Users.Where(u => u.Username.Equals(username) && u.Password.Equals(password)).FirstOrDefault();
             }
             catch (Exception ex)
@@ -29,7 +29,7 @@ namespace DataAccess
             User user = null;
             try
             {
-                using var context = new PRN211_OnlyFundsContext();
+                using var context = new PRN211_OnlyFunds_CopyContext();
                 user = (from u in context.Users.ToList()
                             where u.Username.Equals(username)
                             select u).Single();
