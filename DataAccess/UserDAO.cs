@@ -9,6 +9,42 @@ namespace DataAccess
 {
     public class UserDAO
     {
+        private static UserDAO instance = null;
+        private static readonly object instanceLock = new object();
+
+        public static UserDAO Instance
+        {
+            get
+            {
+                lock (instanceLock)
+                {
+                    if (instance == null)
+                    {
+                        instance = new UserDAO();
+                    }
+
+                    return instance;
+                }
+            }
+        }
+        //----------------------
+        public User GetUserByName(string username)
+        {
+            User user = null;
+            try
+            {
+                using var context = new PRN211_OnlyFunds_CopyContext();
+                user = context.Users.FirstOrDefault(u => u.Username.Equals(username));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            return user;
+        }
+        //-----------------------
         public User CheckLogin(string username, string password)
         {
             User user = null;
@@ -23,22 +59,108 @@ namespace DataAccess
             }
             return user;
         }
-
-        public User GetUserByUsername(string username)
+        //-----------------------
+        public User GetUserByEmail(string email)
         {
             User user = null;
             try
             {
                 using var context = new PRN211_OnlyFunds_CopyContext();
-                user = (from u in context.Users.ToList()
-                            where u.Username.Equals(username)
-                            select u).Single();
+                user = context.Users.FirstOrDefault(u => u.Email.Equals(email));
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                throw new Exception(ex.Message);
+                Console.WriteLine(e);
+                throw;
             }
+
             return user;
+        }
+        //-------------------
+        public void AddUser(User user)
+        {
+            try
+            {
+                User _user = GetUserByName(user.Username);
+                User _email = GetUserByEmail(user.Email);
+                if (_user == null && _email == null)
+                {
+                    using var context = new PRN211_OnlyFunds_CopyContext();
+                    context.Users.Add(user);
+                    context.SaveChanges();
+                }
+                else
+                {
+                    throw new Exception("User exist!");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+        //--------------------
+        public void UpdateUser(User user)
+        {
+            try
+            {
+                User _user = GetUserByName(user.Username);
+                if (_user != null)
+                {
+                    using var context = new PRN211_OnlyFunds_CopyContext();
+                    context.Users.Update(user);
+                    context.SaveChanges();
+                }
+                else
+                {
+                    throw new Exception("User does not exist!");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+
+        public void DeleteUser(string username)
+        {
+            try
+            {
+                User _user = GetUserByName(username);
+                if (_user != null)
+                {
+                    using var context = new PRN211_OnlyFunds_CopyContext();
+                    context.Users.Remove(_user);
+                    context.SaveChanges();
+                }
+                else
+                {
+                    throw new Exception("User does not exist!");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
+        public IEnumerable<User> GetUsers()
+        {
+            var users = new List<User>();
+            try
+            {
+                using var context = new PRN211_OnlyFunds_CopyContext();
+                users = context.Users.ToList();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            return users;
         }
     }
 }

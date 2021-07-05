@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BusinessObjects;
 
 namespace DataAccess
 {
-    class CommentDAO
+    class PostCategoryMap
     {
-        private static CommentDAO instance = null;
+        private static PostCategoryMap instance = null;
         private static readonly object instanceLock = new object();
 
-        public static CommentDAO Instance
+        public static PostCategoryMap Instance
         {
             get
             {
@@ -19,12 +20,19 @@ namespace DataAccess
                 {
                     if (instance == null)
                     {
-                        instance = new CommentDAO();
+                        instance = new PostCategoryMap();
                     }
 
                     return instance;
                 }
             }
+        }
+
+        public IEnumerable<Post> FilterPostByCategory(int categoryId)
+        {
+            var posts = new List<Post>();
+
+            return posts;
         }
     }
 }

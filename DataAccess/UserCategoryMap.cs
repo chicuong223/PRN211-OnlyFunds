@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace DataAccess
 {
-    class CommentDAO
+    class UserCategoryMap
     {
-        private static CommentDAO instance = null;
+        private static UserCategoryMap instance = null;
         private static readonly object instanceLock = new object();
 
-        public static CommentDAO Instance
+        public static UserCategoryMap Instance
         {
             get
             {
@@ -19,7 +19,7 @@ namespace DataAccess
                 {
                     if (instance == null)
                     {
-                        instance = new CommentDAO();
+                        instance = new UserCategoryMap();
                     }
 
                     return instance;
