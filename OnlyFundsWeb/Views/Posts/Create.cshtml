@@ -1,16 +1,91 @@
-﻿@model BusinessObjects.Post
+﻿@using System.Collections
+@using BusinessObjects
+@model BusinessObjects.Post
 
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Write Post</title>
+    <style>
+        ul {
+            -moz-column-count: 3;
+            -moz-column-gap: 10px;
+            -webkit-column-count: 3;
+            -webkit-column-gap: 10px;
+            column-count: 3;
+            column-gap: 10px;
+            list-style: none;
+        }
 
-<h1>Create</h1>
-
-<h4>Post</h4>
+        .list-group-item {
+            border: none;
+        }
+    </style>
+</head>
 <hr />
-<div class="row">
-    <div class="col-md-4">
+<body>
+    <h1>Create a new post</h1>
+
+    <div class="w-75 mx-auto my-5">
+        <form asp-action="Create" method="POST" enctype="multipart/form-data" id="postForm">
+            <div class="form-group">
+                <label asp-for="PostTitle" class="label-form fw-bold">Title</label>@*<span class="text-danger">*</span><span class="error text-danger ms-3" id="titleError">Error</span>*@
+                <input type="text" asp-for="PostTitle" id="title" placeholder="Max 30 characters" class="form-control" /><@*span class="error text-danger" id="titleError">Error</span>*@
+            </div>
+            <div class="form-group">
+                <label for="desc" class="label-form fw-bold">Description</label><span class="text-danger">*</span><span class="error text-danger ms-3" id="descError">Error</span>
+                <textarea asp-for="PostDescription" rows="10" cols="100" placeholder="Max 1000 characters" class="form-control"></textarea><span class="error text-danger" id="descError">${descError}</span>
+            </div>
+            <div class="form-group">
+                <label asp-for="FileUrl" class="label-form fw-bold">Attachment</label>
+                <input type="file" asp-for="FileUrl" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label for="catList" class="fw-bold">Categories</label>
+                <ul id="catList">
+                    @foreach (var category in TempData["CategoryList"] as IEnumerable<Category>)
+                    {
+                        <li>
+                            <label asp-for="PostCategoryMaps">@category.CategoryName</label>
+                            <input type="checkbox" class="form-check-input" value="@category.CategoryId" id="@category.CategoryId" name=""/>
+                        </li>
+                    }
+                    @*<c:forEach var="cat" items="${catList}">
+                            <li>
+                                <label for="${cat.categoryId}">${cat.categoryName}</label>
+                                <input type="checkbox" class="form-check-input" value="${cat.categoryId}" id="${cat.categoryId}" name="cat" />
+                            </li>
+                        </c:forEach>*@
+
+                </ul>
+            </div>
+        </form>
+        <form asp-action="Cancel" method="POST" id="cancelForm">
+            <input type="hidden" name="cancel" />
+        </form>
+        <div class="text-center">
+            <input class="btn btn-success mx-5 rounded-pill" type="submit" value="Post" form="postForm" />
+            <input class="btn btn-danger mx-5 rounded-pill" type="submit" value="Cancel" form="cancelForm" />
+        </div>
+    </div>
+
+    <div>
+        <a asp-action="PostList">Back to List</a>
+    </div>
+    <script defer src="scripts/post_form_script.js"></script>
+</body>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+@*<div class="col-md-4">
         <h2>@ViewBag.error</h2>
         <form asp-action="Create" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -31,12 +106,12 @@
             </div>
             <div class="form-group">
                 <label asp-for="FileUrl" class="control-label"></label>
-                <input asp-for="FileUrl" class="form-control" type="file" name="file"/>
+                <input asp-for="FileUrl" class="form-control" type="file" name="file" />
                 <span asp-validation-for="FileUrl" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="UploaderUsername" class="control-label"></label>
-                <select asp-for="UploaderUsername" class ="form-control" asp-items="ViewBag.UploaderUsername"></select>
+                <select asp-for="UploaderUsername" class="form-control" asp-items="ViewBag.UploaderUsername"></select>
             </div>
             <div class="form-group">
                 <label asp-for="UploadDate" class="control-label"></label>
@@ -47,13 +122,4 @@
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
-    </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    </div>*@

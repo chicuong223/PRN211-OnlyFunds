@@ -18,6 +18,7 @@ namespace OnlyFundsWeb.Controllers
         IWebHostEnvironment webHostEnvironment;
         private IPostRepository postRepository = new PostRepository();
         private IUserRepository userRepository = new UserRepository();
+        private ICategoryRepository categoryRepository = new CategoryRepository();
         public PostsController(IWebHostEnvironment env)
         {
             this.webHostEnvironment = env;
@@ -118,6 +119,8 @@ namespace OnlyFundsWeb.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormFile file, Post post)
         {
+            IEnumerable<Category> categoryList = categoryRepository.GetCategories(1);
+            TempData["CategoryList"] = categoryList;
             try
             {
                 string fileName = UploadFile(file);
@@ -179,6 +182,11 @@ namespace OnlyFundsWeb.Controllers
                 ViewBag.error = ex.Message;
                 return View();
             }
+        }
+
+        public IActionResult Cancel()
+        {
+            return View("Create");
         }
     }
 }
