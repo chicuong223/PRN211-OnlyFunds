@@ -43,12 +43,12 @@ namespace DataAccess
             return _comment;
         }
 
-        public IEnumerable<Comment> GetCommentsByPosts(Post post)
+        public IEnumerable<Comment> GetCommentsByPosts(int postId)
         {
             try
             {
                 using var context = new PRN211_OnlyFunds_CopyContext();
-                return context.Comments.Where(cmt => cmt.PostId == post.PostId);
+                return context.Comments.Where(cmt => cmt.PostId == postId);
             }
             catch (Exception ex)
             {
