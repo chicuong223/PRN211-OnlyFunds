@@ -1,4 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using BusinessObjects;
+using DataAccess.IRepository;
+using DataAccess.Repository;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace TestConsole
 {
@@ -6,7 +11,10 @@ namespace TestConsole
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            IUserRepository userRepository = new UserRepository();
+            ICategoryRepository categoryRepository = new CategoryRepository();
+            IPostCategoryMapRepository map = new PostCategoryMapRepository();
+            Console.WriteLine(map.FilterPostByCategory(1,1));
         }
     }
 }

@@ -7,10 +7,10 @@ using BusinessObjects;
 
 namespace DataAccess.IRepository
 {
-    interface IPostCategoryMapRepository
+    public interface IPostCategoryMapRepository
     {
         IEnumerable<Post> FilterPostByCategory(int categoryId, int pageIndex);
-        void AddPostMap(int postId, int categoryId);
+        void AddPostMap(PostCategoryMap map);
         PostCategoryMap GetPostMap(int postId, int categoryId);
     }
 }

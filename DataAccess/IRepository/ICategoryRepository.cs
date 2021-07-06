@@ -7,7 +7,7 @@ using BusinessObjects;
 
 namespace DataAccess.IRepository
 {
-    interface ICategoryRepository
+    public interface ICategoryRepository
     {
         IEnumerable<Category> GetCategories(int pageIndex);
         Category GetCategoryById(int id);

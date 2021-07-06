@@ -8,7 +8,7 @@ using DataAccess.IRepository;
 
 namespace DataAccess.Repository
 {
-    class CategoryRepository : ICategoryRepository
+    public class CategoryRepository : ICategoryRepository
     {
         public IEnumerable<Category> GetCategories(int pageIndex) => CategoryDAO.Instance.GetCategories(pageIndex);
         public Category GetCategoryById(int id) => CategoryDAO.Instance.GetCategoryById(id);
