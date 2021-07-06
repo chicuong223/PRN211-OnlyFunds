@@ -12,6 +12,7 @@ namespace BusinessObjects
         public int? PostId { get; set; }
         public string ReportDescription { get; set; }
         public DateTime? ReportDate { get; set; }
+        public bool IsSolved { get; set; }
 
         public virtual Post Post { get; set; }
     }

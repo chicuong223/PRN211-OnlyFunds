@@ -1,14 +1,13 @@
 ﻿using BusinessObjects;
-using DataAccess;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.FileProviders;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+
+using DataAccess;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+
 using DataAccess.IRepository;
 using DataAccess.Repository;
 
@@ -19,11 +18,9 @@ namespace OnlyFundsWeb.Controllers
         IWebHostEnvironment webHostEnvironment;
         private IPostRepository postRepository = new PostRepository();
         private IUserRepository userRepository = new UserRepository();
-        public readonly PostDAO postDAO;
         public PostsController(IWebHostEnvironment env)
         {
             this.webHostEnvironment = env;
-            postDAO = new PostDAO();
         }
         private string UploadFile(IFormFile file)
         {
@@ -45,7 +42,7 @@ namespace OnlyFundsWeb.Controllers
             return fileName;
         }
         // GET: PostsController
-        public ActionResult Index()
+        public ActionResult PostList()
         {
             return View();
         }
@@ -68,7 +65,7 @@ namespace OnlyFundsWeb.Controllers
                     page = 1;
                 IEnumerable<Post> postList = postRepository.GetPostByUser(user, page.Value);
                 int pageSize = 3;
-                int count = postDAO.CountPostsByUser(user);
+                int count = postRepository.CountPostByUser(user);
                 int end = count / pageSize;
                 if (count % 3 != 0)
                 {
@@ -76,7 +73,7 @@ namespace OnlyFundsWeb.Controllers
                 }
                 ViewBag.end = end;
                 ViewBag.user = user.Username;
-                return View("Index", postList);
+                return View("PostList", postList);
             }
             catch (Exception ex)
             {
@@ -94,14 +91,14 @@ namespace OnlyFundsWeb.Controllers
                 {
                     return NotFound();
                 }
-                Post post = postDAO.GetPostByID(id.Value);
+                Post post = postRepository.GetPostById(id.Value);
                 if (post == null)
                     return NotFound();
                 return View(post);
             }
             catch
             {
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(PostList));
             }
         }
 
@@ -127,7 +124,7 @@ namespace OnlyFundsWeb.Controllers
                 post.UploaderUsername = HttpContext.Session.GetString("user");
                 post.UploadDate = DateTime.Now;
                 post.FileUrl = fileName;
-                postDAO.InsertPost(post);
+                postRepository.InsertPost(post);
                 return RedirectToAction(nameof(GetPostByUser), new { username = post.UploaderUsername });
             }
             catch (Exception ex)
@@ -150,7 +147,7 @@ namespace OnlyFundsWeb.Controllers
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(PostList));
             }
             catch
             {
@@ -162,7 +159,7 @@ namespace OnlyFundsWeb.Controllers
         public ActionResult Delete(int? id)
         {
             if (id == null) return NotFound();
-            var post = postDAO.GetPostByID(id.Value);
+            var post = postRepository.GetPostById(id.Value);
             if (post == null) return NotFound();
             return View(post);
         }
@@ -174,8 +171,8 @@ namespace OnlyFundsWeb.Controllers
         {
             try
             {
-                postDAO.DeletePost(id);
-                return RedirectToAction(nameof(Index), new { username = HttpContext.Session.GetString("user") });
+                postRepository.DeletePost(id);
+                return RedirectToAction(nameof(PostList), new { username = HttpContext.Session.GetString("user") });
             }
             catch (Exception ex)
             {
