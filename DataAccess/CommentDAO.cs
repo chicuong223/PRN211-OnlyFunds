@@ -43,7 +43,7 @@ namespace DataAccess
             return _comment;
         }
 
-        public IEnumerable<Comment> GetCommentsByPosts(int postId)
+        public IEnumerable<Comment> GetCommentsByPosts(Post post)
         {
             List<Comment> lst = new List<Comment>();
             try
