@@ -9,12 +9,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using DataAccess.IRepository;
+using DataAccess.Repository;
 
 namespace OnlyFundsWeb.Controllers
 {
     public class PostsController : Controller
     {
         IWebHostEnvironment webHostEnvironment;
+        private IPostRepository postRepository = new PostRepository();
+        private IUserRepository userRepository = new UserRepository();
         public readonly PostDAO postDAO;
         public PostsController(IWebHostEnvironment env)
         {
@@ -54,15 +58,15 @@ namespace OnlyFundsWeb.Controllers
                 {
                     return NotFound();
                 }
-                UserDAO userDAO = new UserDAO();
-                User user = userDAO.GetUserByUsername(username);
+
+                User user = userRepository.GetUserByName(username);
                 if (user == null)
                 {
                     return NotFound();
                 }
                 if (page == null)
                     page = 1;
-                List<Post> postList = postDAO.GetPostsByUser(user, page.Value);
+                IEnumerable<Post> postList = postRepository.GetPostByUser(user, page.Value);
                 int pageSize = 3;
                 int count = postDAO.CountPostsByUser(user);
                 int end = count / pageSize;
@@ -77,7 +81,7 @@ namespace OnlyFundsWeb.Controllers
             catch (Exception ex)
             {
                 ViewBag.error = ex.Message;
-                return View();
+                return View("Error");
             }
         }
 

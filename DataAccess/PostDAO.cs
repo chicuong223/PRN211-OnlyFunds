@@ -14,7 +14,7 @@ namespace DataAccess
     {
         private static PostDAO instance = null;
         private static readonly object instanceLock = new object();
-        public PostDAO Instance
+        public static PostDAO Instance
         {
             get
             {
@@ -26,7 +26,7 @@ namespace DataAccess
                 return instance;
             }
         }
-
+        //-------Checked
         public int CountPostsByUser(User user)
         {
             try
@@ -40,7 +40,8 @@ namespace DataAccess
                 throw new Exception("Error counting posts");
             }
         }
-        public List<Post> GetPostsByUser(User user, int pageIndex)
+        //-------Checked
+        public IEnumerable<Post> GetPostsByUser(User user, int pageIndex)
         {
             List<Post> posts = new List<Post>();
             try
@@ -89,7 +90,7 @@ namespace DataAccess
             }
             return posts;
         }
-
+        //-------Checked
         public void InsertPost(Post post)
         {
             try
@@ -103,7 +104,7 @@ namespace DataAccess
                 throw new Exception(ex.Message);
             }
         }
-
+        //-------Checked
         public void DeletePost(int postID)
         {
             try
@@ -122,7 +123,7 @@ namespace DataAccess
                 throw new Exception(ex.Message);
             }
         }
-
+        //--------Checked
         public Post GetPostByID(int postID)
         {
             Post post = null;
@@ -136,6 +137,26 @@ namespace DataAccess
                 throw new Exception("Error finding Post");
             }
             return post;
+        }
+        //--------Checked
+        public IEnumerable<Post> SearchPostByTitle(string title)
+        {
+            var posts = new List<Post>();
+            try
+            {
+                using var context = new PRN211_OnlyFunds_CopyContext();
+                posts = context.Posts.Where(p => p.PostTitle.ToLower().Contains(title.ToLower())).ToList();
+                if (posts == null)
+                {
+                    throw new Exception("There's no post with this title");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            return posts;
         }
     }
 }

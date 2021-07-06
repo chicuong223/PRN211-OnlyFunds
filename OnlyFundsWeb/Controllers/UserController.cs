@@ -6,13 +6,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DataAccess.IRepository;
+using DataAccess.Repository;
 
 namespace OnlyFundsWeb.Controllers
 {
     public class UserController : Controller
     {
-        UserDAO uDAO = null;
-        public UserController() => uDAO = new UserDAO();
+        IUserRepository userRepository= new UserRepository();
         // GET: UserController
         public ActionResult Index()
         {
@@ -24,7 +25,7 @@ namespace OnlyFundsWeb.Controllers
         {
             if(username != null && password != null)
             {
-                User user = uDAO.CheckLogin(username, password);
+                User user = userRepository.CheckLogin(username, password);
                 if(user != null)
                 {
                     HttpContext.Session.SetString("user", username);
@@ -42,13 +43,13 @@ namespace OnlyFundsWeb.Controllers
         }
 
         // GET: UserController/Details/5
-        public ActionResult Details(int id)
+        public ActionResult DetailsUser(int id)
         {
             return View();
         }
 
         // GET: UserController/Create
-        public ActionResult Create()
+        public ActionResult Register()
         {
             return View();
         }
@@ -56,7 +57,7 @@ namespace OnlyFundsWeb.Controllers
         // POST: UserController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Register(IFormCollection collection)
         {
             try
             {
@@ -69,7 +70,7 @@ namespace OnlyFundsWeb.Controllers
         }
 
         // GET: UserController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult UpdateUserInfo(int id)
         {
             return View();
         }
@@ -77,7 +78,7 @@ namespace OnlyFundsWeb.Controllers
         // POST: UserController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult UpdateUserInfo(int id, IFormCollection collection)
         {
             try
             {
@@ -90,7 +91,7 @@ namespace OnlyFundsWeb.Controllers
         }
 
         // GET: UserController/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult DeleteUser(int id)
         {
             return View();
         }
@@ -98,7 +99,7 @@ namespace OnlyFundsWeb.Controllers
         // POST: UserController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult DeleteUser(int id, IFormCollection collection)
         {
             try
             {
