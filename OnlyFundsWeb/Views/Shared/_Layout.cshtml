@@ -40,14 +40,15 @@
                         <!--Left nav-->
                         <nav class="nav navbar-nav" id="left-nav">
                             <span class="nav-item dropdown me-3">
-                                <a href="#Category" class="nav-link dropdown-toggle text-dark" id="navbarDropdown"
+                                @*<a href="#Category" class="nav-link dropdown-toggle text-dark" id="navbarDropdown"
                                    role="button" data-bs-toggle="dropdown">
                                     <u>Category</u>
-                                </a>
+                                </a>*@
+                                <a asp-action="Index" asp-controller="Category">Category</a>
                                 <!-- <c:set var="begin" value="0"/>
                                 <c:set var="end" value="5"/> -->
-                                <div class="container dropdown-menu">
-                                    <div class="row">
+                                <!--iv class="container dropdown-menu">
+                                    <div class="row">-->
                                         <!-- <c:forEach begin="0" end="4">
                                             <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
                                                 <c:forEach items="${applicationScope.catList}" var="cat" begin="${begin}"
@@ -60,7 +61,7 @@
                                             <c:set var="begin" value="${begin+7}" />
                                             <c:set var="end" value="${end+7}" />
                                         </c:forEach> -->
-                                        <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
+                                        <!--<div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
                                             <a href="" class="tag">Tag 1</a>
                                         </div>
                                         <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
@@ -79,7 +80,7 @@
                                             <a href="" class="tag">Tag 1</a>
                                         </div>
                                     </div>
-                                </div>
+                                </div>-->
                             </span>
                             <span class="nav-item mt-1 ms-5">
                                 <form asp-action="Search" asp-controller="Posts" method="get">
@@ -111,6 +112,9 @@
                                 }
                                 else
                                 {
+                                    <span class="nav-item mt-1 ms-5">
+                                        <a asp-action="Create" asp-controller="Posts" class="text-dark">Write Post</a>
+                                    </span>
                                     IUserRepository userRepo = new UserRepository();
                                     User user = userRepo.GetUserByName(session.GetString("user"));
                                     <!-- For User-->
