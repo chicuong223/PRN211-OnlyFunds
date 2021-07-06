@@ -20,6 +20,7 @@ namespace OnlyFundsWeb.Controllers
         public IWebHostEnvironment env;
         private IPostRepository postRepository = new PostRepository();
         private IUserRepository userRepository = new UserRepository();
+<<<<<<< HEAD
         private ICategoryRepository categoryRepository = new CategoryRepository();
         private IPostCategoryMapRepository postCategoryMapRepository = new PostCategoryMapRepository();
         private PRN211_OnlyFunds_CopyContext context = new PRN211_OnlyFunds_CopyContext();
