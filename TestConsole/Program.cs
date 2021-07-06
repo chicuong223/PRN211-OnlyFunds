@@ -1,7 +1,4 @@
-﻿using BusinessObjects;
-using DataAccess.IRepository;
-using DataAccess.Repository;
-using System;
+﻿using System;
 <<<<<<< HEAD
 using System.Collections.Generic;
 using BusinessObjects;
