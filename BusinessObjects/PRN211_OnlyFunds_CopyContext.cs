@@ -241,7 +241,12 @@ namespace BusinessObjects
 
                 entity.Property(e => e.ReporterUsername)
                     .HasMaxLength(32)
-                    .IsUnicode(false);
+                    .IsUnicode(false)
+                    .IsRequired();
+
+                entity.Property(e => e.IsSolved)
+                    .HasDefaultValue(false)
+                    .IsRequired();
 
                 entity.HasOne(d => d.Post)
                     .WithMany(p => p.PostReports)
