@@ -17,7 +17,5 @@ namespace DataAccess.Repository
         public void InsertPost(Post post) => PostDAO.Instance.InsertPost(post);
         public void DeletePost(int postId) => PostDAO.Instance.DeletePost(postId);
         public Post GetPostById(int postId) => PostDAO.Instance.GetPostByID(postId);
-
-        public IEnumerable<Post> SearchPostsByTitle(string title) => PostDAO.Instance.SearchPostByTitle(title);
     }
 }
