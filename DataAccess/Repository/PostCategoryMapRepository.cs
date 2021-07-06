@@ -13,8 +13,8 @@ namespace DataAccess.Repository
         public IEnumerable<Post> FilterPostByCategory(int categoryId, int pageIndex) =>
             PostCategoryMapDAO.Instance.FilterPostByCategory(categoryId, pageIndex);
 
-        public void AddPostMap(int postId, int categoryId) =>
-            PostCategoryMapDAO.Instance.AddPostMap(postId, categoryId);
+        public void AddPostMap(PostCategoryMap map) =>
+            PostCategoryMapDAO.Instance.AddPostMap(map);
 
         public PostCategoryMap GetPostMap(int postId, int categoryId) =>
             PostCategoryMapDAO.Instance.GetPostMap(postId, categoryId);

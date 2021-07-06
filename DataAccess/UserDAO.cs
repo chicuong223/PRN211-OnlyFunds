@@ -27,7 +27,7 @@ namespace DataAccess
                 }
             }
         }
-        //----------------------
+        //----------------------Checked
         public User GetUserByName(string username)
         {
             User user = null;
@@ -44,7 +44,7 @@ namespace DataAccess
 
             return user;
         }
-        //-----------------------
+        //----------------------- Checked
         public User CheckLogin(string username, string password)
         {
             User user = null;
@@ -59,7 +59,7 @@ namespace DataAccess
             }
             return user;
         }
-        //-----------------------
+        //-----------------------Checked
         public User GetUserByEmail(string email)
         {
             User user = null;
@@ -76,7 +76,7 @@ namespace DataAccess
 
             return user;
         }
-        //-------------------
+        //-------------------Checked
         public void AddUser(User user)
         {
             try
@@ -100,7 +100,7 @@ namespace DataAccess
                 throw;
             }
         }
-        //--------------------
+        //--------------------Checked
         public void UpdateUser(User user)
         {
             try
@@ -123,7 +123,7 @@ namespace DataAccess
                 throw;
             }
         }
-
+        //---------------Checked
         public void DeleteUser(string username)
         {
             try
@@ -146,6 +146,7 @@ namespace DataAccess
                 throw;
             }
         }
+        //-------------Checked
         public IEnumerable<User> GetUsers(int pageIndex)
         {
             var users = new List<User>();

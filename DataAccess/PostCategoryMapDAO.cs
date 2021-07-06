@@ -31,7 +31,7 @@ namespace DataAccess
                 }
             }
         }
-
+        //--------Checked
         public IEnumerable<Post> FilterPostByCategory(int categoryId, int pageIndex)
         {
            
@@ -41,7 +41,7 @@ namespace DataAccess
                 using var context = new PRN211_OnlyFunds_CopyContext();
                 SqlConnection con = (SqlConnection)context.Database.GetDbConnection();
                 string SQL =
-                    "SELECT * FROM Post WHERE PostId IN (SELECT PostId FROM PostCategoryMap WHERE CategoryId = ?)";
+                    "SELECT * FROM Post WHERE PostId IN (SELECT PostId FROM PostCategoryMap WHERE CategoryId = @CategoryId)";
                 SqlCommand cmd = new SqlCommand(SQL, con);
                 cmd.Parameters.AddWithValue("@CategoryId", categoryId);
                 if (con.State == ConnectionState.Closed)
@@ -54,12 +54,12 @@ namespace DataAccess
                 {
                     while (reader.Read())
                     {
-                        int postID = reader.GetInt32(1);
-                        string title = reader.GetString(2);
-                        string desc = reader.GetString(3);
-                        string fileURL = reader.GetString(4);
-                        string uploaderUsername = reader.GetString(5);
-                        DateTime date = reader.GetDateTime(6);
+                        int postID = reader.GetInt32(0);
+                        string title = reader.GetString(1);
+                        string desc = reader.GetString(2);
+                        string fileURL = reader.GetString(3);
+                        string uploaderUsername = reader.GetString(4);
+                        DateTime date = reader.GetDateTime(5);
                         Post post = new Post
                         {
                             PostId = postID,
@@ -82,13 +82,13 @@ namespace DataAccess
             }
             return posts;
         }
-
-        public void AddPostMap(int postId, int categoryId)
+        //-----------Checked
+        public void AddPostMap(PostCategoryMap map)
         {
             try
             {
-                PostCategoryMap map= GetPostMap(postId, categoryId);
-                if (map == null)
+                PostCategoryMap _map= GetPostMap(map.PostId, map.CategoryId);
+                if (_map == null)
                 {
                     using var context = new PRN211_OnlyFunds_CopyContext();
                     context.PostCategoryMaps.Add(map);
@@ -101,7 +101,7 @@ namespace DataAccess
                 throw;
             }
         }
-
+        //-----------Checked
         public PostCategoryMap GetPostMap(int postId, int categoryId)
         {
             PostCategoryMap map = null;

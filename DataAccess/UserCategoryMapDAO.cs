@@ -27,7 +27,7 @@ namespace DataAccess
                 }
             }
         }
-        //-------------------
+        //-------------------checked
         public void AddUserCategoryMap(UserCategoryMap map)
         {
             UserCategoryMap _map = GetUserCategoryMap(map.Username, map.CategoryId);
@@ -50,6 +50,7 @@ namespace DataAccess
                 throw;
             }
         }
+        //-------------------checked
         public UserCategoryMap GetUserCategoryMap(string username, int categoryId)
         {
             UserCategoryMap map = null;
@@ -66,7 +67,7 @@ namespace DataAccess
             }
             return map;
         }
-
+        //-------------------checked
         public void DeleteCategoryMap(string username, int categoryId)
         {
             try

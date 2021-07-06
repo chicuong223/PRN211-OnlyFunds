@@ -26,7 +26,7 @@ namespace DataAccess
                 return instance;
             }
         }
-
+        //-------Checked
         public int CountPostsByUser(User user)
         {
             try
@@ -40,6 +40,7 @@ namespace DataAccess
                 throw new Exception("Error counting posts");
             }
         }
+        //-------Checked
         public IEnumerable<Post> GetPostsByUser(User user, int pageIndex)
         {
             List<Post> posts = new List<Post>();
@@ -89,7 +90,7 @@ namespace DataAccess
             }
             return posts;
         }
-
+        //-------Checked
         public void InsertPost(Post post)
         {
             try
@@ -103,7 +104,7 @@ namespace DataAccess
                 throw new Exception(ex.Message);
             }
         }
-
+        //-------Checked
         public void DeletePost(int postID)
         {
             try
@@ -122,7 +123,7 @@ namespace DataAccess
                 throw new Exception(ex.Message);
             }
         }
-
+        //--------Checked
         public Post GetPostByID(int postID)
         {
             Post post = null;
@@ -137,7 +138,7 @@ namespace DataAccess
             }
             return post;
         }
-
+        //--------Checked
         public IEnumerable<Post> SearchPostByTitle(string title)
         {
             var posts = new List<Post>();

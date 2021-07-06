@@ -27,6 +27,7 @@ namespace DataAccess
                 }
             }
         }
+        //--------Checked
         public IEnumerable<Category> GetCategories(int pageIndex)
         {
             var categories = new List<Category>();
@@ -43,7 +44,7 @@ namespace DataAccess
 
             return categories;
         }
-
+        //--------Checked
         public Category GetCategoryById(int id)
         {
             Category category = null;
@@ -60,5 +61,6 @@ namespace DataAccess
 
             return category;
         }
+        //-------Viet them ham create category
     }
 }
