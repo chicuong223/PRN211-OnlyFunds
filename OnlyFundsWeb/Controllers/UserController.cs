@@ -6,13 +6,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DataAccess.IRepository;
+using DataAccess.Repository;
 
 namespace OnlyFundsWeb.Controllers
 {
     public class UserController : Controller
     {
-        UserDAO uDAO = null;
-        public UserController() => uDAO = new UserDAO();
+        IUserRepository userRepository= new UserRepository();
         // GET: UserController
         public ActionResult Index()
         {
@@ -24,7 +25,7 @@ namespace OnlyFundsWeb.Controllers
         {
             if(username != null && password != null)
             {
-                User user = uDAO.CheckLogin(username, password);
+                User user = userRepository.CheckLogin(username, password);
                 if(user != null)
                 {
                     HttpContext.Session.SetString("user", username);

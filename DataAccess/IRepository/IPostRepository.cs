@@ -7,7 +7,7 @@ using BusinessObjects;
 
 namespace DataAccess.IRepository
 {
-    interface IPostRepository
+    public interface IPostRepository
     {
         IEnumerable<Post> GetPostByUser(User user, int pageIndex);
         int CountPostByUser(User user);

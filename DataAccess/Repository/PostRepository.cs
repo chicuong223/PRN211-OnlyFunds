@@ -8,7 +8,7 @@ using DataAccess.IRepository;
 
 namespace DataAccess.Repository
 {
-    class PostRepository : IPostRepository
+    public class PostRepository : IPostRepository
     {
         public IEnumerable<Post> GetPostByUser(User user, int pageIndex) =>
             PostDAO.Instance.GetPostsByUser(user, pageIndex);

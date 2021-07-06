@@ -8,7 +8,7 @@ using DataAccess.IRepository;
 
 namespace DataAccess.Repository
 {
-    class UserRepository : IUserRepository
+    public class UserRepository : IUserRepository
     {
         public IEnumerable<User> GetUsers(int pageIndex) => UserDAO.Instance.GetUsers(pageIndex);
         public User GetUserByName(string username) => UserDAO.Instance.GetUserByName(username);
