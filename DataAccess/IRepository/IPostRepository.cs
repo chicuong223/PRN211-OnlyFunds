@@ -14,6 +14,5 @@ namespace DataAccess.IRepository
         void InsertPost(Post post);
         void DeletePost(int postId);
         Post GetPostById(int postId);
-        IEnumerable<Post> SearchPostsByTitle(string title);
     }
 }
