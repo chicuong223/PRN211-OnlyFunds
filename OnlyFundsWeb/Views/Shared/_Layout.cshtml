@@ -1,22 +1,69 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Http;
+@using DataAccess.Repository;
+@using DataAccess.IRepository;
+@using BusinessObjects;
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - OnlyFunds</title>
+    <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">OnlyFundsWeb</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+        <nav class="navbar navbar-light bg-light shadow p-0">
+            <div class="container-fluid">
+                <div>
+                    <a href="#">
+                        <img src="~images/logo.jpg" alt="logo" />
+                    </a>
+                    <a href="#">Category</a>
+                    <form class="form-inline nav-item mt-1 ms-5" asp-action="Search" asp-controller="Post" method="GET">
+                        <div class="input-group" id="search-input">
+                            <input type="text" class="form-control" name="search" placeholder="Search Post Title..." />
+                            <button class="input-group-text" id="basic-addon2" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
+        </nav>
+        <nav class="navbar-nav ms-auto" id="right-nav">
+            @{
+                if (Context.Session.GetString("user") == null)
+                {
+                    <form asp-action="Login" asp-controller="User" method="GET" class="form-inline nav-item">
+                        <button class="btn btn-sm rounded-pill" id="login-btn" type="submit">
+                            <i class="fas fa-sign-in-alt me-1 align-middle"></i><span class="align-middle">Login</span>
+                        </button>
+                    </form>
+                    <form asp-action="Register" asp-controller="User" method="GET" class="form-inline nav-item">
+                        <button class="btn btn-sm rounded-pill ms-3" id="signup-btn">
+                            <i class="fas fa-user align-middle"></i>
+                            <span class="align-middle">Register</span>
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    IUserRepository userRepo = new UserRepository();
+                    User user = userRepo.GetUserByName(Context.Session.GetString("user"));
+                    <div class="nav-item" id="user-dropdown">
+                        <a href="#User-info" class="nav-link" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            <img class="rounded-pill" src="~/images/avatars/@user.AvatarUrl" width="40px" height="40px" alt="Avatar">
+                        </a>
+                        <div class="dropdown-menu m-0 p-0" style="width: 200px; position: absolute; left: 85vw;">
+                            <a href="ManageAccount" class="col-12 nav-link m-0 p-0 text-center border-bottom">Manage account</a>
+                            <a asp-action="Logout" asp-controller="User">Logout</a>
+                        </div>
+                    </div>
+                }
+            }
         </nav>
     </header>
     <div class="container">
