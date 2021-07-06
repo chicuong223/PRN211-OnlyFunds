@@ -12,5 +12,6 @@ namespace DataAccess.IRepository
         void AddBookmark(string username, int postId);
         Bookmark GetBookmark(string username, int postId);
         void DeleteBookmark(Bookmark bookmark);
+        IEnumerable<Post> GetPostsByBookmark(string username, int pageIndex);
     }
 }

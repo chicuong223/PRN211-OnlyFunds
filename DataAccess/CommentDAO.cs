@@ -45,15 +45,17 @@ namespace DataAccess
 
         public IEnumerable<Comment> GetCommentsByPosts(int postId)
         {
+            List<Comment> lst = new List<Comment>();
             try
             {
                 using var context = new PRN211_OnlyFunds_CopyContext();
-                return context.Comments.Where(cmt => cmt.PostId == postId);
+                lst = context.Comments.Where(cmt => cmt.PostId == postId).ToList();
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                Console.WriteLine(ex.Message);
             }
+            return lst;
         }
 
         public void AddComment(Comment comment)
