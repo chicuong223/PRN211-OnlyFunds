@@ -79,19 +79,22 @@ namespace DataAccess
             return bookmark;
         }
 
-        public IEnumerable<Post> GetPostsByBookmark(User user, int pageIndex)
+        public IEnumerable<Post> GetPostsByBookmark(string username, int pageIndex)
         {
             List<Post> posts = new List<Post>();
             try
             {
                 using var context = new PRN211_OnlyFunds_CopyContext();
                 SqlConnection con = (SqlConnection)context.Database.GetDbConnection();
-                string SQL = "SELECT * FROM \n"
-                    + "(SELECT ROW_NUMBER() OVER(ORDER BY PostId DESC) AS r, * \n"
-                    + "FROM Post WHERE UploaderUsername = @username) as x \n"
-                    + "where x.r between @index * 3 - (3 - 1) AND 3 * @index";
+                string SQL = "SELECT PostId, PostTitle, PostDescription, FileURL, UploaderUsername, UploadDate FROM \n"
+                    + "(SELECT ROW_NUMBER() OVER(ORDER BY PostId) as [row], * \n"
+                    + "FROM Post WHERE PostId IN( \n"
+                    + "SELECT PostId FROM Bookmark \n"
+                    + "WHERE Username = @username" 
+                    +" )) as x \n"
+                    + "WHERE x.[row] BETWEEN @index * 3 - (3 - 1) AND 3 * @index";
                 SqlCommand cmd = new SqlCommand(SQL, con);
-                cmd.Parameters.AddWithValue("@username", user.Username);
+                cmd.Parameters.AddWithValue("@username", username);
                 cmd.Parameters.AddWithValue("@index", pageIndex);
                 if (con.State == ConnectionState.Closed)
                 {
@@ -102,12 +105,12 @@ namespace DataAccess
                 {
                     while (reader.Read())
                     {
-                        int postID = reader.GetInt32(1);
-                        string title = reader.GetString(2);
-                        string desc = reader.GetString(3);
-                        string fileURL = reader.GetString(4);
-                        string uploaderUsername = reader.GetString(5);
-                        DateTime date = reader.GetDateTime(6);
+                        int postID = reader.GetInt32(0);
+                        string title = reader.GetString(1);
+                        string desc = reader.GetString(2);
+                        string fileURL = reader.GetString(3);
+                        string uploaderUsername = reader.GetString(4);
+                        DateTime date = reader.GetDateTime(5);
                         Post post = new Post
                         {
                             PostId = postID,
@@ -115,7 +118,7 @@ namespace DataAccess
                             PostDescription = desc,
                             FileUrl = fileURL,
                             UploadDate = date,
-                            UploaderUsernameNavigation = user
+                            UploaderUsername = uploaderUsername
                         };
                         posts.Add(post);
                     }
