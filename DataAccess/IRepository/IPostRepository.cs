@@ -15,5 +15,6 @@ namespace DataAccess.IRepository
         void DeletePost(int postId);
         Post GetPostById(int postId);
         IEnumerable<Post> SearchPostsByTitle(string title);
+        IEnumerable<Post> GetAllPost(int pageIndex);
     }
 }

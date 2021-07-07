@@ -6,13 +6,17 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using BusinessObjects;
+using DataAccess.IRepository;
+using DataAccess.Repository;
 
 namespace OnlyFundsWeb.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
+        private PRN211_OnlyFunds_CopyContext context = new PRN211_OnlyFunds_CopyContext();
+        private IPostRepository postRepository = new PostRepository();
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
