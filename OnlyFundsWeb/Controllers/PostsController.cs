@@ -79,7 +79,6 @@ namespace OnlyFundsWeb.Controllers
                 Post post = postRepository.GetPostById(id.Value);
                 if (post == null)
                     return NotFound();
-                IEnumerable<Category> categories = categoryRepository.
                 return View(post);
             }
             catch
