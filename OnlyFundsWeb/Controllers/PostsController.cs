@@ -10,12 +10,14 @@ using Microsoft.AspNetCore.Http;
 
 using DataAccess.IRepository;
 using DataAccess.Repository;
+using OnlyFundsWeb.Helpers;
+using System.Linq;
 
 namespace OnlyFundsWeb.Controllers
 {
     public class PostsController : Controller
     {
-        IWebHostEnvironment webHostEnvironment;
+        IWebHostEnvironment env;
         private IPostRepository postRepository = new PostRepository();
         private IUserRepository userRepository = new UserRepository();
         private ICategoryRepository categoryRepository = new CategoryRepository();
