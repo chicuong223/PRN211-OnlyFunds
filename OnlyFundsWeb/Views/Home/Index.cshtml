@@ -1,4 +1,12 @@
-﻿@{
+﻿@using BusinessObjects
+@using DataAccess.Repository
+@using DataAccess.IRepository
+@using System.Collections
+@{
+    IPostRepository postRepository = new PostRepository();
+    IEnumerable<Post> postList = postRepository.GetAllPost(1);
+}
+@{
     ViewData["Title"] = "Home Page";
     Layout = "_UnAuthenticatedUserLayout";
 }
@@ -22,26 +30,8 @@
             <h4>Recent Posts</h4>
         </div>
         <div class="row">
-            <!-- Razor code here -->
-            <div class="col-12 d-flex justify-content-center" style="height: 30rem;">
-                <div class="card w-75 mb-5">
-                    <div class="card-header fw-bold">
-                        Post's name goes here
-                    </div>
-                    <!-- If user is not allowed to see the post -->
-                    <div class="card-body p-0">
-                        <div class="bg-image"></div>
-                        <div class="text">
-                            This post is for subscribers only.<br>
-                            <a href="#Login" class="login">Login</a> or
-                            <a href="#SignUp" class="signup">Sign up</a>
-                            to get started!
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- If user allowed to see the post -->
-            <div class="col-12 d-flex justify-content-center" style="height: 30rem;">
+            @*<!-- Razor code here -->
+            <div class="col-12 d-flex justify-content-center" style="height: 15rem;">
                 <div class="card w-75 mb-5">
                     <div class="card-header fw-bold">
                         Post's name goes here
@@ -59,6 +49,50 @@
                     </div>
                 </div>
             </div>
+            <!-- If user allowed to see the post -->
+            <div class="col-12 d-flex justify-content-center" style="height: 15rem;">
+                <div class="card w-75 mb-5">
+                    <div class="card-header fw-bold">
+                        Post's name goes here
+                    </div>
+                    <!-- If user is not allowed to see the post -->
+                    <div class="card-body border">
+                        Post ngắn thì show hết content ở đây, post dài thì see more<br>
+                        Lorem Ipsum dolor sit amet, consectetur adipis
+                    </div>
+                    <div class="card-footer text-center p-1">
+                        <a href="#post-details" class=" stretched-link link-post">
+                            <span>See more</span>
+                            <i class="fas fa-angle-double-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>*@
+            Hien title, username, uploadDate, description
+            @{
+                foreach (var post in postList)
+                {
+                    <div class="col-12 d-flex justify-content-center" style="height: 15rem;">
+                        <div class="card w-75 mb-5">
+                            <div class="card-header fw-bold">
+                                @post.PostTitle -
+                                @post.UploaderUsername -
+                                @post.UploadDate.Value.ToString("dd/MMM/yyyy")
+                            </div>
+                            <!-- If user is not allowed to see the post -->
+                            <div class="card-body border">
+                                @post.PostDescription
+                            </div>
+                            <div class="card-footer text-center p-1">
+                                <a asp-controller="Posts" asp-action="Details" class=" stretched-link link-post">
+                                    <span>See more</span>
+                                    <i class="fas fa-angle-double-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
         </div>
     </div>
 </div>
