@@ -151,15 +151,5 @@ namespace OnlyFundsWeb.Controllers
             }
             return RedirectToAction("Index", "Home");
         }
-
-        public ActionResult Logout()
-        {
-            var session = HttpContext.Session;
-            if (session.GetString("user") != null)
-            {
-                session.Remove("user");
-            }
-            return RedirectToAction("Index", "Home");
-        }
     }
 }

@@ -17,15 +17,7 @@ namespace DataAccess.Repository
         public void InsertPost(Post post) => PostDAO.Instance.InsertPost(post);
         public void DeletePost(int postId) => PostDAO.Instance.DeletePost(postId);
         public Post GetPostById(int postId) => PostDAO.Instance.GetPostByID(postId);
-<<<<<<< HEAD
-<<<<<<< HEAD
         public IEnumerable<Post> GetAllPost(int pageIndex) => PostDAO.Instance.GetAllPost(pageIndex);
-=======
-
->>>>>>> 0e2125d (CommentRepo, BookmarkRepo)
-=======
-
->>>>>>> 35e68c0 (Revert "Revert "CommentRepo, BookmarkRepo"")
         public IEnumerable<Post> SearchPostsByTitle(string title) => PostDAO.Instance.SearchPostByTitle(title);
     }
 }

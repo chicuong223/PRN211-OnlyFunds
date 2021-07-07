@@ -1,8 +1,10 @@
 ﻿@model BusinessObjects.Post
+@using BusinessObjects
 
 @{
     ViewData["Title"] = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    IEnumerable<Comment> comments = ViewBag.Comments as IEnumerable<Comment>;
 }
 
 <header>
@@ -20,7 +22,22 @@
         }
     </div>
     <div class="CommentSection overflow-auto">
-
+        <form asp-action="AddComment" asp-controller="Comment" method="POST" asp-route-postid="@Model.PostId">
+            <input type="text" class="rounded" placeholder="Write your thoughts here" name="content" />
+            <input type="submit" class="btn btn-warning" value="Post" />
+        </form>
+        @{
+            foreach (Comment cmt in comments)
+            {
+                <div>
+                    <span class="fw-bold">@cmt.Username</span>
+                    <span>@cmt.CommentDate.Value.ToString("dd-MMM-yyyy")</span>
+                </div>
+                <div>
+                    <p class="p-2">@cmt.Content</p>
+                </div>
+            }
+        }
     </div>
 </div>
 

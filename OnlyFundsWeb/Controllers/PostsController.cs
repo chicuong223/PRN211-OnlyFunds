@@ -18,11 +18,9 @@ namespace OnlyFundsWeb.Controllers
         IWebHostEnvironment webHostEnvironment;
         private IPostRepository postRepository = new PostRepository();
         private IUserRepository userRepository = new UserRepository();
-<<<<<<< HEAD
-
         private ICategoryRepository categoryRepository = new CategoryRepository();
         private IPostCategoryMapRepository postCategoryMapRepository = new PostCategoryMapRepository();
-        private ICategoryRepository categoryRepository = new CategoryRepository();
+        private ICommentRepository cmtRepository = new CommentRepository();
         private PRN211_OnlyFunds_CopyContext context = new PRN211_OnlyFunds_CopyContext();
         public PostsController(IWebHostEnvironment env) => this.env = env;
 
@@ -79,6 +77,8 @@ namespace OnlyFundsWeb.Controllers
                 Post post = postRepository.GetPostById(id.Value);
                 if (post == null)
                     return NotFound();
+                IEnumerable<Comment> cmt = cmtRepository.GetCommentsByPost(post.PostId);
+                ViewBag.Comments = cmt;
                 return View(post);
             }
             catch

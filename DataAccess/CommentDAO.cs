@@ -33,20 +33,7 @@ namespace DataAccess
             try
             {
                 using var context = new PRN211_OnlyFunds_CopyContext();
-                return context.Comments.Where(cmt => cmt.PostId == postId);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-        public IEnumerable<Comment> GetCommentsByPosts(Post post)
-        {
-            try
-            {
-                using var context = new PRN211_OnlyFunds_CopyContext();
-                return context.Comments.Where(cmt => cmt.PostId == post.PostId);
+                return context.Comments.Where(cmt => cmt.PostId == postId).ToList();
             }
             catch (Exception ex)
             {
@@ -182,7 +169,21 @@ namespace DataAccess
         }
 
         public IEnumerable<Comment> GetCommentsByPosts(int postId)
->>>>>>> 45c07e8 (abc)
+        {
+            List<Comment> lst = new List<Comment>();
+            try
+            {
+                using var context = new PRN211_OnlyFunds_CopyContext();
+                lst = context.Comments.Where(cmt => cmt.PostId == postId).ToList();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return lst;
+        }
+
+        public void AddComment(Comment comment)
         {
             try
             {
@@ -222,21 +223,6 @@ namespace DataAccess
             {
                 throw new Exception(ex.Message);
             }
-        }
-
-        public Comment GetCommentByID(int commentID)
-        {
-            Comment _comment = null;
-            try
-            {
-                using var context = new PRN211_OnlyFunds_CopyContext();
-                _comment = context.Comments.Where(cmt => cmt.CommentId == commentID).Single();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            return _comment;
         }
     }
 }

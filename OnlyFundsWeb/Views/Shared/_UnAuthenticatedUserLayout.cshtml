@@ -1,5 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using BusinessObjects
+@using DataAccess.Repository
+@{ 
+    CategoryRepository categoryRepository = new CategoryRepository();
+    IEnumerable<Category> catList = categoryRepository.GetCategories();
+} 
 
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8" />
@@ -49,26 +55,32 @@
                             <c:set var="end" value="5"/> -->
                             <div class="container dropdown-menu">
                                 <div class="row">
-                                    <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
-                                        <a href="" class="tag">Tag 1</a>
-                                    </div>
-                                    <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
-                                        <a href="" class="tag">Tag 1</a>
-                                    </div>
-                                    <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
-                                        <a href="" class="tag">Tag 1</a>
-                                    </div>
-                                    <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
-                                        <a href="" class="tag">Tag 1</a>
-                                    </div>
-                                    <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
-                                        <a href="" class="tag">Tag 1</a>
-                                    </div>
-                                    <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
-                                        <a href="" class="tag">Tag 1</a>
-                                    </div>
-
-
+                                    @{
+                                        foreach (Category cate in catList)
+                                        { 
+                                            <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
+                                                <a href="" class="tag">@cate.CategoryName.</a>
+                                            </div>
+                                        }
+                                    }
+                                    @*<div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
+            <a href="" class="tag">Tag 1</a>
+        </div>
+        <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
+            <a href="" class="tag">Tag 1</a>
+        </div>
+        <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
+            <a href="" class="tag">Tag 1</a>
+        </div>
+        <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
+            <a href="" class="tag">Tag 1</a>
+        </div>
+        <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
+            <a href="" class="tag">Tag 1</a>
+        </div>
+        <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
+            <a href="" class="tag">Tag 1</a>
+        </div>*@
                                 </div>
                             </div>
                         </span>

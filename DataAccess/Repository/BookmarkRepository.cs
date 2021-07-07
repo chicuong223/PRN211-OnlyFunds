@@ -15,14 +15,8 @@ namespace DataAccess.Repository
         public void DeleteBookmark(Bookmark bookmark) => BookmarkDAO.Instance.DeleteBookmark(bookmark);
 
         public Bookmark GetBookmark(string username, int postId) => BookmarkDAO.Instance.GetBookmark(postId, username);
-<<<<<<< HEAD
-<<<<<<< HEAD
 
         public IEnumerable<Post> GetPostsByBookmark(string username, int pageIndex)
         => BookmarkDAO.Instance.GetPostsByBookmark(username, pageIndex);
-=======
->>>>>>> 0e2125d (CommentRepo, BookmarkRepo)
-=======
->>>>>>> 35e68c0 (Revert "Revert "CommentRepo, BookmarkRepo"")
     }
 }
