@@ -8,7 +8,7 @@ using DataAccess.IRepository;
 
 namespace DataAccess.Repository
 {
-    public class UserCategoryMapRepository : IUserCategoryMapRepository
+    class UserCategoryMapRepository : IUserCategoryMapRepository
     {
         public void AddUserCategoryMap(UserCategoryMap map) => UserCategoryMapDAO.Instance.AddUserCategoryMap(map);
 
