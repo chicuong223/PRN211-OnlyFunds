@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ﻿using System;
 <<<<<<< HEAD
 using System.Collections.Generic;
@@ -7,6 +8,12 @@ using DataAccess.Repository;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 =======
 >>>>>>> 0e2125d (CommentRepo, BookmarkRepo)
+=======
+﻿using BusinessObjects;
+using DataAccess.IRepository;
+using DataAccess.Repository;
+using System;
+>>>>>>> 35e68c0 (Revert "Revert "CommentRepo, BookmarkRepo"")
 
 namespace TestConsole
 {
@@ -15,9 +22,12 @@ namespace TestConsole
         static void Main(string[] args)
         {
 <<<<<<< HEAD
+<<<<<<< HEAD
             IPostRepository postRepository = new PostRepository();
             Console.WriteLine(postRepository.GetAllPost(1));
 =======
+=======
+>>>>>>> 35e68c0 (Revert "Revert "CommentRepo, BookmarkRepo"")
             //IUserRepository userRepo = new UserRepository();
             //User user = new User
             //{
@@ -67,7 +77,10 @@ namespace TestConsole
             //bmRepo.AddBookmark("chicuong", 2);
             Bookmark bm = bmRepo.GetBookmark("chicuong", 1);
             //bmRepo.DeleteBookmark(bm);
+<<<<<<< HEAD
 >>>>>>> 0e2125d (CommentRepo, BookmarkRepo)
+=======
+>>>>>>> 35e68c0 (Revert "Revert "CommentRepo, BookmarkRepo"")
         }
     }
 }
