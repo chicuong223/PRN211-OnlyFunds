@@ -39,10 +39,10 @@
 </head>
 <body>
     @*@ViewBag.Message*@
-<header class='p-4 text-center'>
-    <h1 style="font-family: Righteous" class="title">ONLY FUNDS</h1>
-    <h2 class="motto">Create your own works and earn money!</h2>
-</header>
+    <header class='p-4 text-center'>
+        <h1 style="font-family: Righteous" class="title">ONLY FUNDS</h1>
+        <h2 class="motto">Create your own works and earn money!</h2>
+    </header>
 
     <div class="mx-auto w-25 p-3 shadow">
         <form asp-area="" asp-controller="User" asp-action="Login" id="loginForm">
@@ -60,7 +60,7 @@
                 <i class="fas fa-lock"></i>
                 <label for="password" style="padding-left: 2.9rem;">Password</label>
                 <input type="password" class="form-control" name="password" id="password"
-                        style="padding-left: 2.6rem;"
+                       style="padding-left: 2.6rem;"
                        @*onkeypress="return RestrictSpace()"*@>
                 <p class="text-danger" id="passwordError"></p>
 
@@ -69,12 +69,12 @@
                 <button type="submit" name="Login" class="btn btn-success w-100" id="loginBtn">Login</button>
             </div>
             <div class="form-check form-switch mb-4">
-                <p>Don't have an account? <a href="RegisterServlet" style="text-decoration: none; color: red; font-weight: bold; text-align: center">Sign up</a></p>  
+                <p>Don't have an account? <a href="RegisterServlet" style="text-decoration: none; color: red; font-weight: bold; text-align: center">Sign up</a></p>
                 <span style="margin: 0 48px;">
                     <a href="passwordEmail" style="text-decoration: none; color: red; font-weight: bold;">Forgot password?</a>
                 </span>
             </div>
         </form>
-        </div>
+    </div>
 </body>
 </html>

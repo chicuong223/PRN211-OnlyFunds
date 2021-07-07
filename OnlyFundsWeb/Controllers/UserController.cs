@@ -20,6 +20,12 @@ namespace OnlyFundsWeb.Controllers
             return View();
         }
 
+        public IActionResult List()
+        {
+            var userList = userRepository.GetUsers(1);
+            return View(userList);
+        }
+
         [HttpPost]
         public IActionResult Login(string username, string password)
         {

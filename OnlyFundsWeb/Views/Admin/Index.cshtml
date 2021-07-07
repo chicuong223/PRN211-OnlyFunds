@@ -1,0 +1,32 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+
+<h3>Admin Login Page</h3>
+@ViewBag.Message
+<form method="post" asp-controller="Admin" asp-action="Login">
+    <table border="0" cellpadding="2" cellspacing="2">
+        <tr>
+            <td>Username</td>
+            <td><input type="text" name="username"></td>
+        </tr>
+        <tr>
+            <td>Password</td>
+            <td><input type="password" name="password"></td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td><input type="submit" value="Login"></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>
