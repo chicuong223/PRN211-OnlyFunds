@@ -101,8 +101,6 @@ namespace OnlyFundsWeb.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormFile file, Post post)
         {
-            IEnumerable<Category> categoryList = categoryRepository.GetCategories(1);
-            TempData["CategoryList"] = categoryList;
             try
             {
                 if (string.IsNullOrWhiteSpace(post.PostTitle))
