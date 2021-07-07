@@ -1,6 +1,5 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
-    Layout = "_UnAuthenticatedUserLayout";
 }
 
 <div class="text-center">
@@ -11,6 +10,7 @@
                 <img@* src="@Url.Content(Model.AvatarUrl)"*@ alt="Logo" class="img-fluid" width="400px">
             </div>
             <div class="col-6 my-auto">
+                @*Cho nay khong biet author's name la sao??'*@
                 <h4 class="mb-3">Author's name</h4>
                 @*<h4 class="mb-3">@Model.Username</h4>*@
                 <div>

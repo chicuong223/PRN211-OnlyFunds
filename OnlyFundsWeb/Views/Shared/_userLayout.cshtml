@@ -27,7 +27,7 @@
             <div class="container-fluid">
                 <div class="navbar-header">
                     <a href="#Home" class="nav-link d-flex align-items-center">
-                        <img src="~/images/Logo.png"
+                        <img src="images/Logo.png"
                              style="width:90px;" height="30px">
                     </a>
                     <!--button when navbar is collapse-->
@@ -120,11 +120,11 @@
                         <div class="nav-item" id="user-dropdown">
                             <a href="#User-info" class="nav-link" id="navbarDropdown" role="button"
                                data-bs-toggle="dropdown">
-                                <img class="rounded-pill" src="~/images/Avatar.png" width=40px
+                                <img class="rounded-pill" src="images/Avatar.png" width=40px
                                      height=40px alt="">
                             </a>
                             <div class="dropdown-menu m-0 p-0" style="width: 200px; position: absolute; left: 85vw;">
-                                <a asp-action="DetailsUser" asp-controller="User" asp-route-username="@Context.Session.GetString("user")" class="col-12 nav-link m-0 p-0 text-center border-bottom">Manage account</a>
+                                <a href="ManageAccount" class="col-12 nav-link m-0 p-0 text-center border-bottom">Manage account</a>
                                 <a href="" class="col-12 nav-link m-0 p-0 text-center border-bottom">
                                     Manage
                                     subscription
