@@ -1,14 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using BusinessObjects;
+using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using BusinessObjects;
 
 namespace DataAccess
 {
     public class AdminDAO
     {
+        private static AdminDAO instance = null;
+        private static readonly object instanceLock = new object();
+
+        public static AdminDAO Instance
+        {
+            get
+            {
+                lock (instanceLock)
+                {
+                    if (instance == null)
+                    {
+                        instance = new AdminDAO();
+                    }
+                    return instance;
+                }
+            }
+        }
+
+
         public Admin CheckLogin(string username, string password)
         {
             Admin user = null;
