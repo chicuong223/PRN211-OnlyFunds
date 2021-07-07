@@ -15,6 +15,9 @@ namespace DataAccess.IRepository
         void DeletePost(int postId);
         Post GetPostById(int postId);
         IEnumerable<Post> SearchPostsByTitle(string title);
+<<<<<<< HEAD
         IEnumerable<Post> GetAllPost(int pageIndex);
+=======
+>>>>>>> 0e2125d (CommentRepo, BookmarkRepo)
     }
 }
