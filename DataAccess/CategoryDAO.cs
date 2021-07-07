@@ -28,7 +28,7 @@ namespace DataAccess
             }
         }
         //--------Checked
-        public IEnumerable<Category> GetCategories(int pageIndex)
+        public IEnumerable<Category> GetCategories()
         {
             var categories = new List<Category>();
             try

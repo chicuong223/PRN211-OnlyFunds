@@ -13,7 +13,7 @@
     <div class="border p-2 rounded text-break postDetails">
         <p>@Model.PostDescription</p>
         @{
-            if (string.IsNullOrEmpty(Model.FileUrl))
+            if (!string.IsNullOrEmpty(Model.FileUrl))
             {
                 <a href="~/postfiles/@Model.FileUrl" class="link-primary">@Model.FileUrl</a>
             }
