@@ -1,0 +1,38 @@
+.bg-image {
+    background-image: url(../images/bg-image.jpg);
+    height: 100%;
+    object-fit: cover;
+    filter: blur(3px);
+}
+.text {
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.login, .signup {
+    color: white;
+    font-weight: 500;
+}
+.link-post {
+    text-decoration: none;
+    color: black;
+    transition: all 1s;
+}
+
+a span{
+    padding-right: 0.2rem;
+    transition: all 1s;
+}
+.link-post i {
+    position: absolute; 
+    bottom: 8px;
+    left: 55%;
+    transition: all 0.5s;
+}
+.link-post:hover i {
+    left: 58%;
+}

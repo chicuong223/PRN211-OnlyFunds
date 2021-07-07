@@ -101,6 +101,8 @@ namespace OnlyFundsWeb.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormFile file, Post post)
         {
+            IEnumerable<Category> categoryList = categoryRepository.GetCategories(1);
+            TempData["CategoryList"] = categoryList;
             try
             {
                 if (string.IsNullOrWhiteSpace(post.PostTitle))
@@ -167,6 +169,11 @@ namespace OnlyFundsWeb.Controllers
                 ViewBag.error = ex.Message;
                 return View();
             }
+        }
+
+        public IActionResult Cancel()
+        {
+            return View("Create");
         }
     }
 }
