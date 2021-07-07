@@ -5,9 +5,14 @@
 @using DataAccess.Repository
 @using DataAccess.IRepository
 @using System.Collections
+@using Microsoft.AspNetCore.Http
 @{
     IPostRepository postRepository = new PostRepository();
-    IEnumerable<Post> postList = postRepository.GetAllPost(1);
+    IUserRepository userRepository = new UserRepository();
+    string username = Context.Session.GetString("user");
+    User user = userRepository.GetUserByName(username);
+
+    IEnumerable<Post> postList = postRepository.GetPostByUser(user, 1);
 }
 @model BusinessObjects.User;
 @{
