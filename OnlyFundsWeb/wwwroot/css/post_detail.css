@@ -1,0 +1,41 @@
+a {
+    text-decoration: none;
+    color: black;
+}
+li {
+    display: inline-block;
+}
+a[id*="author-link"]:hover {
+    color: black;
+    text-decoration: underline;
+}
+img[alt*="avatar"] {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.comment, .comment-input {
+    clear: both;
+}
+.comment-ava {
+    width: 50px;
+    height: 50px;
+}
+.comment-body {
+    max-width: 90%;
+}
+.comment-input {
+    width: 100%;
+    margin-bottom: 10px;
+}
+.comment-text input {
+    width: 90%;
+}
+.comment-text input:focus {
+    outline:0px !important;
+    -webkit-appearance:none;
+    box-shadow: none !important;
+}
+.comment-ava, .comment-body, .comment-input {
+    float: left;
+}

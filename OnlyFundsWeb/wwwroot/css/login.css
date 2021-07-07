@@ -1,0 +1,18 @@
+#username, #password {
+    outline: 0px !important;
+    -webkit-appearance: none;
+    box-shadow: none !important;
+}
+
+.fas.fa-user, .fas.fa-lock {
+    position: absolute;
+    left: 1rem;
+    top: 1.45rem;
+    transform: scale(1.5);
+}
+
+#username, #password {
+    border: none;
+    border-radius: 0px;
+    border-bottom: 1px solid black;
+}
