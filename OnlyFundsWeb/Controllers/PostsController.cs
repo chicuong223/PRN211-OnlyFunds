@@ -106,7 +106,12 @@ namespace OnlyFundsWeb.Controllers
         {
             try
             {
-                string fileName = UploadFile(file);
+                if (string.IsNullOrWhiteSpace(post.PostTitle))
+                    throw new Exception("Title is required");
+                if (string.IsNullOrWhiteSpace(post.PostDescription))
+                    throw new Exception("Description is required");
+                string fileName = Utilities.UploadFile(file, env, "postfiles");
+                post.PostId = context.Posts.Max(p => p.PostId) + 1;
                 post.UploaderUsername = HttpContext.Session.GetString("user");
                 post.UploadDate = DateTime.Now;
                 post.FileUrl = fileName;
