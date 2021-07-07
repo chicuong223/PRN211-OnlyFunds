@@ -104,8 +104,6 @@ namespace OnlyFundsWeb.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormFile file, Post post, int[] category)
         {
-            IEnumerable<Category> categoryList = categoryRepository.GetCategories(1);
-            TempData["CategoryList"] = categoryList;
             try
             {
                 string fileName = UploadFile(file);
