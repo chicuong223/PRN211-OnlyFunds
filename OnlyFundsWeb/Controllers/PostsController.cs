@@ -20,9 +20,13 @@ namespace OnlyFundsWeb.Controllers
         public IWebHostEnvironment env;
         private IPostRepository postRepository = new PostRepository();
         private IUserRepository userRepository = new UserRepository();
+<<<<<<< HEAD
 
         private ICategoryRepository categoryRepository = new CategoryRepository();
         private IPostCategoryMapRepository postCategoryMapRepository = new PostCategoryMapRepository();
+=======
+        private ICategoryRepository categoryRepository = new CategoryRepository();
+>>>>>>> 8f2fcf5 (PostController)
         private PRN211_OnlyFunds_CopyContext context = new PRN211_OnlyFunds_CopyContext();
         public PostsController(IWebHostEnvironment env) => this.env = env;
 
