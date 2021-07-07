@@ -1,0 +1,15 @@
+.stretched-link {
+    text-decoration: none;
+    color: red;
+}
+a span{
+    padding-right: 0.2rem;
+    transition: all 0.5s;
+}
+a i {
+    position: absolute; 
+    bottom: 1.15rem;
+}
+a:hover span {
+    padding-right: 0.7rem;
+}

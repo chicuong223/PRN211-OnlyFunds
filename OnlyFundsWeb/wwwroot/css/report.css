@@ -1,0 +1,19 @@
+* {
+    outline:0px !important;
+    -webkit-appearance:none;
+    box-shadow: none !important;
+}
+.btn-close {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+.btn-success {
+    width: 5rem;
+}
+textarea {
+    width: 100%;
+    min-height: 10rem;
+    border: 1px solid #dee2e6;
+    border-radius: 10px;
+}
