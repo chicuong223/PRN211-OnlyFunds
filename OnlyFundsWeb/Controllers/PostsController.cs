@@ -119,7 +119,7 @@ namespace OnlyFundsWeb.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormFile file, Post post)
         {
-            IEnumerable<Category> categoryList = categoryRepository.GetCategories(1);
+            IEnumerable<Category> categoryList = categoryRepository.GetCategories();
             TempData["CategoryList"] = categoryList;
             try
             {

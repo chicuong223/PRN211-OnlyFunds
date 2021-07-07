@@ -10,7 +10,7 @@ namespace DataAccess.Repository
 {
     public class CategoryRepository : ICategoryRepository
     {
-        public IEnumerable<Category> GetCategories(int pageIndex) => CategoryDAO.Instance.GetCategories(pageIndex);
+        public IEnumerable<Category> GetCategories() => CategoryDAO.Instance.GetCategories();
         public Category GetCategoryById(int id) => CategoryDAO.Instance.GetCategoryById(id);
     }
 }

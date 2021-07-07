@@ -16,6 +16,11 @@ namespace OnlyFundsWeb.Controllers
         IUserRepository userRepository= new UserRepository();
 
         private PRN211_OnlyFunds_CopyContext context = new PRN211_OnlyFunds_CopyContext();
+
+        public ActionResult Success()
+        {
+            return View("Success");
+        }
         // GET: UserController
         public ActionResult Index()
         {
