@@ -51,9 +51,19 @@ namespace OnlyFundsWeb.Controllers
         }
 
         // GET: UserController/Details/5
-        public ActionResult DetailsUser(int id)
+        public ActionResult DetailsUser(string username)
         {
-            return View();
+            if (username == null)
+            {
+                return NotFound();
+            }
+
+            var user = context.Users.FirstOrDefault(u => u.Username.Equals(username));
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return View(user);
         }
 
         // GET: UserController/Create
@@ -77,24 +87,39 @@ namespace OnlyFundsWeb.Controllers
         }
 
         // GET: UserController/Edit/5
-        public ActionResult UpdateUserInfo(int id)
+        public ActionResult UpdateUserInfo(string username)
         {
-            return View();
+            if (username == null)
+            {
+                return NotFound();
+            }
+
+            var user = context.Users.Find(username);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return View(user);
         }
 
         // POST: UserController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult UpdateUserInfo(int id, IFormCollection collection)
+        public ActionResult UpdateUserInfo(string username, User user)
         {
-            try
+            if (!username.Equals(user.Username))
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
+
+            if (ModelState.IsValid)
             {
-                return View();
+                context.Update(user);
+                context.SaveChanges();
+                return RedirectToAction(nameof(DetailsUser));
             }
+
+            return View(user);
         }
 
         // GET: UserController/Delete/5
