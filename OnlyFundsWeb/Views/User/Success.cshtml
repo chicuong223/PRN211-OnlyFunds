@@ -1,6 +1,7 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
+@model BusinessObjects.User;
 @{
 }
 <html>
@@ -8,6 +9,64 @@
     <title>Login success</title>
 </head>
 <body>
-    <h1>@ViewBag.User</h1>
+    <div class="container w-75">
+        <div class="row p-3 border">
+            <div class="col-6 my-auto d-flex justify-content-center">
+                <img@* src="@Url.Content(Model.AvatarUrl)"*@ alt="Logo" class="img-fluid" width="400px">
+            </div>
+            <div class="col-6 my-auto">
+                @*Cho nay khong biet author's name la sao??'*@
+                <h4 class="mb-3">Author's name</h4>
+                @*<h4 class="mb-3">@Model.Username</h4>*@
+                <div>
+                    Short description about user
+                </div>
+            </div>
+        </div>
+        <div class="row pt-4 mb-4 text-center">
+            <h4>Recent Posts</h4>
+        </div>
+        <div class="row">
+            <!-- Razor code here -->
+            <div class="col-12 d-flex justify-content-center" style="height: 30rem;">
+                <div class="card w-75 mb-5">
+                    <div class="card-header fw-bold">
+                        Post's name goes here
+                    </div>
+                    <!-- If user is not allowed to see the post -->
+                    <div class="card-body p-0">
+                        <div class="bg-image"></div>
+                        <div class="text">
+                            This post is for subscribers only.<br>
+                            <a href="#Login" class="login">Login</a> or
+                            <a href="#SignUp" class="signup">Sign up</a>
+                            to get started!
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- If user allowed to see the post -->
+            <div class="col-12 d-flex justify-content-center" style="height: 30rem;">
+                <div class="card w-75 mb-5">
+                    <div class="card-header fw-bold">
+                        Post's name goes here
+                    </div>
+                    <!-- If user is not allowed to see the post -->
+                    <div class="card-body border">
+                        Post ngắn thì show hết content ở đây, post dài thì see more<br>
+                        Lorem Ipsum dolor sit amet, consectetur adipis
+                    </div>
+                    <div class="card-footer text-center p-1">
+                        <a href="#post-details" class=" stretched-link link-post">
+                            <span>See more</span>
+                            <i class="fas fa-angle-double-right"></i>
+                        </a>
+                        
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

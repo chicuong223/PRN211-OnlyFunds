@@ -14,6 +14,8 @@ namespace OnlyFundsWeb.Controllers
     public class UserController : Controller
     {
         IUserRepository userRepository= new UserRepository();
+
+        private PRN211_OnlyFunds_CopyContext context = new PRN211_OnlyFunds_CopyContext();
         // GET: UserController
         public ActionResult Index()
         {
@@ -63,16 +65,15 @@ namespace OnlyFundsWeb.Controllers
         // POST: UserController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(IFormCollection collection)
+        public ActionResult Register(User user)
         {
-            try
+            if (ModelState.IsValid)
             {
+                context.Users.Add(user);
+                context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            return View(user);
         }
 
         // GET: UserController/Edit/5
@@ -115,6 +116,15 @@ namespace OnlyFundsWeb.Controllers
             {
                 return View();
             }
+        }
+        public ActionResult Logout()
+        {
+            var session = HttpContext.Session;
+            if (session.GetString("user") != null)
+            {
+                session.Remove("user");
+            }
+            return RedirectToAction("Index", "Home");
         }
 
         public ActionResult Logout()
