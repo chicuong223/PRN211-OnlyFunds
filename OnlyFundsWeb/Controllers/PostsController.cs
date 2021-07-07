@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 using DataAccess;
 using Microsoft.AspNetCore.Hosting;
@@ -11,22 +10,19 @@ using Microsoft.AspNetCore.Http;
 
 using DataAccess.IRepository;
 using DataAccess.Repository;
-using OnlyFundsWeb.Helpers;
 
 namespace OnlyFundsWeb.Controllers
 {
     public class PostsController : Controller
     {
-        public IWebHostEnvironment env;
+        IWebHostEnvironment webHostEnvironment;
         private IPostRepository postRepository = new PostRepository();
         private IUserRepository userRepository = new UserRepository();
 <<<<<<< HEAD
 
         private ICategoryRepository categoryRepository = new CategoryRepository();
         private IPostCategoryMapRepository postCategoryMapRepository = new PostCategoryMapRepository();
-=======
         private ICategoryRepository categoryRepository = new CategoryRepository();
->>>>>>> 8f2fcf5 (PostController)
         private PRN211_OnlyFunds_CopyContext context = new PRN211_OnlyFunds_CopyContext();
         public PostsController(IWebHostEnvironment env) => this.env = env;
 
@@ -110,12 +106,7 @@ namespace OnlyFundsWeb.Controllers
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(post.PostTitle))
-                    throw new Exception("Title is required");
-                if (string.IsNullOrWhiteSpace(post.PostDescription))
-                    throw new Exception("Description is required");
-                string fileName = Utilities.UploadFile(file, env, "postfiles");
-                post.PostId = context.Posts.Max(p => p.PostId) + 1;
+                string fileName = UploadFile(file);
                 post.UploaderUsername = HttpContext.Session.GetString("user");
                 post.UploadDate = DateTime.Now;
                 post.FileUrl = fileName;
