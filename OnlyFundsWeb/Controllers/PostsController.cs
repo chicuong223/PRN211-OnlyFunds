@@ -21,6 +21,7 @@ namespace OnlyFundsWeb.Controllers
         private IPostRepository postRepository = new PostRepository();
         private IUserRepository userRepository = new UserRepository();
         private ICategoryRepository categoryRepository = new CategoryRepository();
+        private IPostCategoryMapRepository postCategoryMapRepository = new PostCategoryMapRepository();
         private PRN211_OnlyFunds_CopyContext context = new PRN211_OnlyFunds_CopyContext();
         public PostsController(IWebHostEnvironment env) => this.env = env;
 
@@ -77,6 +78,7 @@ namespace OnlyFundsWeb.Controllers
                 Post post = postRepository.GetPostById(id.Value);
                 if (post == null)
                     return NotFound();
+                IEnumerable<Category> categories = categoryRepository.
                 return View(post);
             }
             catch
@@ -99,7 +101,7 @@ namespace OnlyFundsWeb.Controllers
         [HttpPost]
         [RequestFormLimits(MultipartBodyLengthLimit = 104857600)]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormFile file, Post post)
+        public ActionResult Create(IFormFile file, Post post, int[] category)
         {
             try
             {
@@ -113,6 +115,15 @@ namespace OnlyFundsWeb.Controllers
                 post.UploadDate = DateTime.Now;
                 post.FileUrl = fileName;
                 postRepository.InsertPost(post);
+                foreach(int catID in category)
+                {
+                    PostCategoryMap map = new PostCategoryMap
+                    {
+                        CategoryId = catID,
+                        PostId = post.PostId
+                    };
+                    postCategoryMapRepository.AddPostMap(map);
+                }
                 return RedirectToAction(nameof(GetPostByUser), new { username = post.UploaderUsername });
             }
             catch (Exception ex)
