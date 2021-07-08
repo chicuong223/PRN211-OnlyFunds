@@ -1,6 +1,4 @@
-﻿@using System.Collections
-@using BusinessObjects
-@model BusinessObjects.Post
+﻿@using Microsoft.AspNetCore.Http;
 @using DataAccess.Repository;
 @using DataAccess.IRepository;
 @using BusinessObjects;
@@ -9,12 +7,12 @@
     ICategoryRepository categoryRepository = new CategoryRepository();
     IEnumerable<Category> cateList = categoryRepository.GetCategories();
 }
+@model BusinessObjects.Post
+
 @{
     ViewData["Title"] = "Create";
-    Layout = "_userLayout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-@*<!DOCTYPE html>
-<html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Write Post</title>
@@ -33,7 +31,7 @@
             border: none;
         }
     </style>
-</head>*@
+</head>
 <hr />
 <body>
     <h1>Create a new post</h1>
@@ -41,16 +39,16 @@
     <div class="w-75 mx-auto my-5">
         <form asp-action="Create" method="POST" enctype="multipart/form-data" id="postForm">
             <div class="form-group">
-                <label asp-for="PostTitle" class="label-form fw-bold">Title</label>@*<span class="text-danger">*</span><span class="error text-danger ms-3" id="titleError">Error</span>*@
-                <input type="text" asp-for="PostTitle" id="title" placeholder="Max 30 characters" class="form-control" /><@*span class="error text-danger" id="titleError">Error</span>*@
+                <label asp-for="PostTitle" class="label-form fw-bold">Title</label><span class="text-danger">*</span>
+                <input type="text" asp-for="PostTitle" id="title" placeholder="Max 30 characters" class="form-control" required=""/>
             </div>
             <div class="form-group">
-                <label for="desc" class="label-form fw-bold">Description</label><span class="text-danger">*</span><span class="error text-danger ms-3" id="descError">Error</span>
-                <textarea asp-for="PostDescription" rows="10" cols="100" placeholder="Max 1000 characters" class="form-control"></textarea><span class="error text-danger" id="descError">${descError}</span>
+                <label for="desc" class="label-form fw-bold">Description</label><span class="text-danger">*</span>
+                <textarea asp-for="PostDescription" rows="10" cols="100" placeholder="Max 1000 characters" class="form-control" required=""></textarea>
             </div>
             <div class="form-group">
                 <label asp-for="FileUrl" class="label-form fw-bold">Attachment</label>
-                <input type="file" asp-for="FileUrl" class="form-control" />
+                <input type="file" name="file" asp-for="FileUrl" class="form-control" />
             </div>
             <div class="form-group">
                 <label for="catList" class="fw-bold">Categories</label>
@@ -59,36 +57,35 @@
                     {
                         <li>
                             <label asp-for="PostCategoryMaps">@category.CategoryName</label>
-                            <input type="checkbox" class="form-check-input" value="@category.CategoryId" id="@category.CategoryId" name="" />
+                            <input type="checkbox" class="form-check-input" value="@category.CategoryId" id="@category.CategoryId" name="category" />
                         </li>
                     }
-                    @*<c:forEach var="cat" items="${catList}">
-                            <li>
-                                <label for="${cat.categoryId}">${cat.categoryName}</label>
-                                <input type="checkbox" class="form-check-input" value="${cat.categoryId}" id="${cat.categoryId}" name="cat" />
-                            </li>
-                        </c:forEach>*@
-
                 </ul>
             </div>
         </form>
         <form asp-action="Cancel" method="POST" id="cancelForm">
-            <input type="hidden" name="cancel" />
+            <input asp-action="Success" asp-controller="User" type="hidden" name="cancel" />
         </form>
         <div class="text-center">
             <input class="btn btn-success mx-5 rounded-pill" type="submit" value="Post" form="postForm" />
-            <input class="btn btn-danger mx-5 rounded-pill" type="submit" value="Cancel" form="cancelForm" />
+            <input  asp-action="Success" asp-controller="User" onclick="onClickHandled()" class="btn btn-danger mx-5 rounded-pill" type="submit" value="Cancel" form="cancelForm" />
         </div>
     </div>
-
-    <div>
-        <a asp-action="PostList">Back to List</a>
+<div>
+        <a asp-action="Success" asp-controller="User">Back to List</a>
     </div>
-    <script defer src="scripts/post_form_script.js"></script>
+<script defer src="scripts/post_form_script.js"></script>
+<script>
+    function onClickHandled() {
+        var x = confirm("Are you sure?");
+        if (x) {
+            return true;
+        } else return false;
+    }
+</script>
 </body>
 
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
-

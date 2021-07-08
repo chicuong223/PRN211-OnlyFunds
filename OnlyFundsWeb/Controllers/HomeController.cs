@@ -15,16 +15,28 @@ namespace OnlyFundsWeb.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private PRN211_OnlyFunds_CopyContext context = new PRN211_OnlyFunds_CopyContext();
+        private PRN211_OnlyFunds_CopyContext context = null;
         private IPostRepository postRepository = new PostRepository();
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int? page)
         {
-            return View();
+            using var context = new PRN211_OnlyFunds_CopyContext();
+            if (page == null)
+                page = 1;
+            int pageSize = 3;
+            int count = context.Posts.Count();
+            int end = count / pageSize;
+            IEnumerable<Post> postList = postRepository.GetAllPost(page.Value);
+            if (count % 3 != 0)
+            {
+                end = end + 1;
+            }
+            ViewBag.end = end;
+            return View(postList);
         }
 
         public IActionResult Privacy()

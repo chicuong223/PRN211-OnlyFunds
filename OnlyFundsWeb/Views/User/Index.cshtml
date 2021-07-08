@@ -62,7 +62,7 @@
                 <input type="password" class="form-control" name="password" id="password"
                         style="padding-left: 2.6rem;"
                        @*onkeypress="return RestrictSpace()"*@>
-                <p class="text-danger" id="passwordError"></p>
+                <p class="text-danger" id="passwordError">@ViewBag.Message</p>
 
             </div>
             <div class="w-100">
@@ -70,8 +70,8 @@
             </div>
             <div class="form-check form-switch mb-4">
                 <p>Don't have an account? <a asp-action="Register" asp-controller="User" style="text-decoration: none; color: red; font-weight: bold; text-align: center">Sign up</a></p>
-                <span style="margin: 0 48px;">
-                    <a style="text-decoration: none; color: red; font-weight: bold;">Forgot password?</a>
+                <span style="margin: 0 145px;">
+                    <a style="text-decoration: none; color: red; font-weight: bold; text-align: center">Forgot password?</a>
                 </span>
             </div>
         </form>

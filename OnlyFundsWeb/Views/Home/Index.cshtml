@@ -14,61 +14,10 @@
 <div class="text-center">
     <h1>Welcome To OnlyFunds</h1>
     <div class="container w-75">
-        <div class="row p-3 border">
-            <div class="col-6 my-auto d-flex justify-content-center">
-                <img@* src="@Url.Content(Model.AvatarUrl)"*@ alt="Logo" class="img-fluid" width="400px">
-            </div>
-            <div class="col-6 my-auto">
-                <h4 class="mb-3">Author's name</h4>
-                @*<h4 class="mb-3">@Model.Username</h4>*@
-                <div>
-                    Short description about user
-                </div>
-            </div>
-        </div>
         <div class="row pt-4 mb-4 text-center">
             <h4>Recent Posts</h4>
         </div>
         <div class="row">
-            @*<!-- Razor code here -->
-            <div class="col-12 d-flex justify-content-center" style="height: 15rem;">
-                <div class="card w-75 mb-5">
-                    <div class="card-header fw-bold">
-                        Post's name goes here
-                    </div>
-                    <!-- If user is not allowed to see the post -->
-                    <div class="card-body border">
-                        Post ngắn thì show hết content ở đây, post dài thì see more<br>
-                        Lorem Ipsum dolor sit amet, consectetur adipis
-                    </div>
-                    <div class="card-footer text-center p-1">
-                        <a href="#post-details" class=" stretched-link link-post">
-                            <span>See more</span>
-                            <i class="fas fa-angle-double-right"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <!-- If user allowed to see the post -->
-            <div class="col-12 d-flex justify-content-center" style="height: 15rem;">
-                <div class="card w-75 mb-5">
-                    <div class="card-header fw-bold">
-                        Post's name goes here
-                    </div>
-                    <!-- If user is not allowed to see the post -->
-                    <div class="card-body border">
-                        Post ngắn thì show hết content ở đây, post dài thì see more<br>
-                        Lorem Ipsum dolor sit amet, consectetur adipis
-                    </div>
-                    <div class="card-footer text-center p-1">
-                        <a href="#post-details" class=" stretched-link link-post">
-                            <span>See more</span>
-                            <i class="fas fa-angle-double-right"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>*@
-            Hien title, username, uploadDate, description
             @{
                 foreach (var post in postList)
                 {
@@ -84,7 +33,7 @@
                                 @post.PostDescription
                             </div>
                             <div class="card-footer text-center p-1">
-                                <a asp-controller="Posts" asp-action="Details" class=" stretched-link link-post">
+                                <a asp-controller="User" asp-action="Index" class=" stretched-link link-post">
                                     <span>See more</span>
                                     <i class="fas fa-angle-double-right"></i>
                                 </a>
@@ -92,6 +41,12 @@
                         </div>
                     </div>
                 }
+            }
+        </div>
+        <div class="text-center font-weight-bold">
+            @for (int index = 1; index <= ViewBag.end; index++)
+            {
+                <a asp-action="Index"  asp-controller="Home" asp-route-page="@index">@index</a>
             }
         </div>
     </div>
