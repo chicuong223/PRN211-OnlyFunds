@@ -15,8 +15,6 @@ namespace OnlyFundsWeb.Controllers
     {
         IUserRepository userRepository= new UserRepository();
 
-        private PRN211_OnlyFunds_CopyContext context = new PRN211_OnlyFunds_CopyContext();
-
         public ActionResult Success()
         {
             return View("Success");
@@ -63,7 +61,7 @@ namespace OnlyFundsWeb.Controllers
                 return NotFound();
             }
 
-            var user = context.Users.FirstOrDefault(u => u.Username.Equals(username));
+            var user = userRepository.GetUserByName(username);
             if (user == null)
             {
                 return NotFound();
@@ -82,13 +80,19 @@ namespace OnlyFundsWeb.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Register(User user)
         {
-            if (ModelState.IsValid)
+            try
             {
-                context.Users.Add(user);
-                context.SaveChanges();
+                if (ModelState.IsValid)
+                {
+                    userRepository.AddUser(user);
+                }
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return View(user);
+            }
         }
 
         // GET: UserController/Edit/5
@@ -99,7 +103,7 @@ namespace OnlyFundsWeb.Controllers
                 return NotFound();
             }
 
-            var user = context.Users.Find(username);
+            var user = userRepository.GetUserByName(username);
             if (user == null)
             {
                 return NotFound();
@@ -119,11 +123,9 @@ namespace OnlyFundsWeb.Controllers
 
             if (ModelState.IsValid)
             {
-                context.Update(user);
-                context.SaveChanges();
+                userRepository.UpdateUser(user);
                 return RedirectToAction(nameof(DetailsUser));
             }
-
             return View(user);
         }
 
@@ -156,5 +158,7 @@ namespace OnlyFundsWeb.Controllers
             }
             return RedirectToAction("Index", "Home");
         }
+
+         
     }
 }

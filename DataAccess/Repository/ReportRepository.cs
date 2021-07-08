@@ -21,5 +21,8 @@ namespace DataAccess.Repository
 
         public void SolveReport(PostReport report)
         => ReportDAO.Instance.SolveReport(report);
+
+        public IEnumerable<PostReport> GetReportByStatus(bool status) => ReportDAO.Instance.GetReportByStatus(status);
+        public int GetMaxReportId() => ReportDAO.Instance.GetMaxReportId();
     }
 }

@@ -95,10 +95,12 @@
                                 <!-- Từ post id -> post name -->
                                 <td class="text-truncate"><a class="td-link"></a>@report.PostId</td>
                                 <!-- Solve rồi chữ xanh chưa solve chữ đỏ -->
-                                <td class="text-success"><a class="td-link"></a>@report.IsSolved</td>
+                                @{
+                                    <td class="text-success"><a class="td-link"></a>@(@report.IsSolved == true ? "Solved" : "Pending")</td>
+                                }
                                 <!-- <td class="text-danger"><a href="#report-details" class="td-link"></a>Not solved</td> -->
                                 <td><a class="td-link"></a>@report.ReportDate.Value.ToString("dd/MMM/yyyy")</td>
-                            </tr>
+                                </tr>
                         }
                     }
                     

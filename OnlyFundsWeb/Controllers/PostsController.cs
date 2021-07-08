@@ -23,7 +23,6 @@ namespace OnlyFundsWeb.Controllers
         private ICategoryRepository categoryRepository = new CategoryRepository();
         private IPostCategoryMapRepository postCategoryMapRepository = new PostCategoryMapRepository();
         private ICommentRepository cmtRepository = new CommentRepository();
-        private PRN211_OnlyFunds_CopyContext context = new PRN211_OnlyFunds_CopyContext();
         public PostsController(IWebHostEnvironment env) => this.env = env;
 
         // GET: PostsController
@@ -112,7 +111,7 @@ namespace OnlyFundsWeb.Controllers
                 if (string.IsNullOrWhiteSpace(post.PostDescription))
                     throw new Exception("Description is required");
                 string fileName = Utilities.UploadFile(file, env, "postfiles");
-                post.PostId = context.Posts.Max(p => p.PostId) + 1;
+                post.PostId = postRepository.GetMaxPostId() +1;
                 post.UploaderUsername = HttpContext.Session.GetString("user");
                 post.UploadDate = DateTime.Now;
                 post.FileUrl = fileName;

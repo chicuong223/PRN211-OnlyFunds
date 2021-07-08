@@ -32,12 +32,26 @@ namespace DataAccess
             try
             {
                 using var context = new PRN211_OnlyFunds_CopyContext();
-                int count = context.Posts.Where(post => post.UploaderUsername.Equals(user.Username)).Count();
+                int count = context.Posts.Count(post => post.UploaderUsername.Equals(user.Username));
                 return count;
             }
             catch
             {
                 throw new Exception("Error counting posts");
+            }
+        }
+
+        public int CountAllPost()
+        {
+            try
+            {
+                using var context = new PRN211_OnlyFunds_CopyContext();
+                int count = context.Posts.Count();
+                return count;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Count all post error");
             }
         }
 
@@ -208,6 +222,27 @@ namespace DataAccess
                 throw;
             }
             return posts;
+        }
+
+        public int GetMaxPostId()
+        {
+            int postId = 0;
+            try
+            {
+                using var context = new PRN211_OnlyFunds_CopyContext(); 
+                postId = context.Posts.Max(p => p.PostId);
+                if (postId ==0)
+                {
+                    throw new Exception("There's no post here");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            return postId;
         }
     }
 }
