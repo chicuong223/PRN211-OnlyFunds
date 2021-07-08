@@ -136,9 +136,14 @@ namespace OnlyFundsWeb.Controllers
         }
 
         // GET: PostsController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int? id)
         {
-            return View();
+            if (id == null)
+                return NotFound();
+            Post post = postRepository.GetPostById(id.Value);
+            if (post == null)
+                return NotFound();
+            return View(post);
         }
 
         // POST: PostsController/Edit/5

@@ -19,6 +19,11 @@ namespace DataAccess.Repository
         public IEnumerable<PostReport> GetReports()
         => ReportDAO.Instance.GetReports();
 
+        public IEnumerable<PostReport> GetReportstByPost(int postId)
+        {
+            return ReportDAO.Instance.GetReportsByPost(postId);
+        }
+
         public void SolveReport(PostReport report)
         => ReportDAO.Instance.SolveReport(report);
     }

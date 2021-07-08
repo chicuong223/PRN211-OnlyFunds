@@ -13,5 +13,6 @@ namespace DataAccess.IRepository
         void SolveReport(PostReport report);
         PostReport GetReportById(int reportId);
         IEnumerable<PostReport> GetReports();
+        IEnumerable<PostReport> GetReportstByPost(int postID);
     }
 }

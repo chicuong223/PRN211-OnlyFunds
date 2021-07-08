@@ -88,5 +88,21 @@ namespace DataAccess
                 throw new Exception(ex.Message);
             }
         }
+
+        public IEnumerable<PostReport> GetReportsByPost(int postId)
+        {
+            List<PostReport> lst = new List<PostReport>();
+            try
+            {
+                using var context = new PRN211_OnlyFunds_CopyContext();
+                lst = context.PostReports.Where(r => r.PostId == postId).ToList();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception(ex.Message);
+            }
+            return lst;
+        }
     }
 }
