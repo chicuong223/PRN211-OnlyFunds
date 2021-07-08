@@ -1,10 +1,14 @@
 ﻿@using System.Collections
 @using BusinessObjects
+@using DataAccess.IRepository
+@using DataAccess.Repository  
 @model BusinessObjects.Post
 
 @{
     ViewData["Title"] = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    ICategoryRepository cateRepo = new CategoryRepository();
+    IEnumerable<Category> cateList = cateRepo.GetCategories();
 }
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -46,7 +50,7 @@
             <div class="form-group">
                 <label for="catList" class="fw-bold">Categories</label>
                 <ul id="catList">
-                    @foreach (var category in TempData["CategoryList"] as IEnumerable<Category>)
+                    @foreach (var category in cateList)
                     {
                         <li>
                             <label asp-for="PostCategoryMaps">@category.CategoryName</label>
