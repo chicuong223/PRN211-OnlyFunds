@@ -43,11 +43,25 @@
                 }
             }
         </div>
-        <div class="text-center font-weight-bold">
-            @for (int index = 1; index <= ViewBag.end; index++)
-            {
-                <a asp-action="Index"  asp-controller="Home" asp-route-page="@index">@index</a>
-            }
-        </div>
+        <nav aria-label="Page navigation example" class="text-center font-weight-bold mx-auto">
+            <ul class="pagination justify-content-center">
+                <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+                </li>
+                @for (int index = 1; index <= ViewBag.end; index++)
+                {
+                    <a asp-action="Index"  asp-controller="Home" asp-route-page="@index" class="page-link">
+                        @index
+                    </a>
+                }
+                <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </div>
