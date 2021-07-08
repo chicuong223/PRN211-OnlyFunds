@@ -33,6 +33,7 @@ namespace DataAccess
             try
             {
                 using var context = new PRN211_OnlyFunds_CopyContext();
+                //report.IsSolved = false;
                 context.PostReports.Add(report);
                 context.SaveChanges();
             }
@@ -124,6 +125,20 @@ namespace DataAccess
             }
 
             return reportId;
+        }
+        public IEnumerable<PostReport> GetReportByStatus(bool status)
+        {
+            try
+            {
+                using var context = new PRN211_OnlyFunds_CopyContext();
+                IEnumerable<PostReport> reports = context.PostReports.Where(r => r.IsSolved == status).ToList();
+                return reports;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }

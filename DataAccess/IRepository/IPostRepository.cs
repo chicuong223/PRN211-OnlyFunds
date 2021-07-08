@@ -17,6 +17,7 @@ namespace DataAccess.IRepository
         IEnumerable<Post> SearchPostsByTitle(string title);
         IEnumerable<Post> GetAllPost(int pageIndex);
         int GetMaxPostId();
-        void Update(Post updatedPost);
+        void UpdatePost(Post updatedPost);
+        int CountAllPosts();
     }
 }

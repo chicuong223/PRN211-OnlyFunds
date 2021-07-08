@@ -21,12 +21,15 @@ namespace DataAccess.Repository
         public IEnumerable<PostReport> GetReports()
         => ReportDAO.Instance.GetReports();
 
-        public IEnumerable<PostReport> GetReportstByPost(int postId)
+        public IEnumerable<PostReport> GetReportsByPost(int postId)
         {
             return ReportDAO.Instance.GetReportsByPost(postId);
         }
 
+        public IEnumerable<PostReport> GetReportsByStatus(bool status)
+        => ReportDAO.Instance.GetReportByStatus(status);
         public void SolveReport(PostReport report)
         => ReportDAO.Instance.SolveReport(report);
+        
     }
 }

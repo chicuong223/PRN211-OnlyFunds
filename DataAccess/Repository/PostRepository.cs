@@ -20,6 +20,7 @@ namespace DataAccess.Repository
         public IEnumerable<Post> GetAllPost(int pageIndex) => PostDAO.Instance.GetAllPost(pageIndex);
         public IEnumerable<Post> SearchPostsByTitle(string title) => PostDAO.Instance.SearchPostByTitle(title);
         public int GetMaxPostId() => PostDAO.Instance.GetMaxPostId();
-        public void Update(Post updatedPost) => PostDAO.Instance.UpdatePost(updatedPost);
+        public void UpdatePost(Post updatedPost) => PostDAO.Instance.UpdatePost(updatedPost);
+        public int CountAllPosts() => PostDAO.Instance.CountAllPost();
     }
 }

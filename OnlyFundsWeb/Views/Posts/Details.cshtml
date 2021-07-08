@@ -13,7 +13,7 @@
     if (!currentUsername.Equals(Model.UploaderUsername))
     {
         IReportRepository reportRepo = new ReportRepository();
-        IEnumerable<PostReport> reports = reportRepo.GetReportstByPost(Model.PostId);
+        IEnumerable<PostReport> reports = reportRepo.GetReportsByPost(Model.PostId);
         foreach (var report in reports)
         {
             if (report.ReporterUsername.Equals(currentUsername))
@@ -42,8 +42,8 @@
                 if (reported == false)
                 {
                     <i class="fa fa-exclamation-triangle float-end" aria-hidden="true">
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#report-form">Report</a>
-                    </i><div class="modal fade" id="report-form" tabindex="-1">
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#report-modal">Report</a>
+                    </i><div class="modal fade" id="report-modal" tabindex="-1">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -59,7 +59,7 @@
                                     </form>
                                 </div>
                                 <div class="modal-footer">
-                                    <input type="submit" form="report-form" class="btn btn-primary" value="Submit" />
+                                    <button type="submit" form="report-form" class="btn btn-primary">Submit</button>
                                     <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                 </div>
                             </div>

@@ -41,6 +41,20 @@ namespace DataAccess
             }
         }
 
+        public int CountAllPost()
+        {
+            try
+            {
+                using var context = new PRN211_OnlyFunds_CopyContext();
+                int count = context.Posts.Count();
+                return count;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Count all post error");
+            }
+        }
+
         public IEnumerable<Post> GetAllPost(int pageIndex)
         {
             List<Post> posts = new List<Post>();

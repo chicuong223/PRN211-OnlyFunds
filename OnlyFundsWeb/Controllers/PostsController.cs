@@ -175,7 +175,7 @@ namespace OnlyFundsWeb.Controllers
                 IEnumerable<Category> postCatList = categoryRepository.GetCategoriesByPost(post.PostId);
                 foreach(var category in postCatList)
                 {
-                    postCategoryMapRepository.DeleteMap(post, category);
+                    postCategoryMapRepository.DeletePostMap(post, category);
                 }
                 foreach (int catID in cate)
                 {
@@ -186,7 +186,7 @@ namespace OnlyFundsWeb.Controllers
                     };
                     postCategoryMapRepository.AddPostMap(map);
                 }
-                postRepository.Update(post);
+                postRepository.UpdatePost(post);
                 return RedirectToAction(nameof(Details), new { id = post.PostId });
             }
             catch (Exception ex)
