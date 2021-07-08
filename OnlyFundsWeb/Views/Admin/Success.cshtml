@@ -1,12 +1,142 @@
-﻿@{
-    Layout = null;
+﻿@using Microsoft.AspNetCore.Http
+@using BusinessObjects
+@using DataAccess
+@using DataAccess.Repository
+@using System.Collections
+@*@model IEnumerable<BusinessObjects.PostReport>*@
+@{
+    Layout = "_adminLayout";
+    IEnumerable<PostReport> reportList = TempData["reportList"] as IEnumerable<PostReport>;
+    IEnumerable<PostReport> reportSolved = TempData["reportSolved"] as IEnumerable<PostReport>;
+    IEnumerable<PostReport> reportPending =TempData["reportPending"] as IEnumerable<PostReport>;
+    IEnumerable<User> userList = TempData["userList"] as IEnumerable<User>;
+    IAdminRepository adminRepository = new AdminRepository();
+    string adminName = Context.Session.GetString("user");
+    Admin admin = adminRepository.GetAdminByUname(adminName);
 }
 <html>
 <head>
     <title>Login success</title>
+    <link rel="stylesheet" href="~/css/admin.css">
 </head>
 <body>
-<h1>@ViewBag.User</h1>
-<a asp-action="List" asp-controller="User">To user List</a>
+    <div class="container w-75">
+        <div class="row gx-5 pb-4 border-bottom">
+            <div class="col-3 my-auto d-flex justify-content-end">
+                <img src="images/Avatar.png" alt="" class="avatar rounded-circle">
+            </div>
+            <div class="col-9 my-auto">
+                <div class="name"><span class="fw-bold">Staff name:</span> <span>@admin.FirstName @admin.LastName</span></div>
+                <div class="email"><span class="fw-bold">Staff email:</span> <span>@admin.Email</span></div>
+            </div>
+        </div>
+        <div class="row gx-5 pb-4 pt-4 border-bottom">
+            <div class="col-lg-3 d-flex justify-content-center">
+            <a class="box w-100 border border-primary" id="box-primary">
+                <div class="body text-center my-auto">
+                    <i class="fas fa-file-alt fa-2x"></i>
+                    <div class="text fw-bold">Total reports: </div>
+                    <div class="reports">@reportList.Count()</div>
+                </div>
+            </a>
+            </div>
+            <div class="col-lg-3 d-flex justify-content-center">
+                <a  class="box w-100 border border-success" id="box-success">
+                    <div class="body text-center my-auto">
+                        <i class="fas fa-file-alt fa-2x"></i>
+                        <div class="text fw-bold">Reports solved: </div>
+                        <div class="reports">@reportList.Count(r => r.IsSolved)</div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3 d-flex justify-content-center">
+                <a class="box w-100 border border-warning" id="box-warning">
+                    <div class="body text-center my-auto">
+                        <i class="fas fa-file-alt fa-2x"></i>
+                        <div class="text fw-bold">Reports pending: </div>
+                        <div class="reports">@reportList.Count( r => !r.IsSolved)</div>
+                    </div>
+            </a>
+            </div>
+            <div class="col-lg-3 d-flex justify-content-center">
+                <a class="box w-100 border border-danger" id="box-danger">
+                    <div class="body text-center my-auto">
+                        <i class="fas fa-file-alt fa-2x"></i>
+                        <div class="text fw-bold">Accounts total: </div>
+                        <div class="reports">@userList.Count()</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="row gx-5 pt-4 pb-4 text-center">
+            <div class="col-12 title">
+                <h4>@Model.ToString()</h4>
+            </div>
+            <div class="col-12">
+                <table class="table table-striped border" id="report">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Post's name</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @{
+                        foreach (var report in TempData["reportList"] as List<PostReport>)
+                        {
+                            <tr>
+                                <th class="text-truncate" scope="row"><a href="#report-details" class="td-link"></a>@report.ReportId</th>
+                                <td class="text-truncate"><a class="td-link"></a>@report.ReportDescription</td>
+                                <td class="text-truncate"><a class="td-link"></a>@report.ReporterUsername</td>
+                                <!-- Từ post id -> post name -->
+                                <td class="text-truncate"><a class="td-link"></a>@report.PostId</td>
+                                <!-- Solve rồi chữ xanh chưa solve chữ đỏ -->
+                                <td class="text-success"><a class="td-link"></a>@report.IsSolved</td>
+                                <!-- <td class="text-danger"><a href="#report-details" class="td-link"></a>Not solved</td> -->
+                                <td><a class="td-link"></a>@report.ReportDate.Value.ToString("dd/MMM/yyyy")</td>
+                            </tr>
+                        }
+                    }
+                    
+                    </tbody>
+                </table>
+                <table id="account" class="table table-striped border">
+                    <thead>
+                    <tr>
+                        <th scope="col">First name</th>
+                        <th scope="col">Last name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Password</th>
+                        <th scope="col">Avatar URL</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (var user in TempData["userList"] as IEnumerable<User>)
+                            {
+                                <tr>
+                                    <td class="text-truncate"><a class="td-link"></a>@user.FirstName</td>
+                                    <td class="text-truncate"><a class="td-link"></a>@user.LastName</td>
+                                    <!-- Từ post id -> post name -->
+                                    <td class="text-truncate"><a class="td-link"></a>@user.Email</td>
+                                    <!-- Solve rồi chữ xanh chưa solve chữ đỏ -->
+                                    <td class="text-success"><a class="td-link"></a>@user.Username</td>
+                                    <!-- <td class="text-danger"><a href="#report-details" class="td-link"></a>Not solved</td> -->
+                                    <td><a class="td-link"></a>*******</td>
+                                    <td><a class="td-link"></a>@user.AvatarUrl</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <a asp-action="List" asp-controller="User">To user List</a>
 </body>
 </html>
