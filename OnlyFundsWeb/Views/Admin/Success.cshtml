@@ -32,16 +32,16 @@
         </div>
         <div class="row gx-5 pb-4 pt-4 border-bottom">
             <div class="col-lg-3 d-flex justify-content-center">
-            <a class="box w-100 border border-primary" id="box-primary">
-                <div class="body text-center my-auto">
-                    <i class="fas fa-file-alt fa-2x"></i>
-                    <div class="text fw-bold">Total reports: </div>
-                    <div class="reports">@reportList.Count()</div>
-                </div>
-            </a>
+                <a class="box w-100 border border-primary" id="box-primary" name="filterAll">
+                    <div class="body text-center my-auto">
+                        <i class="fas fa-file-alt fa-2x"></i>
+                        <div class="text fw-bold">Total reports: </div>
+                        <div class="reports">@reportList.Count()</div>
+                    </div>
+                </a>
             </div>
             <div class="col-lg-3 d-flex justify-content-center">
-                <a  class="box w-100 border border-success" id="box-success">
+                <a  class="box w-100 border border-success" id="box-success" name="filterSolved">
                     <div class="body text-center my-auto">
                         <i class="fas fa-file-alt fa-2x"></i>
                         <div class="text fw-bold">Reports solved: </div>
@@ -50,16 +50,16 @@
                 </a>
             </div>
             <div class="col-lg-3 d-flex justify-content-center">
-                <a class="box w-100 border border-warning" id="box-warning">
+                <a class="box w-100 border border-warning" id="box-warning" name="filterPending">
                     <div class="body text-center my-auto">
                         <i class="fas fa-file-alt fa-2x"></i>
                         <div class="text fw-bold">Reports pending: </div>
                         <div class="reports">@reportList.Count( r => !r.IsSolved)</div>
                     </div>
-            </a>
+                </a>
             </div>
             <div class="col-lg-3 d-flex justify-content-center">
-                <a class="box w-100 border border-danger" id="box-danger">
+                <a class="box w-100 border border-danger" id="box-danger" name="toggleAccount">
                     <div class="body text-center my-auto">
                         <i class="fas fa-file-alt fa-2x"></i>
                         <div class="text fw-bold">Accounts total: </div>
@@ -68,6 +68,7 @@
                 </a>
             </div>
         </div>
+
         <div class="row gx-5 pt-4 pb-4 text-center">
             <div class="col-12 title">
                 <h4>@Model.ToString()</h4>
@@ -88,7 +89,7 @@
                     @{
                         foreach (var report in TempData["reportList"] as List<PostReport>)
                         {
-                            <tr>
+                            <tr class=@(report.IsSolved ? "Solved" : "Pending")>
                                 <th class="text-truncate" scope="row"><a href="#report-details" class="td-link"></a>@report.ReportId</th>
                                 <td class="text-truncate"><a class="td-link"></a>@report.ReportDescription</td>
                                 <td class="text-truncate"><a class="td-link"></a>@report.ReporterUsername</td>
@@ -96,16 +97,20 @@
                                 <td class="text-truncate"><a class="td-link"></a>@report.PostId</td>
                                 <!-- Solve rồi chữ xanh chưa solve chữ đỏ -->
                                 @{
-                                    <td class="text-success"><a class="td-link"></a>@(@report.IsSolved == true ? "Solved" : "Pending")</td>
+                                    <td class="text-success ">
+                                        <a class="td-link"></a>@(@report.IsSolved == true ? "Solved" : "Pending")
+                                    </td>
                                 }
                                 <!-- <td class="text-danger"><a href="#report-details" class="td-link"></a>Not solved</td> -->
                                 <td><a class="td-link"></a>@report.ReportDate.Value.ToString("dd/MMM/yyyy")</td>
-                                </tr>
+                            </tr>
                         }
                     }
                     
                     </tbody>
                 </table>
+                
+                
                 <table id="account" class="table table-striped border">
                     <thead>
                     <tr>
@@ -142,3 +147,37 @@
     <a asp-action="List" asp-controller="User">To user List</a>
 </body>
 </html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        
+        $("a[name='filterAll']").click(function () {
+            $("table#report").show();
+            $("tbody tr").show();
+            $("table#account").hide();
+        });
+
+        $("a[name='filterPending']").click(function () {
+            $("table#report").show();
+            $("tbody tr:not(.Pending)").hide();
+            $("tbody tr.Pending").show();
+            $("table#account").hide();
+        });
+
+        $("a[name='filterSolved']").click(function () {
+            $("table#report").show();
+            $("tbody tr:not(.Solved)").hide();
+            $("tbody tr.Solved").show();
+            $("table#account").hide();
+        });
+
+        $("table#account").hide();
+        $("a[name='toggleAccount']").click(function () {
+            
+            $("table#account").toggle();
+            $("table#report").toggle();
+        });
+
+    });
+</script>
