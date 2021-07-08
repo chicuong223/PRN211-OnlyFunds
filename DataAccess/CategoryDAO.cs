@@ -61,5 +61,25 @@ namespace DataAccess
             return category;
         }
         //-------Viet them ham create category
+        public IEnumerable<Category> GetCategoriesByPost(int postID)
+        {
+            List<Category> catList = new List<Category>();
+            try
+            {
+                using var context = new PRN211_OnlyFunds_CopyContext();
+                IEnumerable<int> categoryID = context.PostCategoryMaps.Where(map => map.PostId == postID).Select(map => map.CategoryId).ToList();
+                foreach (int catID in categoryID)
+                {
+                    Category cat = GetCategoryById(catID);
+                    catList.Add(cat);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception(ex.Message);
+            }
+            return catList;
+        }
     }
 }

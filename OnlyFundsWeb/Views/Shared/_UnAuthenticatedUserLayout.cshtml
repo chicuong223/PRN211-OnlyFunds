@@ -49,7 +49,7 @@
                                         @{
                                             foreach (var category in cateList)
                                             {
-                                                <li><a class="dropdown-item tag">@category.CategoryName</a></li>
+                                                <li><a asp-action="GetPostByCategory" asp-controller="Posts" asp-route-categoryId="@category.CategoryId" class="dropdown-item tag">@category.CategoryName</a></li>
                                             }
                                         }
                                 </ul>

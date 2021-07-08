@@ -17,7 +17,6 @@
 @model BusinessObjects.User;
 @{
     Layout = "_userLayout";
-
 }
 <html>
 <head>
@@ -34,7 +33,7 @@
                     <form method="post" action="#search-function">
                         <div class="input-group input-group-sm" id="search-input">
                             <input type="text" class="form-control" placeholder="Search...">
-                            <button class="input-group-text" id="basic-addon2" type="submit">
+                            <button @*onclick="location.href = '@Url.Action("Success",)'"*@ class="input-group-text" id="basic-addon2" type="submit">
                                 <i class="fas fa-search"></i>
                             </button>
                         </div>
@@ -53,32 +52,36 @@
         <div class="row pt-4 mb-4 text-center">
             <h4>Recent Posts</h4>
         </div>
-        <div class="row">
-            @{
-                foreach (var post in postList)
-                {
-                    <div class="col-12 d-flex justify-content-center" style="height: 15rem;">
-                        <div class="card w-75 mb-5">
-                            <div class="card-header fw-bold">
-                                @post.PostTitle -
-                                @post.UploaderUsername -
-                                @post.UploadDate.Value.ToString("dd/MMM/yyyy")
-                            </div>
-                            <!-- If user is not allowed to see the post -->
-                            <div class="card-body border">
-                                @post.PostDescription
-                            </div>
-                            <div class="card-footer text-center p-1">
-                                <a asp-controller="Posts" asp-action="Details" class=" stretched-link link-post">
-                                    <span>See more</span>
-                                    <i class="fas fa-angle-double-right"></i>
-                                </a>
-                            </div>
-                        </div>
+    <div class="row">
+        @foreach (var post in postList)
+        {
+            <div class="col-12 d-flex justify-content-center" style="height: 15rem;">
+                <div class="card w-75 mb-5">
+                    <div class="card-header fw-bold">
+                        @post.PostTitle -
+                        @post.UploaderUsername -
+                        @post.UploadDate.Value.ToString("dd/MMM/yyyy")
                     </div>
-                }
-            }
-        </div>
+                    <!-- If user is not allowed to see the post -->
+                    <div class="card-body border">
+                        @post.PostDescription
+                    </div>
+                    <div class="card-footer text-center p-1">
+                        <a asp-controller="Posts" asp-action="Details" asp-route-id="@post.PostId" class=" stretched-link link-post">
+                            <span>See more</span>
+                            <i class="fas fa-angle-double-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="text-center font-weight-bold">
+        @for (int index = 1; index <= ViewBag.end; index++)
+        {
+            <a asp-action="Success" asp-route-page="@index">@index</a>
+        }
+    </div>
 </div>
 </body>
 </html>

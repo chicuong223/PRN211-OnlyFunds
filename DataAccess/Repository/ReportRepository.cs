@@ -24,5 +24,6 @@ namespace DataAccess.Repository
 
         public IEnumerable<PostReport> GetReportByStatus(bool status) => ReportDAO.Instance.GetReportByStatus(status);
         public int GetMaxReportId() => ReportDAO.Instance.GetMaxReportId();
+        public IEnumerable<PostReport> GetReportsByPost(int postId) => ReportDAO.Instance.GetReportsByPost(postId);
     }
 }

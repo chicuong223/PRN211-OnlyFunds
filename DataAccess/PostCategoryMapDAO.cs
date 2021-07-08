@@ -118,6 +118,23 @@ namespace DataAccess
 
             return map;
         }
+        public void DeletePostMap(Post post, Category category)
+        {
+            try
+            {
+                using var context = new PRN211_OnlyFunds_CopyContext();
+                PostCategoryMap map = GetPostMap(post.PostId, category.CategoryId);
+                if (map == null)
+                    return;
+                context.PostCategoryMaps.Remove(map);
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
 
     }
 }

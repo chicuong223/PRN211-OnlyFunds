@@ -12,5 +12,8 @@ namespace DataAccess.Repository
     {
         public IEnumerable<Category> GetCategories() => CategoryDAO.Instance.GetCategories();
         public Category GetCategoryById(int id) => CategoryDAO.Instance.GetCategoryById(id);
+
+        public IEnumerable<Category> GetCategoriesByPost(int postID) =>
+            CategoryDAO.Instance.GetCategoriesByPost(postID);
     }
 }

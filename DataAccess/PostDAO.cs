@@ -261,6 +261,19 @@ namespace DataAccess
 
             return postId;
         }
-
+        public void UpdatePost(Post editedPost)
+        {
+            try
+            {
+                using var context = new PRN211_OnlyFunds_CopyContext();
+                context.Entry<Post>(editedPost).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

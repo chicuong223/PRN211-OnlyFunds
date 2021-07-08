@@ -8,15 +8,32 @@ using System.Linq;
 using System.Threading.Tasks;
 using DataAccess.IRepository;
 using DataAccess.Repository;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace OnlyFundsWeb.Controllers
 {
     public class UserController : Controller
     {
         IUserRepository userRepository= new UserRepository();
-
-        public ActionResult Success()
+        IPostRepository postRepository = new PostRepository();
+        public ActionResult Success(int?  page, string searchString)
         {
+            if (page == null)
+            {
+                page = 1;
+            }
+            IEnumerable<Post> postList = postRepository.GetAllPost(page.Value);
+            int pageSize = 3;
+            int count = postRepository.CountAllPost();
+            int end = count / pageSize;
+            if (count % 3 != 0)
+            {
+                end = end + 1;
+            }
+
+            ViewBag.end = end;
+            ViewBag["PostList"] = postList;
+
             return View("Success");
         }
 

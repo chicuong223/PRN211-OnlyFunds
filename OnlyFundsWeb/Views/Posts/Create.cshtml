@@ -44,7 +44,7 @@
             </div>
             <div class="form-group">
                 <label for="desc" class="label-form fw-bold">Description</label><span class="text-danger">*</span>
-                <textarea asp-for="PostDescription" rows="10" cols="100" placeholder="Max 1000 characters" class="form-control" required=""></textarea>
+                <textarea asp-for="PostDescription" rows="10" cols="100" placeholder="Max 1000 characters" class="form-control" style="resize: none" required=""></textarea>
             </div>
             <div class="form-group">
                 <label asp-for="FileUrl" class="label-form fw-bold">Attachment</label>
@@ -72,9 +72,7 @@
         </div>
     </div>
 <div>
-        <a asp-action="Success" asp-controller="User">Back to List</a>
-    </div>
-<script defer src="scripts/post_form_script.js"></script>
+</div>
 <script>
     function onClickHandled() {
         var x = confirm("Are you sure?");

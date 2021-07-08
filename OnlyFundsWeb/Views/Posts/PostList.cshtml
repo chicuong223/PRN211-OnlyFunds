@@ -1,44 +1,58 @@
 ﻿@model IEnumerable<BusinessObjects.Post>
-
+@using Microsoft.AspNetCore.Http
 @{
     ViewData["Title"] = "Index";
-    Layout = "_userLayout";
+    string session = Context.Session.GetString("user");
+    if (session == null)
+    {
+        Layout = "_UnAuthenticatedUserLayout";
+    }
+    else
+    {
+        Layout = "_userLayout";
+    }
 }
-
-<h1>Posts</h1>
-
+@*@{
+    if (ViewBag.Category.CategoryName != null)
+    {
+    <h1 style="text-align: center">@ViewBag.Category.CategoryName</h1>
+    }
+}*@
 @foreach (var item in Model)
 {
-    @*<div class="border rounded my-3 w-50 mx-auto">
-        <a asp-action="Details" asp-route-id="@item.PostId">
-            <div>
-                <p class="border-bottom p-3 text-break">@item.PostTitle</p>
-                <div class="overflow-auto">
-                    <p class="p-3 text-break">@item.PostDescription</p>
+    <div class="container w-75">
+        <div class="col-12 d-flex justify-content-center" style="height: 15rem;">
+            <div class="card w-75 mb-5">
+                <div class="card-header fw-bold">
+                    @item.PostTitle -
+                    @item.UploaderUsername -
+                    @item.UploadDate.Value.ToString("dd/MMM/yyyy")
                 </div>
-            </div>
-        </a>
-    </div>*@
-    <div class="col-12 d-flex justify-content-center" style="height: 15rem;">
-        <div class="card w-75 mb-5">
-            <div class="card-header fw-bold">
-                @item.PostTitle -
-                @item.UploaderUsername -
-                @item.UploadDate.Value.ToString("dd/MMM/yyyy")
-            </div>
-            <!-- If user is not allowed to see the post -->
-            <div class="card-body border">
-                @item.PostDescription
-            </div>
-            <div class="card-footer text-center p-1">
-                <a asp-controller="Posts" asp-action="Details" class=" stretched-link link-post">
-                    <span>See more</span>
-                    <i class="fas fa-angle-double-right"></i>
-                </a>
+                <!-- If user is not allowed to see the post -->
+                <div class="card-body border">
+                    @item.PostDescription
+                </div>
+                <div class="card-footer text-center p-1">
+                    @{
+                        if (session == null)
+                        {
+                            <a asp-controller="User" asp-action="Index" asp-route-id="@item.PostId" class=" stretched-link link-post">
+                                <span>See more</span>
+                                <i class="fas fa-angle-double-right"></i>
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@item.PostId" class=" stretched-link link-post">
+                                <span>See more</span>
+                                <i class="fas fa-angle-double-right"></i>
+                            </a>
+                        }
+                    }
+                </div>
             </div>
         </div>
     </div>
-
 }
 <div class="text-center font-weight-bold">
     @for (int index = 1; index <= ViewBag.end; index++)

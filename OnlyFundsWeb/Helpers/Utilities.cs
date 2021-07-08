@@ -45,5 +45,22 @@ namespace OnlyFundsWeb.Helpers
             }
             return fileName;
         }
+        public static void DeleteFile(string fileName, IWebHostEnvironment env, string folderName)
+        {
+            try
+            {
+                string wwwPath = env.WebRootPath;
+                string path = Path.Combine(wwwPath, folderName);
+                if (File.Exists(Path.Combine(path, fileName)))
+                {
+                    File.Delete(Path.Combine(path, fileName));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
