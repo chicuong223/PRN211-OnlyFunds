@@ -80,6 +80,8 @@ function validate(parameter) {
         }
     } else if (parameter === 'password') {
         const password = document.getElementById('password').value;
+        const pass = document.getElementById('password').value;
+        const confPass = document.getElementById('confPass').value;
         if (passRegex.test(password) == false) {
             pass_error.innerHTML =
                 '<i class="fas fa-times"></i> Password is not valid, try again'
@@ -92,6 +94,19 @@ function validate(parameter) {
             pass_error.style.display = "block";
             pass_error.className = "success";
             pass_error.style.color = "rgb(97 218 16)";
+        }
+        if (confPass !== pass) {
+            confPass_error.innerHTML =
+                '<i class="fas fa-times"></i> Password does not match'
+            confPass_error.style.display = "block";
+            confPass_error.className = "error";
+            confPass_error.style.color = "red";
+        } else {
+            confPass_error.innerHTML =
+                '<i class="fas fa-check"></i> Password matched'
+            confPass_error.style.display = "block";
+            confPass_error.className = "success";
+            confPass_error.style.color = "rgb(97 218 16)";
         }
     } else if (parameter === 'confPass') {
         const pass = document.getElementById('password').value;
