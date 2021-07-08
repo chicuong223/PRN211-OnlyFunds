@@ -20,5 +20,7 @@ namespace DataAccess.Repository
 
         public IEnumerable<Comment> GetCommentsByPost(int postId) => CommentDAO.Instance.GetCommentsByPosts(postId);
 
+        public int GetMaxCommentId() => CommentDAO.Instance.GetMaxCommentId();
+
     }
 }

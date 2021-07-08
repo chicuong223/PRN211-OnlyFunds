@@ -104,5 +104,26 @@ namespace DataAccess
             }
             return lst;
         }
+
+        public int GetMaxReportId()
+        {
+            int reportId = 0;
+            try
+            {
+                using var context = new PRN211_OnlyFunds_CopyContext();
+                reportId = context.PostReports.Max(r => r.ReportId);
+                if (reportId == 0)
+                {
+                    throw new Exception("no report");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            return reportId;
+        }
     }
 }

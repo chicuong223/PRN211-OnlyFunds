@@ -1,53 +1,53 @@
 ﻿@model BusinessObjects.Post
-
+@using BusinessObjects
+@using DataAccess.IRepository
+@using DataAccess.Repository
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_userLayout.cshtml";
+    ICategoryRepository cateRepo = new CategoryRepository();
+    IEnumerable<Category> cateList = cateRepo.GetCategories();
 }
 
-<h1>Edit</h1>
+<h1>Edit Post</h1>
 
-<h4>Post</h4>
-<hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="Edit">
+        <form asp-action="Edit" method="POST" enctype="multipart/form-data" id="postForm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="PostId" />
             <div class="form-group">
-                <label asp-for="PostTitle" class="control-label"></label>
-                <input asp-for="PostTitle" class="form-control" />
+                <label asp-for="PostTitle" class="label-form fw-bold">Title</label><span class="text-danger">*</span>
+                <input type="text" asp-for="PostTitle" id="title" placeholder="Max 100 characters" class="form-control" />
                 <span asp-validation-for="PostTitle" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PostDescription" class="control-label"></label>
-                <input asp-for="PostDescription" class="form-control" />
+                <label asp-for="PostDescription" class="label-form fw-bold">Description</label><span class="text-danger">*</span>
+                <textarea asp-for="PostDescription" rows="10" cols="100" placeholder="Max 3000 characters" class="form-control"></textarea>
                 <span asp-validation-for="PostDescription" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="FileUrl" class="control-label"></label>
-                <input asp-for="FileUrl" class="form-control" />
-                <span asp-validation-for="FileUrl" class="text-danger"></span>
+                <label asp-for="FileUrl" class="label-form fw-bold">Attachment</label>
+                <input type="file" asp-for="FileUrl" class="form-control" name="file"/>
             </div>
             <div class="form-group">
-                <label asp-for="UploaderUsername" class="control-label"></label>
-                <select asp-for="UploaderUsername" class="form-control" asp-items="ViewBag.UploaderUsername"></select>
-                <span asp-validation-for="UploaderUsername" class="text-danger"></span>
+                <label for="catList" class="fw-bold">Categories</label>
+                <ul id="catList">
+                    @foreach (var category in cateList)
+                    {
+                        <li>
+                            <label asp-for="PostCategoryMaps">@category.CategoryName</label>
+                            <input type="checkbox" class="form-check-input" value="@category.CategoryId" id="@category.CategoryId" name="cate" />
+                        </li>
+                    }
+                </ul>
             </div>
             <div class="form-group">
-                <label asp-for="UploadDate" class="control-label"></label>
-                <input asp-for="UploadDate" class="form-control" />
-                <span asp-validation-for="UploadDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input class="btn btn-success mx-5 rounded-pill" type="submit" value="Update" form="postForm"/>
+                <button class="btn btn-danger mx-5 rounded-pill" onclick='location.href=@Url.Action("Posts","Details", new { id = Model.PostId })'>Cancel</button>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

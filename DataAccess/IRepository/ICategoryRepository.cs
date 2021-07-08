@@ -11,6 +11,6 @@ namespace DataAccess.IRepository
     {
         IEnumerable<Category> GetCategories();
         Category GetCategoryById(int id);
-
+        IEnumerable<Category> GetCategoriesByPost(int postId);
     }
 }

@@ -12,28 +12,41 @@
     string username = Context.Session.GetString("user");
     User user = userRepository.GetUserByName(username);
 
-    IEnumerable<Post> postList = postRepository.GetPostByUser(user, 1);
+    IEnumerable<Post> postList = postRepository.GetAllPost(1);
 }
 @model BusinessObjects.User;
 @{
     Layout = "_userLayout";
+
 }
 <html>
 <head>
-    <title>Login success</title>
+    <title>Landing User Page</title>
+    <link href="~css/UserSuccess.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Righteous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 </head>
 <body>
     <div class="container w-75">
-        <div class="row p-3 border">
-            <div class="col-6 my-auto d-flex justify-content-center">
-                <img@* src="@Url.Content(Model.AvatarUrl)"*@ alt="Logo" class="img-fluid" width="400px">
-            </div>
-            <div class="col-6 my-auto">
-                @*Cho nay khong biet author's name la sao??'*@
-                <h4 class="mb-3">Author's name</h4>
-                @*<h4 class="mb-3">@Model.Username</h4>*@
-                <div>
-                    Short description about user
+        <div class="row">
+            <div class="col-12 d-flex w-75 align-items-center mx-auto">
+                <div class='col-lg-8'>
+                    <form method="post" action="#search-function">
+                        <div class="input-group input-group-sm" id="search-input">
+                            <input type="text" class="form-control" placeholder="Search...">
+                            <button class="input-group-text" id="basic-addon2" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class='col-lg-4 d-flex justify-content-end'>
+                    <button onclick="location.href = '@Url.Action("Create", "Posts")'" class='btn btn-danger btn-user rounded-pill mx-auto' id="register-btn">
+                        New Post
+                    </button>
+                    <button onclick="location.href = '@Url.Action("GetPostByUser", "Posts", new {username = @Context.Session.GetString("user")})'" class='btn btn-success rounded-pill'>
+                        Your Post
+                    </button>
                 </div>
             </div>
         </div>

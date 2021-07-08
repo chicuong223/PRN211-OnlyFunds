@@ -13,7 +13,6 @@ namespace OnlyFundsWeb.Controllers
     public class CommentController : Controller
     {
         private ICommentRepository cmtRepo = new CommentRepository();
-        private PRN211_OnlyFunds_CopyContext context = new PRN211_OnlyFunds_CopyContext();
         public IActionResult Index()
         {
             return View();
@@ -28,7 +27,7 @@ namespace OnlyFundsWeb.Controllers
             try
             {
                 Comment cmt = new Comment();
-                cmt.CommentId = context.Comments.Max(c => c.CommentId) + 1;
+                cmt.CommentId = cmtRepo.GetMaxCommentId() + 1;
                 cmt.PostId = postid;
                 cmt.CommentDate = DateTime.Now;
                 cmt.Content = content;

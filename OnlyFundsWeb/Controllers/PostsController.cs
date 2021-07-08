@@ -23,7 +23,6 @@ namespace OnlyFundsWeb.Controllers
         private ICategoryRepository categoryRepository = new CategoryRepository();
         private IPostCategoryMapRepository postCategoryMapRepository = new PostCategoryMapRepository();
         private ICommentRepository cmtRepository = new CommentRepository();
-        private PRN211_OnlyFunds_CopyContext context = new PRN211_OnlyFunds_CopyContext();
         public PostsController(IWebHostEnvironment env) => this.env = env;
 
         // GET: PostsController
@@ -112,7 +111,7 @@ namespace OnlyFundsWeb.Controllers
                 if (string.IsNullOrWhiteSpace(post.PostDescription))
                     throw new Exception("Description is required");
                 string fileName = Utilities.UploadFile(file, env, "postfiles");
-                post.PostId = context.Posts.Max(p => p.PostId) + 1;
+                post.PostId = postRepository.GetMaxPostId() + 1;
                 post.UploaderUsername = HttpContext.Session.GetString("user");
                 post.UploadDate = DateTime.Now;
                 post.FileUrl = fileName;
@@ -138,36 +137,63 @@ namespace OnlyFundsWeb.Controllers
         // GET: PostsController/Edit/5
         public ActionResult Edit(int? id)
         {
+            string username = HttpContext.Session.GetString("user");
+            if (username == null)
+                return RedirectToAction("Index", "User");
             if (id == null)
                 return NotFound();
             Post post = postRepository.GetPostById(id.Value);
             if (post == null)
                 return NotFound();
+            if (!username.Equals(post.UploaderUsername))
+            {
+                ViewBag.Error = "You are not allowed to edit posts of others";
+                return View("Error");
+            }
             return View(post);
         }
 
         // POST: PostsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Post post, IFormFile file, int[] cate)
         {
             try
             {
-                return RedirectToAction(nameof(PostList));
+                Post oldPost = postRepository.GetPostById(id);
+                if (oldPost == null)
+                    throw new Exception("Post not found");
+                post.UploaderUsername = oldPost.UploaderUsername;
+                post.UploadDate = oldPost.UploadDate;
+                if (file == null)
+                    post.FileUrl = oldPost.FileUrl;
+                else
+                {
+                    Utilities.DeleteFile(oldPost.FileUrl, env, "postfiles");
+                    post.FileUrl = Utilities.UploadFile(file, env, "postfiles");
+                }
+                IEnumerable<Category> postCatList = categoryRepository.GetCategoriesByPost(post.PostId);
+                foreach(var category in postCatList)
+                {
+                    postCategoryMapRepository.DeleteMap(post, category);
+                }
+                foreach (int catID in cate)
+                {
+                    PostCategoryMap map = new PostCategoryMap
+                    {
+                        PostId = post.PostId,
+                        CategoryId = catID
+                    };
+                    postCategoryMapRepository.AddPostMap(map);
+                }
+                postRepository.Update(post);
+                return RedirectToAction(nameof(Details), new { id = post.PostId });
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                ViewBag.error = ex.Message;
+                return View("Error");
             }
-        }
-
-        // GET: PostsController/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null) return NotFound();
-            var post = postRepository.GetPostById(id.Value);
-            if (post == null) return NotFound();
-            return View(post);
         }
 
         // POST: PostsController/Delete/5
@@ -178,7 +204,7 @@ namespace OnlyFundsWeb.Controllers
             try
             {
                 postRepository.DeletePost(id);
-                return RedirectToAction(nameof(PostList), new { username = HttpContext.Session.GetString("user") });
+                return RedirectToAction(nameof(GetPostByUser), new { username = HttpContext.Session.GetString("user") });
             }
             catch (Exception ex)
             {

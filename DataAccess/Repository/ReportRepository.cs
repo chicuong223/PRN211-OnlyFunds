@@ -13,6 +13,8 @@ namespace DataAccess.Repository
         public void AddReport(PostReport report)
         => ReportDAO.Instance.AddReport(report);
 
+        public int GetMaxReportId() => ReportDAO.Instance.GetMaxReportId();
+
         public PostReport GetReportById(int reportId)
         => ReportDAO.Instance.GetReportById(reportId);
 

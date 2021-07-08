@@ -18,5 +18,8 @@ namespace DataAccess.Repository
 
         public PostCategoryMap GetPostMap(int postId, int categoryId) =>
             PostCategoryMapDAO.Instance.GetPostMap(postId, categoryId);
+
+        public void DeleteMap(Post post, Category category) =>
+            PostCategoryMapDAO.Instance.DeletePostMap(post, category);
     }
 }

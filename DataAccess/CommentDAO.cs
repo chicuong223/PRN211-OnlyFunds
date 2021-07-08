@@ -97,5 +97,26 @@ namespace DataAccess
             }
             return _comment;
         }
+
+        public int GetMaxCommentId()
+        {
+            int commentId = 0;
+            try
+            {
+                using var context = new PRN211_OnlyFunds_CopyContext();
+                commentId = context.Comments.Max(c => c.CommentId);
+                if (commentId == 0)
+                {
+                    throw new Exception("no comment");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            return commentId;
+        }
     }
 }

@@ -14,5 +14,6 @@ namespace DataAccess.IRepository
         PostReport GetReportById(int reportId);
         IEnumerable<PostReport> GetReports();
         IEnumerable<PostReport> GetReportstByPost(int postID);
+        int GetMaxReportId();
     }
 }

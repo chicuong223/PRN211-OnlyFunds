@@ -14,8 +14,8 @@ namespace TestConsole
     {
         static void Main(string[] args)
         {
-            IPostRepository postRepository = new PostRepository();
-            Console.WriteLine(postRepository.GetAllPost(1));
+            IPostCategoryMapRepository mapRepo = new PostCategoryMapRepository();
+            mapRepo.DeleteMap(14, 1);
         }
     }
 }

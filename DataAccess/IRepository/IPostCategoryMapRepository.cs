@@ -12,5 +12,6 @@ namespace DataAccess.IRepository
         IEnumerable<Post> FilterPostByCategory(int categoryId, int pageIndex);
         void AddPostMap(PostCategoryMap map);
         PostCategoryMap GetPostMap(int postId, int categoryId);
+        void DeleteMap(Post post, Category category);
     }
 }

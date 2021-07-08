@@ -209,5 +209,41 @@ namespace DataAccess
             }
             return posts;
         }
+
+        public int GetMaxPostId()
+        {
+            int postId = 0;
+            try
+            {
+                using var context = new PRN211_OnlyFunds_CopyContext();
+                postId = context.Posts.Max(p => p.PostId);
+                if (postId == 0)
+                {
+                    throw new Exception("There's no post here");
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+
+            return postId;
+        }
+
+        public void UpdatePost(Post editedPost)
+        {
+            try
+            {
+                using var context = new PRN211_OnlyFunds_CopyContext();
+                context.Entry<Post>(editedPost).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+                context.SaveChanges();
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
