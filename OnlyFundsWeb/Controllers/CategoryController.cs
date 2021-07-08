@@ -4,16 +4,29 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BusinessObjects;
+using DataAccess.IRepository;
+using DataAccess.Repository;
 
 namespace OnlyFundsWeb.Controllers
 {
     public class CategoryController : Controller
     {
+        ICategoryRepository categoryRepository = null;
+        private IPostCategoryMapRepository postCategoryMapRepository = null;
+
+        public CategoryController()
+        {
+            categoryRepository = new CategoryRepository();
+            postCategoryMapRepository = new PostCategoryMapRepository();
+        }
         // GET: CategoryController
         public ActionResult CategoryList()
         {
-            return View();
+            IEnumerable<Category> categories= categoryRepository.GetCategories();
+            return View(categories);
         }
+
 
         // GET: CategoryController/Details/5
         /*public ActionResult Details(int id)

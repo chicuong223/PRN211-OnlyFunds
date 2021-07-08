@@ -55,6 +55,23 @@ namespace DataAccess
             }
         }
 
+        public int CountPostByCategory(Category category)
+        {
+
+            try
+            {
+                using var context = new PRN211_OnlyFunds_CopyContext();
+                IEnumerable<PostCategoryMap> postCategory =
+                    context.PostCategoryMaps.Where(c => c.CategoryId == category.CategoryId).ToList();
+                int count = postCategory.Count();
+                return count;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
         public IEnumerable<Post> GetAllPost(int pageIndex)
         {
             List<Post> posts = new List<Post>();
@@ -244,5 +261,6 @@ namespace DataAccess
 
             return postId;
         }
+
     }
 }

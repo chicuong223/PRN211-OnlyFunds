@@ -32,7 +32,7 @@
             <!-- Navigation bar -->
             <nav class="navbar navbar-expand-lg navbar-light bg-light shadow p-0">
                 <div class="container-fluid">
-                        <a class="navbar-brand">
+                        <a asp-action="Success" asp-controller="User" class="navbar-brand">
                             <img src="~/images/Logo.png"
                                  style="width: 90px;" height="30px">
                         </a>
@@ -52,7 +52,7 @@
                                         @{
                                             foreach (var category in cateList)
                                             {
-                                                <li><a class="dropdown-item tag">@category.CategoryName</a></li>
+                                                <li><a asp-action="GetPostByCategory" asp-controller="Posts" asp-route-categoryId="@category.CategoryId" class="dropdown-item tag">@category.CategoryName</a></li>
                                             }
                                         }
                                 </ul>
@@ -69,10 +69,10 @@
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                     <li>
-                                        <a asp-action="DetailsUser" asp-controller="User" asp-route-username="@Context.Session.GetString("user")" class="dropdown-item">Manage account</a>
+                                        <a asp-action="DetailsUser" asp-controller="User" asp-route-username="@username" class="dropdown-item">Manage account</a>
                                     </li>
                                     <li>
-                                        <a href="" class="dropdown-item">
+                                        <a asp-action="ChangePassword" class="dropdown-item">
                                         Change password
                                         </a>
                                     </li>

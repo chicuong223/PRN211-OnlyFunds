@@ -18,13 +18,21 @@ namespace OnlyFundsWeb.Controllers
     public class PostsController : Controller
     {
         IWebHostEnvironment env;
-        private IPostRepository postRepository = new PostRepository();
-        private IUserRepository userRepository = new UserRepository();
-        private ICategoryRepository categoryRepository = new CategoryRepository();
-        private IPostCategoryMapRepository postCategoryMapRepository = new PostCategoryMapRepository();
-        private ICommentRepository cmtRepository = new CommentRepository();
-        public PostsController(IWebHostEnvironment env) => this.env = env;
+        private IPostRepository postRepository = null;
+        private IUserRepository userRepository = null;
+        private ICategoryRepository categoryRepository =null;
+        private IPostCategoryMapRepository postCategoryMapRepository = null;
+        private ICommentRepository cmtRepository = null;
 
+        public PostsController(IWebHostEnvironment env)
+        {
+            this.env = env;
+            postRepository = new PostRepository();
+            userRepository = new UserRepository();
+            categoryRepository = new CategoryRepository();
+            postCategoryMapRepository = new PostCategoryMapRepository();
+            cmtRepository = new CommentRepository();
+        }
         // GET: PostsController
         public ActionResult PostList()
         {
@@ -66,6 +74,42 @@ namespace OnlyFundsWeb.Controllers
             }
         }
 
+        public ActionResult GetPostByCategory(int categoryId, int? page)
+        {
+            try
+            {
+                if (categoryId == 0)
+                {
+                    return NotFound();
+                }
+
+                Category category = categoryRepository.GetCategoryById(categoryId);
+                if (category == null)
+                {
+                    return NotFound();
+                }
+                if (page == null)
+                {
+                    page = 1;
+                }
+                IEnumerable<Post> postList = postCategoryMapRepository.FilterPostByCategory(categoryId, page.Value);
+                int pageSize = 3;
+                int count = postRepository.CountPostByCategory(category);
+                int end = count / pageSize;
+                if (count % 3 != 0)
+                {
+                    end = end + 1;
+                }
+
+                ViewBag.end = end;
+                return View("PostList", postList);
+            }
+            catch (Exception e)
+            {
+                ViewBag.error = e.Message;
+                return View("Error");
+            }
+        }
         // GET: PostsController/Details/5
         public ActionResult Details(int? id)
         {

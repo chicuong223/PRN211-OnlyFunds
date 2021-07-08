@@ -163,5 +163,21 @@ namespace DataAccess
 
             return users;
         }
+
+        public void ChangePassword(User user, string newPassword)
+        {
+            try
+            {
+                user.Password = newPassword;
+                using var context = new PRN211_OnlyFunds_CopyContext();
+                context.Users.Update(user);
+                context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+        }
     }
 }

@@ -16,11 +16,17 @@ namespace OnlyFundsWeb.Controllers
         private IReportRepository reportRepository = new ReportRepository();
         private IAdminRepository adminRepository = new AdminRepository();
         private IUserRepository userRepository = new UserRepository();
+        private ICategoryRepository categoryRepository = new CategoryRepository();
         public IActionResult Index()
         {
             return View();
         }
-
+        public IActionResult Success()
+        {
+            IEnumerable<Category> categories = categoryRepository.GetCategories();
+            ViewBag["categories"] = categories;
+            return View("Success");
+        }
         [HttpPost]
         public IActionResult Login(string username, string password, int? page)
         {

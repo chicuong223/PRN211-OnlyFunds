@@ -19,6 +19,11 @@ namespace OnlyFundsWeb.Controllers
         {
             return View("Success");
         }
+
+        public ActionResult ChangePassword()
+        {
+            return View("PasswordChange");
+        }
         // GET: UserController
         public ActionResult Index()
         {

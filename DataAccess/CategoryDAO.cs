@@ -51,14 +51,13 @@ namespace DataAccess
             try
             {
                 using var context = new PRN211_OnlyFunds_CopyContext();
-                category = context.Categories.SingleOrDefault(c => c.CategoryId == id);
+                category = context.Categories.SingleOrDefault(c => c.CategoryId == (id));
             }
             catch (Exception e)
             {
                 Console.WriteLine(e);
                 throw;
             }
-
             return category;
         }
         //-------Viet them ham create category

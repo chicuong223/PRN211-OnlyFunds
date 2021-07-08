@@ -11,6 +11,7 @@ namespace DataAccess.IRepository
     {
         IEnumerable<Post> GetPostByUser(User user, int pageIndex);
         int CountPostByUser(User user);
+        int CountPostByCategory(Category category);
         void InsertPost(Post post);
         void DeletePost(int postId);
         Post GetPostById(int postId);
