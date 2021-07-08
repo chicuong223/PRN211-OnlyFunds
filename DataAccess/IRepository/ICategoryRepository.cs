@@ -9,7 +9,7 @@ namespace DataAccess.IRepository
 {
     public interface ICategoryRepository
     {
-        IEnumerable<Category> GetCategories(int pageIndex);
+        IEnumerable<Category> GetCategories();
         Category GetCategoryById(int id);
 
     }

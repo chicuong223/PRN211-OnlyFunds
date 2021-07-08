@@ -1,68 +1,84 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
+@using BusinessObjects
+@using DataAccess.Repository
+@using DataAccess.IRepository
+@using System.Collections
+@using Microsoft.AspNetCore.Http
+@{
+    IPostRepository postRepository = new PostRepository();
+    IUserRepository userRepository = new UserRepository();
+    string username = Context.Session.GetString("user");
+    User user = userRepository.GetUserByName(username);
+
+    IEnumerable<Post> postList = postRepository.GetAllPost(1);
+}
+@model BusinessObjects.User;
 @{
     Layout = "_userLayout";
+
 }
 <html>
 <head>
-    <title>Login success</title>
+    <title>Landing User Page</title>
+    <link href="~css/UserSuccess.css"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Righteous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 </head>
 <body>
-    <div class="container w-75">
-        <div class="row p-3 border">
-            <div class="col-6 my-auto d-flex justify-content-center">
-                <img src="images/Cat.jpg" alt="Logo" class="img-fluid" width="400px">
-            </div>
-            <div class="col-6 my-auto">
-                <h4 class="mb-3">Author's name</h4>
-                <div>
-                    Short description about user
+<div class="container w-75">
+        <div class="row">
+            <div class="col-12 d-flex w-75 align-items-center mx-auto">
+                <div class='col-lg-8'>   
+                    <form method="post" action="#search-function">
+                        <div class="input-group input-group-sm" id="search-input">
+                            <input type="text" class="form-control" placeholder="Search...">
+                            <button class="input-group-text" id="basic-addon2" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
                 </div>
-            </div>
+                <div class='col-lg-4 d-flex justify-content-end'>
+                    <button onclick="location.href = '@Url.Action("Create", "Posts")'" class='btn btn-danger btn-user rounded-pill mx-auto' id="register-btn">
+                        New Post
+                    </button>
+                    <button onclick="location.href = '@Url.Action("GetPostByUser", "Posts", new {username = @Context.Session.GetString("user")})'"  class='btn btn-success rounded-pill'>
+                        Your Post
+                    </button>
+                </div>  
+            </div>       
         </div>
         <div class="row pt-4 mb-4 text-center">
             <h4>Recent Posts</h4>
         </div>
         <div class="row">
-            <!-- Razor code here -->
-            <div class="col-12 d-flex justify-content-center" style="height: 30rem;">
-                <div class="card w-75 mb-5">
-                    <div class="card-header fw-bold">
-                        Post's name goes here
-                    </div>
-                    <!-- If user is not allowed to see the post -->
-                    <div class="card-body p-0">
-                        <div class="bg-image"></div>
-                        <div class="text">
-                            This post is for subscribers only.<br>
-                            <a href="#Login" class="login">Login</a> or
-                            <a href="#SignUp" class="signup">Sign up</a>
-                            to get started!
+            @{
+                foreach (var post in postList)
+                {
+                    <div class="col-12 d-flex justify-content-center" style="height: 15rem;">
+                        <div class="card w-75 mb-5">
+                            <div class="card-header fw-bold">
+                                @post.PostTitle -
+                                @post.UploaderUsername -
+                                @post.UploadDate.Value.ToString("dd/MMM/yyyy")
+                            </div>
+                            <!-- If user is not allowed to see the post -->
+                            <div class="card-body border">
+                                @post.PostDescription
+                            </div>
+                            <div class="card-footer text-center p-1">
+                                <a asp-controller="Posts" asp-action="Details" class=" stretched-link link-post">
+                                    <span>See more</span>
+                                    <i class="fas fa-angle-double-right"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <!-- If user allowed to see the post -->
-            <div class="col-12 d-flex justify-content-center" style="height: 30rem;">
-                <div class="card w-75 mb-5">
-                    <div class="card-header fw-bold">
-                        Post's name goes here
-                    </div>
-                    <!-- If user is not allowed to see the post -->
-                    <div class="card-body border">
-                        Post ngắn thì show hết content ở đây, post dài thì see more<br>
-                        Lorem Ipsum dolor sit amet, consectetur adipis
-                    </div>
-                    <div class="card-footer text-center p-1">
-                        <a href="#post-details" class=" stretched-link link-post">
-                            <span>See more</span>
-                            <i class="fas fa-angle-double-right"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
+                }
+            }
         </div>
-    </div>
+</div>
 </body>
 </html>

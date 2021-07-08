@@ -10,38 +10,22 @@ using Microsoft.AspNetCore.Http;
 
 using DataAccess.IRepository;
 using DataAccess.Repository;
+using OnlyFundsWeb.Helpers;
+using System.Linq;
 
 namespace OnlyFundsWeb.Controllers
 {
     public class PostsController : Controller
     {
-        IWebHostEnvironment webHostEnvironment;
+        IWebHostEnvironment env;
         private IPostRepository postRepository = new PostRepository();
         private IUserRepository userRepository = new UserRepository();
         private ICategoryRepository categoryRepository = new CategoryRepository();
-        public PostsController(IWebHostEnvironment env)
-        {
-            this.webHostEnvironment = env;
-        }
-        private string UploadFile(IFormFile file)
-        {
-            if (file == null || file.Length < 0)
-            {
-                return "";
-            }
-            string wwwPath = webHostEnvironment.WebRootPath;
-            string path = Path.Combine(wwwPath, "postfiles");
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-            string fileName = Path.GetFileName(file.FileName);
-            using (FileStream stream = new FileStream(Path.Combine(path, fileName), FileMode.Create))
-            {
-                file.CopyTo(stream);
-            }
-            return fileName;
-        }
+        private IPostCategoryMapRepository postCategoryMapRepository = new PostCategoryMapRepository();
+        private ICommentRepository cmtRepository = new CommentRepository();
+        private PRN211_OnlyFunds_CopyContext context = new PRN211_OnlyFunds_CopyContext();
+        public PostsController(IWebHostEnvironment env) => this.env = env;
+
         // GET: PostsController
         public ActionResult PostList()
         {
@@ -88,13 +72,15 @@ namespace OnlyFundsWeb.Controllers
         {
             try
             {
-                if(id == null)
+                if (id == null)
                 {
                     return NotFound();
                 }
                 Post post = postRepository.GetPostById(id.Value);
                 if (post == null)
                     return NotFound();
+                IEnumerable<Comment> cmt = cmtRepository.GetCommentsByPost(post.PostId);
+                ViewBag.Comments = cmt;
                 return View(post);
             }
             catch
@@ -117,17 +103,29 @@ namespace OnlyFundsWeb.Controllers
         [HttpPost]
         [RequestFormLimits(MultipartBodyLengthLimit = 104857600)]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormFile file, Post post)
+        public ActionResult Create(IFormFile file, Post post, int[] category)
         {
-            IEnumerable<Category> categoryList = categoryRepository.GetCategories(1);
-            TempData["CategoryList"] = categoryList;
             try
             {
-                string fileName = UploadFile(file);
+                if (string.IsNullOrWhiteSpace(post.PostTitle))
+                    throw new Exception("Title is required");
+                if (string.IsNullOrWhiteSpace(post.PostDescription))
+                    throw new Exception("Description is required");
+                string fileName = Utilities.UploadFile(file, env, "postfiles");
+                post.PostId = context.Posts.Max(p => p.PostId) + 1;
                 post.UploaderUsername = HttpContext.Session.GetString("user");
                 post.UploadDate = DateTime.Now;
                 post.FileUrl = fileName;
                 postRepository.InsertPost(post);
+                foreach (int catID in category)
+                {
+                    PostCategoryMap map = new PostCategoryMap
+                    {
+                        CategoryId = catID,
+                        PostId = post.PostId
+                    };
+                    postCategoryMapRepository.AddPostMap(map);
+                }
                 return RedirectToAction(nameof(GetPostByUser), new { username = post.UploaderUsername });
             }
             catch (Exception ex)

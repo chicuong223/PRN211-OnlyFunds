@@ -1,8 +1,53 @@
-﻿@{
+﻿@using BusinessObjects
+@using DataAccess.Repository
+@using DataAccess.IRepository
+@using System.Collections
+@{
+    IPostRepository postRepository = new PostRepository();
+    IEnumerable<Post> postList = postRepository.GetAllPost(1);
+}
+@{
     ViewData["Title"] = "Home Page";
+    Layout = "_UnAuthenticatedUserLayout";
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1>Welcome To OnlyFunds</h1>
+    <div class="container w-75">
+        <div class="row pt-4 mb-4 text-center">
+            <h4>Recent Posts</h4>
+        </div>
+        <div class="row">
+            @{
+                foreach (var post in postList)
+                {
+                    <div class="col-12 d-flex justify-content-center" style="height: 15rem;">
+                        <div class="card w-75 mb-5">
+                            <div class="card-header fw-bold">
+                                @post.PostTitle -
+                                @post.UploaderUsername -
+                                @post.UploadDate.Value.ToString("dd/MMM/yyyy")
+                            </div>
+                            <!-- If user is not allowed to see the post -->
+                            <div class="card-body border">
+                                @post.PostDescription
+                            </div>
+                            <div class="card-footer text-center p-1">
+                                <a asp-controller="User" asp-action="Index" class=" stretched-link link-post">
+                                    <span>See more</span>
+                                    <i class="fas fa-angle-double-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        <div class="text-center font-weight-bold">
+            @for (int index = 1; index <= ViewBag.end; index++)
+            {
+                <a asp-action="Index"  asp-controller="Home" asp-route-page="@index">@index</a>
+            }
+        </div>
+    </div>
 </div>

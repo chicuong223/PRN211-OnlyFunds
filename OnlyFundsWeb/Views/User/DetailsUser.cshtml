@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Details";
+    Layout = "_userLayout";
 }
 
 <h1>Details</h1>
@@ -43,6 +44,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="UpdateUserInfo" asp-route-id="@Model.Username">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="UpdateUserInfo" asp-route-username="@Model.Username">Edit</a> |
+    <a asp-page="">Back</a>
 </div>

@@ -44,22 +44,8 @@
                                    role="button" data-bs-toggle="dropdown">
                                     <u>Category</u>
                                 </a>
-                                <!-- <c:set var="begin" value="0"/>
-                                <c:set var="end" value="5"/> -->
                                 <div class="container dropdown-menu">
                                     <div class="row">
-                                        <!-- <c:forEach begin="0" end="4">
-                                            <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
-                                                <c:forEach items="${applicationScope.catList}" var="cat" begin="${begin}"
-                                                    end="${end}">
-                                                    <a class="tag" href="SearchServlet?a=searchtag&id=${cat.categoryId}">
-                                                        <c:out value="${cat.getCategoryName()}" />
-                                                    </a>
-                                                </c:forEach>
-                                            </div>
-                                            <c:set var="begin" value="${begin+7}" />
-                                            <c:set var="end" value="${end+7}" />
-                                        </c:forEach> -->
                                         <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
                                             <a href="" class="tag">Tag 1</a>
                                         </div>
@@ -132,56 +118,6 @@
                 </div>
             </nav>
         </div>
-        @*<nav class="navbar navbar-light bg-light shadow p-0">
-                <div class="container-fluid">
-                    <div class="navbar-header">
-                        <a href="#">
-                            <img src="~images/logo.jpg" alt="logo" />
-                        </a>
-                        <a href="#">Category</a>
-                        <form class="form-inline nav-item mt-1 ms-5" asp-action="Search" asp-controller="Post" method="GET">
-                            <div class="input-group" id="search-input">
-                                <input type="text" name="search" placeholder="Search Post Title..." />
-                                <button class="input-group-text" id="basic-addon2" type="submit">
-                                    <i class="fas fa-search"></i>
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </nav>
-            <nav class="navbar-nav ms-auto" id="right-nav">
-                @{
-                    if (Context.Session.GetString("user") == null)
-                    {
-                        <form asp-action="Login" asp-controller="User" method="GET">
-                            <button class="btn btn-sm rounded-pill" id="login-btn" type="submit">
-                                <i class="fas fa-sign-in-alt me-1 align-middle"></i><span class="align-middle">Login</span>
-                            </button>
-                        </form>
-                        <form asp-action="Register" asp-controller="User" method="GET">
-                            <button class="btn btn-sm rounded-pill ms-3" id="signup-btn">
-                                <i class="fas fa-user align-middle"></i>
-                                <span class="align-middle">Register</span>
-                            </button>
-                        </form>
-                    }
-                    else
-                    {
-                        IUserRepository userRepo = new UserRepository();
-                        User user = userRepo.GetUserByName(Context.Session.GetString("user"));
-                        <div class="nav-item" id="user-dropdown">
-                            <a href="#User-info" class="nav-link" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                <img class="rounded-pill" src="~/images/avatars/@user.AvatarUrl" width="40px" height="40px" alt="Avatar">
-                            </a>
-                            <div class="dropdown-menu m-0 p-0" style="width: 200px; position: absolute; left: 85vw;">
-                                <a href="ManageAccount" class="col-12 nav-link m-0 p-0 text-center border-bottom">Manage account</a>
-                                <a asp-action="Logout" asp-controller="User">Logout</a>
-                            </div>
-                        </div>
-                    }
-                }
-            </nav>*@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
