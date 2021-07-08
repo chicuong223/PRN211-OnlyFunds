@@ -28,43 +28,57 @@
 </head>
 <body>
 <div class="container w-75">
-<div class='mt-3' style="text-align: right; margin: 20px">
-<button onclick="location.href = '@Url.Action("Create", "Posts")'" class='btn btn-danger btn-user' id="register-btn" style="border-radius: 40px; margin-right: 30px;">
-    New Post
-</button>
-<button onclick="location.href = '@Url.Action("GetPostByUser", "Posts", new {username = @Context.Session.GetString("user")})'"  class='btn btn-success' style="border-radius: 40px; margin-left:30px">
-            Your Post
-        </button>
-    </div>
-    <div class="row pt-4 mb-4 text-center">
-        <h4>Recent Posts</h4>
-    </div>
-    <div class="row">
-        @{
-            foreach (var post in postList)
-            {
-                <div class="col-12 d-flex justify-content-center" style="height: 15rem;">
-                    <div class="card w-75 mb-5">
-                        <div class="card-header fw-bold">
-                            @post.PostTitle -
-                            @post.UploaderUsername -
-                            @post.UploadDate.Value.ToString("dd/MMM/yyyy")
+        <div class="row">
+            <div class="col-12 d-flex w-75 align-items-center mx-auto">
+                <div class='col-lg-8'>   
+                    <form method="post" action="#search-function">
+                        <div class="input-group input-group-sm" id="search-input">
+                            <input type="text" class="form-control" placeholder="Search...">
+                            <button class="input-group-text" id="basic-addon2" type="submit">
+                                <i class="fas fa-search"></i>
+                            </button>
                         </div>
-                        <!-- If user is not allowed to see the post -->
-                        <div class="card-body border">
-                            @post.PostDescription
-                        </div>
-                        <div class="card-footer text-center p-1">
-                            <a asp-controller="Posts" asp-action="Details" class=" stretched-link link-post">
-                                <span>See more</span>
-                                <i class="fas fa-angle-double-right"></i>
-                            </a>
+                    </form>
+                </div>
+                <div class='col-lg-4 d-flex justify-content-end'>
+                    <button onclick="location.href = '@Url.Action("Create", "Posts")'" class='btn btn-danger btn-user rounded-pill mx-auto' id="register-btn">
+                        New Post
+                    </button>
+                    <button onclick="location.href = '@Url.Action("GetPostByUser", "Posts", new {username = @Context.Session.GetString("user")})'"  class='btn btn-success rounded-pill'>
+                        Your Post
+                    </button>
+                </div>  
+            </div>       
+        </div>
+        <div class="row pt-4 mb-4 text-center">
+            <h4>Recent Posts</h4>
+        </div>
+        <div class="row">
+            @{
+                foreach (var post in postList)
+                {
+                    <div class="col-12 d-flex justify-content-center" style="height: 15rem;">
+                        <div class="card w-75 mb-5">
+                            <div class="card-header fw-bold">
+                                @post.PostTitle -
+                                @post.UploaderUsername -
+                                @post.UploadDate.Value.ToString("dd/MMM/yyyy")
+                            </div>
+                            <!-- If user is not allowed to see the post -->
+                            <div class="card-body border">
+                                @post.PostDescription
+                            </div>
+                            <div class="card-footer text-center p-1">
+                                <a asp-controller="Posts" asp-action="Details" class=" stretched-link link-post">
+                                    <span>See more</span>
+                                    <i class="fas fa-angle-double-right"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
+                }
             }
-        }
-    </div>
+        </div>
 </div>
 </body>
 </html>

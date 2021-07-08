@@ -1,3 +1,17 @@
 ﻿.btn-user {
-    border-radius: 45px;
+  border-radius: 45px;
+}
+ul .nav-item a {
+  text-decoration: none;
+}
+ul .nav-item a:link {
+  text-decoration: none;
+}
+
+ul .nav-item a:visited {
+  text-decoration: none;
+}
+
+ul .nav-item a:hover {
+  text-decoration: underline;
 }

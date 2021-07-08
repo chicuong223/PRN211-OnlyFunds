@@ -1,44 +1,55 @@
 * {
-    font-family: 'Helvetica Neue',"Sans-Serif";
-    font-size: 20px;
+  font-family: "Helvetica Neue", "Sans-Serif";
+  font-size: 20px;
 }
-@media (min-width: 1200px) {
-    .dropdown-menu {
-        width: 500px;
-    }
-    #search-input {
-        margin-right: 3rem;
-    }
-    #dropdown-noti {
-        width: 300px;
-        position: absolute;
-        left: 78.5vw;
-    }
-    /* Them margin giup dieu chinh do dai thanh search :D */
-}
+
+/* Them margin giup dieu chinh do dai thanh search :D */
 .col-sm-4.nav-link.m-0.p-0.text-center.text-dark:hover {
-    text-decoration: underline;
+  text-decoration: underline;
 }
-.form-control, .input-group-text {
-    background-color:#eeeeee;
-    border-right: none;
+.form-control,
+.input-group-text {
+  background-color: #eeeeee;
+  border-right: none;
 }
-.form-control:focus, .input-group-text:hover {
-    background-color:#DCDCDC;
-    box-shadow: none;
+.form-control:focus,
+.input-group-text:hover {
+  background-color: #dcdcdc;
+  box-shadow: none;
 }
-#right-nav {
-    align-items: center;
+
+#login-btn,
+#signup-btn {
+  border: 1px solid #dcdcdc;
+  width: 130px;
 }
-#login-btn, #signup-btn {
-    border: 1px solid #DCDCDC;
-    width: 130px;
-}
-#login-btn:hover, #signup-btn:hover {
-    background-color:#DCDCDC;
+#login-btn:hover,
+#signup-btn:hover {
+  background-color: #dcdcdc;
 }
 .tag {
-    text-decoration: none;
-    color: black;
+  text-decoration: none;
+  color: black;
+}
+ul .nav-item a {
+  text-decoration: none;
+}
+ul .nav-item a:link {
+  text-decoration: none;
+}
+
+ul .nav-item a:visited {
+  text-decoration: none;
+}
+
+ul .nav-item a:hover {
+  text-decoration: underline;
+}
+@media (min-width: 1200px) {
+  #dropdown-noti {
+    width: 300px;
+    position: absolute;
+    left: 78.5vw;
+  }
 }
 /* end of navigation bar css */
