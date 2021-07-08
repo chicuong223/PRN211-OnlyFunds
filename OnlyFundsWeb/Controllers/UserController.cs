@@ -8,12 +8,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using DataAccess.IRepository;
 using DataAccess.Repository;
+using System.Text.Json;
 
 namespace OnlyFundsWeb.Controllers
 {
     public class UserController : Controller
     {
-        IUserRepository userRepository= new UserRepository();
+        IUserRepository userRepository = new UserRepository();
 
         private PRN211_OnlyFunds_CopyContext context = new PRN211_OnlyFunds_CopyContext();
 
@@ -36,10 +37,10 @@ namespace OnlyFundsWeb.Controllers
         [HttpPost]
         public IActionResult Login(string username, string password)
         {
-            if(username != null && password != null)
+            if (username != null && password != null)
             {
                 User user = userRepository.CheckLogin(username, password);
-                if(user != null)
+                if (user != null)
                 {
                     HttpContext.Session.SetString("user", username);
                     ViewBag.User = HttpContext.Session.GetString("user");
@@ -84,12 +85,60 @@ namespace OnlyFundsWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                context.Users.Add(user);
-                context.SaveChanges();
-                return RedirectToAction(nameof(Index));
+                //context.Users.Add(user);
+                //context.SaveChanges();
+                //return RedirectToAction(nameof(Index));
+
+                TempData["newAccount"] = JsonSerializer.Serialize(user);
+                return RedirectToAction(nameof(ConfirmOTP));
             }
             return View(user);
         }
+        public ActionResult ConfirmOTP()
+        {
+            Object jsonNewUser = TempData.Peek("newAccount");
+            User newUser = jsonNewUser == null ? null : JsonSerializer.Deserialize<User>((string)jsonNewUser);
+            string otp = new Random().Next(999999).ToString("D6");
+
+            EmailSender emailSender = new EmailSender();
+            string subject = "OTP";
+            string body = $"Your otp is {otp}";
+            TempData["otp"] = otp;
+            emailSender.sendEmail(subject, body, newUser.Email);
+            ViewBag.Message = $"OTP code is sent to {newUser.Email}";
+            return View();
+        }
+        [HttpPost]
+        public ActionResult ConfirmOTP(string otp)
+        {
+            if(TempData["Attempts"]==null)
+            {
+                TempData["Attempts"] = 3;
+            }
+            int attempt = int.Parse(TempData["Attempts"].ToString());
+            if (attempt == 0)
+            {
+                TempData["Attempts"] = null;
+                TempData["otp"] = null;
+                TempData["newAccount"] = null;
+                ViewBag.Message = "You ran out of attempts<br>Make sure to use your own email";
+                return View(nameof(Register));
+            }
+            Object jsonNewUser = TempData.Peek("newAccount");
+            User newUser = jsonNewUser == null ? null : JsonSerializer.Deserialize<User>((string)jsonNewUser);
+            if (otp!=null && otp.Equals(TempData["otp"].ToString()))
+            {
+                context.Users.Add(newUser);
+                context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            ViewBag.Message = $"OTP code is sent to {newUser.Email}";
+            ViewBag.Attempts=$"{attempt} attempts left";
+            attempt--;
+            TempData["Attempts"] = attempt;
+            return View();
+        }
+
 
         // GET: UserController/Edit/5
         public ActionResult UpdateUserInfo(string username)
