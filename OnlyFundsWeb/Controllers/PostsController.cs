@@ -18,11 +18,13 @@ namespace OnlyFundsWeb.Controllers
     public class PostsController : Controller
     {
         IWebHostEnvironment env;
+        
         private IPostRepository postRepository = new PostRepository();
         private IUserRepository userRepository = new UserRepository();
         private ICategoryRepository categoryRepository = new CategoryRepository();
         private IPostCategoryMapRepository postCategoryMapRepository = new PostCategoryMapRepository();
         private ICommentRepository cmtRepository = new CommentRepository();
+        private IBookmarkRepository bookmarkRepository = new BookmarkRepository();
         public PostsController(IWebHostEnvironment env) => this.env = env;
 
         // GET: PostsController
@@ -112,7 +114,13 @@ namespace OnlyFundsWeb.Controllers
 
 
                 //for Bookmark
-                ViewBag.IsBookmarked = true;
+
+                Bookmark bookmark= bookmarkRepository.GetBookmark(HttpContext.Session.GetString("user"), id.Value);
+                ViewBag.IsBookmarked = !(bookmark == null);
+                //ViewBag.IsBookmarked = true;
+
+
+
                 Console.WriteLine(isAdmin);
                 return View(post);
             }

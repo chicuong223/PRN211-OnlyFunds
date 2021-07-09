@@ -68,13 +68,16 @@
 
             <div>
                 @{
-                    if (ViewBag.IsBookmarked)
+                    bool IsBookmarked = (bool)ViewBag.IsBookmarked;
+                    <div>@IsBookmarked</div>
+                    if (!IsBookmarked)
                     {
-                        <button id="btnBookmark" onclick="clickBookmarkBtn('@currentUser.Username', @Model.PostId);">Add Bookmark</button>
+                        @Html.ActionLink("Add Bookmark", "AddBookMark", "BookMark", new { username = currentUser.Username, postId = Model.PostId })
+
                     }
                     else
                     {
-                        <button id="btnBookmark" onclick="clickBookmarkBtn(' @currentUser.Username ', @Model.PostId);">Remove Bookmark</button>
+                        @Html.ActionLink("Remove Bookmark", "RemoveBookMark", "BookMark", new { username = currentUser.Username, postId = Model.PostId })
                     }
                 }
             </div>

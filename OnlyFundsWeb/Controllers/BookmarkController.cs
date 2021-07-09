@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BusinessObjects;
+using DataAccess.IRepository;
+using DataAccess.Repository;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -9,6 +12,11 @@ namespace OnlyFundsWeb.Controllers
 {
     public class BookmarkController : Controller
     {
+        IBookmarkRepository bookmarkRepository;
+        public BookmarkController()
+        {
+            bookmarkRepository = new BookmarkRepository();
+        }
         //// GET: BookmarkController
         //public ActionResult Index()
         //{
@@ -30,66 +38,17 @@ namespace OnlyFundsWeb.Controllers
         //// POST: BookmarkController/Create
         //[HttpPost]
         //[ValidateAntiForgeryToken]
-        //public ActionResult Create(IFormCollection collection)
-        //{
-        //    try
-        //    {
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
-
-        //// GET: BookmarkController/Edit/5
-        //public ActionResult Edit(int id)
-        //{
-        //    return View();
-        //}
-
-        //// POST: BookmarkController/Edit/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit(int id, IFormCollection collection)
-        //{
-        //    try
-        //    {
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
-
-        //// GET: BookmarkController/Delete/5
-        //public ActionResult Delete(int id)
-        //{
-        //    return View();
-        //}
-
-        //// POST: BookmarkController/Delete/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Delete(int id, IFormCollection collection)
-        //{
-        //    try
-        //    {
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
+        
         public ActionResult AddBookmark(string username, int postId )
         {
-            return RedirectToAction("Home", "Index");
+            bookmarkRepository.AddBookmark(username, postId);
+            return RedirectToAction("Details", "Posts", new { id = postId });
         }
-        public void RemoveBookmark()
+        public ActionResult RemoveBookmark(string username, int postId)
         {
-
+            Bookmark bookmark = bookmarkRepository.GetBookmark(username, postId);
+            bookmarkRepository.DeleteBookmark(bookmark);
+            return RedirectToAction("Details", "Posts", new { id = postId });
         }
     }
 }
