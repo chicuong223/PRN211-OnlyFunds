@@ -9,7 +9,6 @@ namespace BusinessObjects
     {
         public int PostId { get; set; }
         public string Username { get; set; }
-
         public virtual Post Post { get; set; }
         public virtual User UsernameNavigation { get; set; }
     }

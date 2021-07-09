@@ -44,6 +44,31 @@ namespace OnlyFundsWeb.Controllers
             return View();
         }
 
+        public IActionResult Solve(int? reportId, string solveAction)
+        {
+            if (reportId == null)
+                return NotFound();
+            PostReport report = reportRepo.GetReportById(reportId.Value);
+            if (report == null)
+                return NotFound();
+            if (solveAction.Equals("Delete"))
+                return RedirectToAction(nameof(DeletePost), new { report = report });
+            if (solveAction.Equals("Warning"))
+                return RedirectToAction(nameof(WarnUser), new { report = report });
+            return RedirectToAction(nameof(Ignore), new { report = report });
+        }
+
+        public IActionResult Ignore(PostReport report)
+        {
+            Post reportedPost = postRepo.GetPostById(report.PostId.Value);
+            IEnumerable<PostReport> reports = reportRepo.GetReportsByPost(reportedPost.PostId);
+            foreach (var r in reports)
+            {
+                reportRepo.SolveReport(r);
+            }
+            return View();
+        }
+
         [HttpPost]
         public IActionResult Add(int? postid, string desc)
         {
