@@ -19,7 +19,8 @@ namespace OnlyFundsWeb.Controllers
         IPostRepository postRepository = new PostRepository();
         public ActionResult Success(int?  page, string searchString)
         {
-            if (HttpContext.Session.GetString("user") == null)
+            string username = HttpContext.Session.GetString("user");
+            if (username == null)
             {
                 return RedirectToAction("Index");
             }
@@ -35,6 +36,9 @@ namespace OnlyFundsWeb.Controllers
             {
                 end = end + 1;
             }
+
+            User user = userRepository.GetUserByName(username);
+            ViewBag.User = user;
             ViewBag.end = end;
             return View("Success",postList);
         }

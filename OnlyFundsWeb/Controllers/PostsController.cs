@@ -1,6 +1,7 @@
 ﻿using BusinessObjects;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
@@ -120,6 +121,7 @@ namespace OnlyFundsWeb.Controllers
         {
             try
             {
+                string username = HttpContext.Session.GetString("user");
                 if (id == null)
                 {
                     return NotFound();
@@ -127,22 +129,39 @@ namespace OnlyFundsWeb.Controllers
                 Post post = postRepository.GetPostById(id.Value);
                 if (post == null)
                     return NotFound();
+                //-------------
                 IEnumerable<Comment> cmt = cmtRepository.GetCommentsByPost(post.PostId);
                 List<User> cmtUsers = new List<User>();
+                if (cmt != null)
+                {
+                    foreach (var comment in cmt)
+                    {
+                        IEnumerable<BusinessObjects.CommentLike> commentLikeList =
+                            commentLikeRepository.GetCommentLikeByCommentId(comment.CommentId);
+                        foreach (var commentLike in commentLikeList)
+                        {
+                            comment.CommentLikes.Add(commentLike);
+                        }
+                    }
+                }
+                //-----------------
                 int postLike = postLikeRepository.CountPostLike(id.Value);
                 int postComment = cmt.Count();
+                //-------------
                 foreach (Comment c in cmt)
                 {
                     User user = userRepository.GetUserByName(c.Username);
                     cmtUsers.Add(user);
                 }
-                if (HttpContext.Session.GetString("user") != null &&!HttpContext.Session.GetString("user").Equals(post.UploaderUsername))
+                /*if (username != null &&!username.Equals(post.UploaderUsername))
                 {
-                    IReportRepository reportRepo = new ReportRepository();
-                    IEnumerable<PostReport> reports = reportRepo.GetReportsByPost(post.PostId);
-                    ViewBag.Reports = reports;
-                }
-
+                    
+                }*/
+                IReportRepository reportRepo = new ReportRepository();
+                IEnumerable<PostReport> reports = reportRepo.GetReportsByPost(post.PostId);
+                ViewBag.Reports = reports;
+                User currentUser = userRepository.GetUserByName(username);
+                ViewBag.CurrentUser = currentUser;
                 ViewBag.CmtUsers = cmtUsers;
                 ViewBag.Comments = cmt;
                 ViewBag.PostLike = postLike;
@@ -158,6 +177,7 @@ namespace OnlyFundsWeb.Controllers
         // GET: PostsController/Create
         public ActionResult Create()
         {
+            ViewBag.CategoryList = categoryRepository.GetCategories();
             if (HttpContext.Session.GetString("user") == null)
             {
                 return RedirectToAction("Index", "User");
@@ -212,6 +232,7 @@ namespace OnlyFundsWeb.Controllers
             Post post = postRepository.GetPostById(id.Value);
             if (post == null)
                 return NotFound();
+            ViewBag.CategoryList = categoryRepository.GetCategories();
             if (!username.Equals(post.UploaderUsername))
             {
                 ViewBag.Error = "You are not allowed to edit posts of others";
