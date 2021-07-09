@@ -104,11 +104,10 @@ namespace DataAccess
             try
             {
                 using var context = new PRN211_OnlyFunds_CopyContext();
-                commentId = context.Comments.Max(c => c.CommentId);
-                if (commentId == 0)
-                {
-                    throw new Exception("no comment");
-                }
+                if (context.Comments.ToList().Count() <= 0)
+                    commentId = 0;
+                else
+                    commentId = context.Comments.Max(c => c.CommentId);
             }
             catch (Exception e)
             {

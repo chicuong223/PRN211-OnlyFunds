@@ -69,6 +69,8 @@ namespace OnlyFundsWeb.Controllers
         // GET: PostsController/Details/5
         public ActionResult Details(int? id)
         {
+            if(HttpContext.Session.GetString("user") == null)
+                return RedirectToAction("Index", "User");
             try
             {
                 if(id == null)
@@ -87,6 +89,7 @@ namespace OnlyFundsWeb.Controllers
                 }
                 if (!HttpContext.Session.GetString("user").Equals(post.UploaderUsername))
                 {
+                    ViewBag.CurrentUser = userRepository.GetUserByName(HttpContext.Session.GetString("user"));
                     IReportRepository reportRepo = new ReportRepository();
                     IEnumerable<PostReport> reports = reportRepo.GetReportsByPost(post.PostId);
                     ViewBag.Reports = reports;
@@ -97,7 +100,7 @@ namespace OnlyFundsWeb.Controllers
             }
             catch
             {
-                return RedirectToAction(nameof(PostList));
+                return View("Error");
             }
         }
 

@@ -9,14 +9,14 @@
     Layout = "~/Views/Shared/_userLayout.cshtml";
     IEnumerable<Comment> comments = ViewBag.Comments as IEnumerable<Comment>;
     IEnumerable<User> cmtUsers = ViewBag.CmtUsers as IEnumerable<User>;
-    string currentUsername = Context.Session.GetString("user");
+    User CurrentUser = ViewBag.CurrentUser;
     bool reported = false;
-    if (!currentUsername.Equals(Model.UploaderUsername))
+    if (!CurrentUser.Equals(Model.UploaderUsername))
     {
         IEnumerable<PostReport> reports = ViewBag.Reports as IEnumerable<PostReport>;
         foreach (var report in reports)
         {
-            if (report.ReporterUsername.Equals(currentUsername))
+            if (report.ReporterUsername.Equals(CurrentUser.Username))
             {
                 reported = true;
                 break;
@@ -64,10 +64,10 @@
                     <i class="fas fa-comment">@comments.Count()</i>
                 </a>
                 <text>
-                    <!-- Nếu user không phải author -->
-                    @if (currentUsername != null)
+                    @if (CurrentUser != null)
                     {
-                        @if (!Model.UploaderUsername.Equals(currentUsername))
+                        <!-- Nếu user không phải author -->
+                        @if (!Model.UploaderUsername.Equals(CurrentUser.Username))
                         {
                             @if (reported == false)
                             {
@@ -102,9 +102,8 @@
                             }
                             else
                             {
-                                <span href="#" data-bs-toggle="tooltip" data-bs-placement="top"
-                                      title="Tooltip on top" style="position: absolute; right: 0;">
-                                    <i class="fas fa-exclamation-triangle"></i>
+                                <span class="text-danger">
+                                    You have already reported this post
                                 </span>
                             }
 
@@ -157,10 +156,11 @@
             <!-- Write a comment -->
             <div class="comment-input mt-3">
                 <div class="comment-ava">
-                    <img src="images/Avatar.png" alt="avatar">
+                    <img src="~/images/@CurrentUser.AvatarUrl" alt="avatar">
                 </div>
                 <div class="comment-text">
                     <form asp-action="Add" asp-controller="Comment" method="post">
+                        <input type="hidden" name="postid" value="@Model.PostId"/>
                         <input class="rounded-pill ps-2" type="text" placeholder="Write a comment..." name="content">
                     </form>
                 </div>
@@ -178,6 +178,7 @@
                                         if (user.Username.Equals(cmt.Username))
                                         {
                                             <img src="~/images/@user.AvatarUrl" alt="@user.Username-avatar" />
+                                            break;
                                         }
                                     }
                                 }
@@ -185,8 +186,8 @@
                             <div class="comment-body">
                                 <div class="main-content border rounded p-2 pt-1">
                                     <!-- Comment's author'-->
-                                    <a class="bg-info fw-bold" asp-action="">@cmt.Username</a>
-                                    @if (currentUsername != null && cmt.Username.Equals(currentUsername))
+                                    <a class="bg-info fw-bold" asp-action="DetailsUser" asp-controller="User" asp-route-username="@cmt.Username">@cmt.Username</a>
+                                    @if (CurrentUser != null && cmt.Username.Equals(CurrentUser.Username))
                                     {
                                         <!-- Edit Comment -->
                                         <a href="#" data-bs-toggle="modal" data-bs-target="#modalEdit-@cmt.CommentId">Edit</a>
