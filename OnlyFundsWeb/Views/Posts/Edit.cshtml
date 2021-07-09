@@ -5,8 +5,7 @@
 @{
     ViewData["Title"] = "Edit";
     Layout = "~/Views/Shared/_userLayout.cshtml";
-    ICategoryRepository cateRepo = new CategoryRepository();
-    IEnumerable<Category> cateList = cateRepo.GetCategories();
+    IEnumerable<Category> cateList = ViewBag.CategoryList;
 }
 
 <h1>Edit Post</h1>

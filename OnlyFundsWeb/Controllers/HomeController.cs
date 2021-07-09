@@ -15,10 +15,13 @@ namespace OnlyFundsWeb.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private IPostRepository postRepository = new PostRepository();
+        private IPostRepository postRepository = null;
+        private ICategoryRepository categoryRepository = null;
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
+            postRepository = new PostRepository();
+            categoryRepository = new CategoryRepository();
         }
 
         public IActionResult Index(int? page)
@@ -33,6 +36,8 @@ namespace OnlyFundsWeb.Controllers
             {
                 end = end + 1;
             }
+
+            ViewBag.CategoryList = categoryRepository.GetCategories();
             ViewBag.end = end;
             return View(postList);
         }

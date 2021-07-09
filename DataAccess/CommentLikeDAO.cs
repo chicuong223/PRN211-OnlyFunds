@@ -46,7 +46,22 @@ namespace DataAccess
 
             return commentLike;
         }
+        public IEnumerable<CommentLike> GetCommentLikeByCommentId(int commendId)
+        {
+            var commentLikeList = new List<CommentLike>();
+            try
+            {
+                using var context = new PRN211_OnlyFunds_CopyContext();
+                commentLikeList = context.CommentLikes.Where(l => l.CommentId == commendId).ToList();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
 
+            return commentLikeList;
+        }
         public void AddCommentLike(CommentLike like)
         {
             try

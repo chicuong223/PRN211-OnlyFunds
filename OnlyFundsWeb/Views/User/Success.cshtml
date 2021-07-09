@@ -7,11 +7,7 @@
 @using System.Collections
 @using Microsoft.AspNetCore.Http
 @{
-    IPostRepository postRepository = new PostRepository();
-    IUserRepository userRepository = new UserRepository();
-    string username = Context.Session.GetString("user");
-    User user = userRepository.GetUserByName(username);
-    /*IEnumerable<Post> postList = postRepository.GetAllPost(1);*/
+    User user = ViewBag.User;
     Layout = "_userLayout";
 }
 @model IEnumerable<BusinessObjects.Post>

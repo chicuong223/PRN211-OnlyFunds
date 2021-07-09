@@ -18,5 +18,8 @@ namespace DataAccess.Repository
 
         public CommentLike CheckCommentLike(string username, int commentId) =>
             CommentLikeDAO.Instance.CheckCommentLike(username, commentId);
+
+        public IEnumerable<CommentLike> GetCommentLikeByCommentId(int commentId) =>
+            CommentLikeDAO.Instance.GetCommentLikeByCommentId(commentId);
     }
 }

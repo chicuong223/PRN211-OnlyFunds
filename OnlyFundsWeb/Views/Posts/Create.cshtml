@@ -4,8 +4,7 @@
 @using BusinessObjects;
 @using System.Collections
 @{
-    ICategoryRepository categoryRepository = new CategoryRepository();
-    IEnumerable<Category> cateList = categoryRepository.GetCategories();
+    IEnumerable<Category> cateList = ViewBag.CategoryList;
 }
 @model BusinessObjects.Post
 

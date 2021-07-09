@@ -3,8 +3,7 @@
 @using DataAccess.IRepository
 @using System.Collections
 @{
-    ICategoryRepository categoryRepository = new CategoryRepository();
-    IEnumerable<Category> cateList = categoryRepository.GetCategories();
+    IEnumerable<Category> cateList = ViewBag.CategoryList;
 }
 
 <!DOCTYPE html>

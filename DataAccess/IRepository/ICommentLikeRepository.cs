@@ -13,5 +13,6 @@ namespace DataAccess.IRepository
         void AddCommentLike(CommentLike like);
         void DeleteLike(string username, int postId);
         CommentLike CheckCommentLike(string username, int commentId);
+        IEnumerable<CommentLike> GetCommentLikeByCommentId(int commentId);
     }
 }
