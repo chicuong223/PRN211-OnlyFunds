@@ -6,6 +6,7 @@
 }
 <div class="container">
     <div class="main-body">
+
         <div class="row">
             <div class="col-md-6 mx-auto mb-3">
                 <div class="card">
@@ -33,7 +34,7 @@
                                 <hr>
                                 <div class="row">
                                     <div class="col-sm-12">
-                                        <a class="btn btn-info" asp-action="UpdateUserInfo" asp-route-username="@Model.Username" >
+                                        <a class="btn btn-info" asp-action="UpdateUserInfo" asp-route-username="@Model.Username">
                                             Edit
                                         </a>
                                     </div>
@@ -44,9 +45,10 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-1 me-auto">
+                <a class="btn btn-primary" asp-page="">Back</a>
+            </div>
+        </div>
     </div>
-</div>
-
-<div>
-    <a asp-page="">Back</a>
 </div>
