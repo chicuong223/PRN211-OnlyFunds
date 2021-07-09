@@ -36,15 +36,25 @@ img[alt*="avatar"] {
     margin-bottom: 10px;
 }
 
-.comment-text input {
-    width: 90%;
+.comment-text {
+    vertical-align: baseline;
 }
 
-    .comment-text input:focus {
-        outline: 0px !important;
-        -webkit-appearance: none;
-        box-shadow: none !important;
-    }
+.comment-text input {
+    width: 83%;
+    height: 2rem;
+}
+
+.comment-text button {
+    width: 7%;
+    height: 2rem;
+}
+
+.comment-text input:focus {
+    outline: 0px !important;
+    -webkit-appearance: none;
+    box-shadow: none !important;
+}
 
 .comment-ava, .comment-body, .comment-input {
     float: left;

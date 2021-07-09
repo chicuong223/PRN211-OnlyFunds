@@ -125,6 +125,19 @@ namespace OnlyFundsWeb.Controllers
                 if (post == null)
                     return NotFound();
                 IEnumerable<Comment> cmt = cmtRepository.GetCommentsByPost(post.PostId);
+                List<User> cmtUsers = new List<User>();
+                foreach (Comment c in cmt)
+                {
+                    User user = userRepository.GetUserByName(c.Username);
+                    cmtUsers.Add(user);
+                }
+                if (!HttpContext.Session.GetString("user").Equals(post.UploaderUsername))
+                {
+                    IReportRepository reportRepo = new ReportRepository();
+                    IEnumerable<PostReport> reports = reportRepo.GetReportsByPost(post.PostId);
+                    ViewBag.Reports = reports;
+                }
+                ViewBag.CmtUsers = cmtUsers;
                 ViewBag.Comments = cmt;
                 return View(post);
             }

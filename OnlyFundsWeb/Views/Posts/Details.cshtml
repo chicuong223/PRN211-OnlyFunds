@@ -1,18 +1,19 @@
-﻿@using BusinessObjects
+﻿@model BusinessObjects.Post
+@using BusinessObjects
 @using DataAccess.IRepository
 @using DataAccess.Repository
 @using Microsoft.AspNetCore.Http
-@model BusinessObjects.Post
+
 @{
     ViewData["Title"] = "Details";
-    string currentUsername = Context.Session.GetString("user");
-    string admin = Context.Session.GetString("admin");
+    Layout = "~/Views/Shared/_userLayout.cshtml";
     IEnumerable<Comment> comments = ViewBag.Comments as IEnumerable<Comment>;
+    IEnumerable<User> cmtUsers = ViewBag.CmtUsers as IEnumerable<User>;
+    string currentUsername = Context.Session.GetString("user");
     bool reported = false;
-    if (currentUsername != null && !currentUsername.Equals(Model.UploaderUsername))
+    if (!currentUsername.Equals(Model.UploaderUsername))
     {
-        IReportRepository reportRepo = new ReportRepository();
-        IEnumerable<PostReport> reports = reportRepo.GetReportsByPost(Model.PostId);
+        IEnumerable<PostReport> reports = ViewBag.Reports as IEnumerable<PostReport>;
         foreach (var report in reports)
         {
             if (report.ReporterUsername.Equals(currentUsername))
@@ -22,15 +23,8 @@
             }
         }
     }
-    if (admin != null)
-    {
-        Layout = "_adminLayout";
-    }
-    else
-    {
-        Layout = "_userLayout";
-    }
 }
+
 <head>
     <link rel="stylesheet" href="~/css/post_detail.css"/>
 </head>
@@ -165,119 +159,124 @@
                 <!-- Write a comment -->
                 <div class="comment-input mt-3">
                     <div class="comment-ava">
-                        <img src="images/Avatar.png" alt="avatar">
+                        <img src="blalbla ble ble"/>
+                        @*<img src="~/images/@user.AvatarUrl" alt="">*@
                     </div>
                     <div class="comment-text">
-                        <form action="#CommentServlet" method="post">
-                            <input class="rounded-pill ps-2" type="text" placeholder="Write a comment...">
+                        <form asp-route-postid="@Model.PostId" asp-action="Add" asp-controller="Comment" method="post">
+                            <input class="rounded-pill ps-2" type="text" placeholder="Write a comment..." name="content"
+                                   id="content">
+                            <button type="submit" class="btn btn-sm rounded-pill btn-warning">Post</button>
                         </form>
                     </div>
                 </div>
                 <!-- List of comments -->
                 <div class="comment-list">
-                    <div class="comment">
-                        <div class="comment-ava">
-                            <img src="images/Avatar.png" alt="avatar">
-                        </div>
-                        <div class="comment-body">
-                            <div class="main-content border rounded p-2 pt-1">
-                                <!-- Comment's author -->
-                                <div class="comment-name">
-                                    <a href="#author-page" class="info fw-bold" id="author-link">Wibu Dũng</a>
+                    @{
+                        foreach (Comment cmt in comments)
+                        {
+                            <div class="comment">
+                                <div class="comment-ava">
+                                    @{
+                                        foreach (User user in cmtUsers)
+                                        {
+                                            if (user.Username.Equals(cmt.Username))
+                                            {
+                                                <img src="~/images/@user.AvatarUrl" alt="@user.Username-avatar" />
+                                                break;
+                                            }
+                                        }
+                                    }
                                 </div>
-                                <!-- Comment's content -->
-                                <p class="mb-0">
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-                                    temporincididunt
-                                    ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                                    ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-                                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur
-                                </p>
-                            </div>
-                            <!-- Icons -->
-                            <ul class="p-0">
-                                <li>
-                                    <a href="#AJAX" class="like">
-                                        <i class="far fa-thumbs-up"></i>
-                                        421
-                                        <!-- Đã like thì chuyển thành nút này -->
-                                        <!-- <i class="fas fa-thumbs-up"></i> -->
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#AJAX" class="report">
-                                        <i class="fas fa-exclamation-triangle"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="comment">
-                        <div class="comment-ava">
-                            <img src="images/Avatar.png" alt="avatar">
-                        </div>
-                        <div class="comment-body">
-                            <div class="main-content border rounded p-2 pt-1">
-                                <!-- Comment's author -->
-                                <div class="comment-name">
-                                    <a href="#author-page" class="info fw-bold" id="author-link">Wibu Khôi</a>
+                                <div class="comment-body">
+                                    <div class="main-content border rounded p-2 pt-1">
+                                        <!-- Comment's author -->
+                                        <div class="comment-name pb-1 border-bottom">
+                                            <a href="#author-page" class="info fw-bold" id="author-link">@cmt.Username</a>
+                                            <span> commented on @cmt.CommentDate.Value.ToString("dd-MMM-yyyy")</span>
+                                        </div>
+                                        <!-- Comment's content -->
+                                        <p class="mb-0">
+                                            @cmt.Content
+                                        </p>
+                                    </div>
+                                    <!-- Icons -->
+                                    <ul class="p-0">
+                                        <li>
+                                            <a href="#AJAX" class="like">
+                                                <i class="far fa-thumbs-up"></i>
+                                                421
+                                                <!-- Đã like thì chuyển thành nút này -->
+                                                <!-- <i class="fas fa-thumbs-up"></i> -->
+                                            </a>
+                                        </li>
+                                        @{
+                                            if (cmt.Username.Equals(currentUsername))
+                                            {
+                                                <li>
+                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modalEdit-@cmt.CommentId">
+                                                        <i class="fas fa-edit"></i>
+                                                    </a>
+                                                    <div class="modal fade" id="modalEdit-@cmt.CommentId" tabindex="-1">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">Edit</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                            aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <form asp-action="Edit" asp-controller="Comment" method="Post"
+                                                                          asp-route-id="@cmt.CommentId" id="form-@cmt.CommentId"
+                                                                          asp-route-postid="@Model.PostId">
+                                                                        <textarea name="newContent" class="form-control"
+                                                                                  style="resize:none">@cmt.Content</textarea>
+                                                                    </form>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <input type="submit" form="form-@cmt.CommentId"
+                                                                           class="btn btn-primary" value="Edit" />
+                                                                    <button class="btn btn-secondary"
+                                                                            data-bs-dismiss="modal">
+                                                                        Cancel
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li>
+                                                    <a href="#" data-bs-toggle="modal" data-bs-target="#modal-@cmt.CommentId">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </a>
+                                                    <div class="modal fade" id="modal-@cmt.CommentId" tabindex="-1">
+                                                        <div class="modal-dialog">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">Delete Comment</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    Are you sure you want to delete this comment ?
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <form class="form-inline" asp-action="Delete" asp-controller="Comment" method="post" asp-route-id="@cmt.CommentId" asp-route-postid="@Model.PostId">
+                                                                        <input type="submit" class="btn btn-danger" value="Delete" />
+                                                                        <button class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            }
+                                        }
+                                    </ul>
                                 </div>
-                                <!-- Comment's content -->
-                                <p class="mb-0">
-                                    Visit my website to know how to become a golden frog
-                                </p>
                             </div>
-                            <!-- Icons -->
-                            <ul class="p-0">
-                                <li>
-                                    <a href="#AJAX" class="like">
-                                        <i class="far fa-thumbs-up"></i>
-                                        421
-                                        <!-- Đã like thì chuyển thành nút này -->
-                                        <!-- <i class="fas fa-thumbs-up"></i> -->
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#AJAX" class="report">
-                                        <i class="fas fa-exclamation-triangle"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="comment">
-                        <div class="comment-ava">
-                            <img src="images/Avatar.png" alt="avatar">
-                        </div>
-                        <div class="comment-body">
-                            <div class="main-content border rounded p-2 pt-1">
-                                <!-- Comment's author -->
-                                <div class="comment-name">
-                                    <a href="#author-page" class="info fw-bold" id="author-link">Wibu Thái</a>
-                                </div>
-                                <!-- Comment's content -->
-                                <p class="mb-0">
-                                    お兄ちゃんのへんたい!
-                                </p>
-                            </div>
-                            <!-- Icons -->
-                            <ul class="p-0">
-                                <li>
-                                    <a href="#AJAX" class="like">
-                                        <i class="far fa-thumbs-up"></i>
-                                        421
-                                        <!-- Đã like thì chuyển thành nút này -->
-                                        <!-- <i class="fas fa-thumbs-up"></i> -->
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#AJAX" class="report">
-                                        <i class="fas fa-exclamation-triangle"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                        }
+                    }
+                    <!--End of comment list-->
                 </div>
             }
         </div>
