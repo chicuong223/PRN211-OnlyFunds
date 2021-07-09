@@ -8,7 +8,7 @@ using DataAccess.IRepository;
 
 namespace DataAccess.Repository
 {
-    class PostLikeRepository :IPostLikeRepository
+    public class PostLikeRepository :IPostLikeRepository
     {
         public PostLike GetPostLike(string username, int postId) => PostLikeDAO.Instance.GetPostLike(username, postId);
         public void AddPostLike(PostLike like) => PostLikeDAO.Instance.AddPostLike(like);

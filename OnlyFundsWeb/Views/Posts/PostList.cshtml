@@ -22,7 +22,12 @@
 }*@
 <div class="container w-75">
     <div class="row pt-4 mb-4 text-center">
-        <h4>@cate.CategoryName Post</h4>
+        @{
+            if (cate != null)
+            {
+                <h4>@cate.CategoryName Post</h4>
+            }
+        }
     </div>
     <div class="row">
         @foreach (var item in Model)
@@ -63,12 +68,27 @@
 
     <nav aria-label="Page navigation example" class="text-center font-weight-bold mx-auto">
         <ul class="pagination justify-content-center">
-            @for (int index = 1; index <= ViewBag.end; index++)
-            {
-                <li>
-                    <a class="page-link" asp-action="GetPostByUser" asp-route-username="@ViewBag.user" asp-route-page="@index">@index</a>
-                </li>
+            @{
+                if (cate != null)
+                {
+                    @for (int index = 1; index <= ViewBag.end; index++)
+                    {
+                        <li>
+                            <a class="page-link" asp-action="GetPostByCategory" asp-route-categoryId="@cate.CategoryId" asp-route-page="@index">@index</a>
+                        </li>
+                    }
+                }
+                else
+                {
+                    @for (int index = 1; index <= ViewBag.end; index++)
+                    {
+                        <li>
+                            <a class="page-link" asp-action="GetPostByUser" asp-route-username="@session" asp-route-page="@index">@index</a>
+                        </li>
+                    }
+                }
             }
+
         </ul>
     </nav>
 </div>

@@ -130,7 +130,7 @@ namespace OnlyFundsWeb.Controllers
                     User user = userRepository.GetUserByName(c.Username);
                     cmtUsers.Add(user);
                 }
-                if (!HttpContext.Session.GetString("user").Equals(post.UploaderUsername))
+                if (HttpContext.Session.GetString("user") != null &&!HttpContext.Session.GetString("user").Equals(post.UploaderUsername))
                 {
                     IReportRepository reportRepo = new ReportRepository();
                     IEnumerable<PostReport> reports = reportRepo.GetReportsByPost(post.PostId);
