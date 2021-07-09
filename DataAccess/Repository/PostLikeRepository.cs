@@ -14,5 +14,8 @@ namespace DataAccess.Repository
         public void AddPostLike(PostLike like) => PostLikeDAO.Instance.AddPostLike(like);
         public void DeleteLike(string username, int postId) => PostLikeDAO.Instance.DeleteLike(username, postId);
         public int CountPostLike(int postId) => PostLikeDAO.Instance.CountPostLike(postId);
+
+        public PostLike CheckUserLike(string username, int postId) =>
+            PostLikeDAO.Instance.CheckUserLike(username, postId);
     }
 }
