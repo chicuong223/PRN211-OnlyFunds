@@ -69,7 +69,7 @@ namespace OnlyFundsWeb.Controllers
         // GET: PostsController/Details/5
         public ActionResult Details(int? id)
         {
-            if(HttpContext.Session.GetString("user") == null)
+            if(HttpContext.Session.GetString("user") == null && HttpContext.Session.GetString("admin") == null)
                 return RedirectToAction("Index", "User");
             try
             {
@@ -80,22 +80,35 @@ namespace OnlyFundsWeb.Controllers
                 Post post = postRepository.GetPostById(id.Value);
                 if (post == null)
                     return NotFound();
+                //Get comments of the post and users of the comments
                 IEnumerable<Comment> cmt = cmtRepository.GetCommentsByPost(post.PostId);
                 List<User> cmtUsers = new List<User>();
+                bool isAdmin = false;
                 foreach(Comment c in cmt)
                 {
                     User user = userRepository.GetUserByName(c.Username);
                     cmtUsers.Add(user);
                 }
-                if (!HttpContext.Session.GetString("user").Equals(post.UploaderUsername))
+                //Get reports of the posts
+                IEnumerable<PostReport> reports = new ReportRepository().GetReportsByPost(post.PostId);
+                ViewBag.Reports = reports;
+
+                //If is user: Set ViewBag.CurrentUser
+                //ViewBag.IsAdmin = false
+                //If is admin: ViewBag.IsAdmin = true
+                if(HttpContext.Session.GetString("user") != null)
                 {
                     ViewBag.CurrentUser = userRepository.GetUserByName(HttpContext.Session.GetString("user"));
-                    IReportRepository reportRepo = new ReportRepository();
-                    IEnumerable<PostReport> reports = reportRepo.GetReportsByPost(post.PostId);
-                    ViewBag.Reports = reports;
+                    isAdmin = false;
+                }
+                else if(HttpContext.Session.GetString("admin") != null)
+                {
+                    isAdmin = true;
                 }
                 ViewBag.CmtUsers = cmtUsers;
                 ViewBag.Comments = cmt;
+                ViewBag.IsAdmin = isAdmin;
+                Console.WriteLine(isAdmin);
                 return View(post);
             }
             catch
