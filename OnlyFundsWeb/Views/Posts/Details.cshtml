@@ -5,9 +5,9 @@
 @model BusinessObjects.Post
 @{
     ViewData["Title"] = "Details";
+    string currentUsername = Context.Session.GetString("user");
     Layout = "~/Views/Shared/_userLayout.cshtml";
     IEnumerable<Comment> comments = ViewBag.Comments as IEnumerable<Comment>;
-    string currentUsername = Context.Session.GetString("user");
     bool reported = false;
     if (!currentUsername.Equals(Model.UploaderUsername))
     {

@@ -89,8 +89,8 @@
                     @{
                         foreach (var report in TempData["reportList"] as List<PostReport>)
                         {
-                            <tr class=@(report.IsSolved ? "Solved" : "Pending")>
-                                <th class="text-truncate" scope="row"><a href="#report-details" class="td-link"></a>@report.ReportId</th>
+                            <tr id="@report.PostId" class=@(report.IsSolved ? "Solved" : "Pending")>
+                                <th class="text-truncate" scope="row">@report.ReportId</th>
                                 <td class="text-truncate"><a class="td-link"></a>@report.ReportDescription</td>
                                 <td class="text-truncate"><a class="td-link"></a>@report.ReporterUsername</td>
                                 <!-- Từ post id -> post name -->
@@ -144,7 +144,6 @@
             </div>
         </div>
     </div>
-    <a asp-action="List" asp-controller="User">To user List</a>
 </body>
 </html>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
@@ -179,6 +178,9 @@
             $("tbody tr").show();
             $("table#report").hide();
         });
-
+        $("tbody tr.Pending").click(function() {
+            var id = this.id;
+            window.location.href = '@Url.Action("Details", "Posts")/' + id;
+        });
     });
 </script>
