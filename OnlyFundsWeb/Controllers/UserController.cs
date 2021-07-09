@@ -17,7 +17,8 @@ namespace OnlyFundsWeb.Controllers
     {
         IUserRepository userRepository= new UserRepository();
         IPostRepository postRepository = new PostRepository();
-        public ActionResult Success(int?  page, string searchString)
+        IBookmarkRepository bookmarkRepository = new BookmarkRepository();
+        public ActionResult Success(int? page, string searchString)
         {
             string username = HttpContext.Session.GetString("user");
             if (username == null)
@@ -40,7 +41,32 @@ namespace OnlyFundsWeb.Controllers
             User user = userRepository.GetUserByName(username);
             ViewBag.User = user;
             ViewBag.end = end;
-            return View("Success",postList);
+            return View("Success", postList);
+        }
+        public ActionResult BookmarkedPosts(int? page)
+        {
+            string username = HttpContext.Session.GetString("user");
+            if (username == null)
+            {
+                return RedirectToAction("Index");
+            }
+            if (page == null)
+            {
+                page = 1;
+            }
+            var postList = bookmarkRepository.GetPostsByBookmark( username, page.Value);
+            int pageSize = 3;
+            int count = postRepository.CountAllPost();
+            int end = count / pageSize;
+            if (count % 3 != 0)
+            {
+                end = end + 1;
+            }
+
+            User user = userRepository.GetUserByName(username);
+            ViewBag.User = user;
+            ViewBag.end = end;
+            return View(postList);
         }
 
         public ActionResult ChangePassword()

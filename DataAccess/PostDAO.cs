@@ -55,6 +55,7 @@ namespace DataAccess
             }
         }
 
+
         public int CountPostByCategory(Category category)
         {
 

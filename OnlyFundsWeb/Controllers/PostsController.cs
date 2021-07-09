@@ -26,6 +26,7 @@ namespace OnlyFundsWeb.Controllers
         private ICommentRepository cmtRepository = null;
         private IPostLikeRepository postLikeRepository = null;
         private ICommentLikeRepository commentLikeRepository = null;
+        private IBookmarkRepository bookmarkRepository = null;
 
         public PostsController(IWebHostEnvironment env)
         {
@@ -37,6 +38,7 @@ namespace OnlyFundsWeb.Controllers
             cmtRepository = new CommentRepository();
             postLikeRepository = new PostLikeRepository();
             commentLikeRepository = new CommentLikeRepository();
+            bookmarkRepository = new BookmarkRepository();
         }
         // GET: PostsController
         public ActionResult PostList()
@@ -166,11 +168,24 @@ namespace OnlyFundsWeb.Controllers
                 ViewBag.Comments = cmt;
                 ViewBag.PostLike = postLike;
                 ViewBag.PostComment = postComment;
+
+                //for Bookmark
+                try
+                {
+                    Bookmark bookmark = bookmarkRepository.GetBookmark(username, id.Value);
+                    ViewBag.IsBookmarked = bookmark != null;
+                    //ViewBag.IsBookmarked = true;
+                }
+                catch(Exception ex)
+                {
+                    //return RedirectToAction("Index", "User");
+                }
+
                 return View(post);
             }
             catch
             {
-                return RedirectToAction(nameof(PostList));
+                    return RedirectToAction(nameof(PostList));
             }
         }
 

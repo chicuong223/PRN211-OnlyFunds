@@ -69,7 +69,8 @@ namespace DataAccess
             try
             {
                 using var context = new PRN211_OnlyFunds_CopyContext();
-                bookmark = context.Bookmarks.Where(b => b.PostId == postId && b.Username.Equals(username)).Single();
+                //bookmark = context.Bookmarks.Where(b => b.PostId == postId && b.Username.Equals(username)).Single();
+                bookmark = context.Bookmarks.SingleOrDefault(b => b.PostId == postId && b.Username.Equals(username));
             }
             catch (Exception ex)
             {

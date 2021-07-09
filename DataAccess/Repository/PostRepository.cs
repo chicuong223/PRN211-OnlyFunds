@@ -24,5 +24,6 @@ namespace DataAccess.Repository
         public int CountAllPost() => PostDAO.Instance.CountAllPost();
         public void UpdatePost(Post editedPost) => PostDAO.Instance.UpdatePost(editedPost);
         public IEnumerable<PostReport> GetReportsByPost(int postId) => ReportDAO.Instance.GetReportsByPost(postId);
+
     }
 }
