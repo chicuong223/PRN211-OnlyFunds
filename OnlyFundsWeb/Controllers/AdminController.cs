@@ -23,11 +23,16 @@ namespace OnlyFundsWeb.Controllers
         }
         public IActionResult Success()
         {
+            string adminName = HttpContext.Session.GetString("admin");
+            if (adminName == null)
+            {
+                return RedirectToAction("Index");
+            }
             /*IEnumerable<Category> categories = categoryRepository.GetCategories();
             ViewBag["categories"] = categories;*/
             IEnumerable<PostReport> reportLIst = reportRepository.GetReports();
             IEnumerable<User> userList = userRepository.GetUsers(1);
-            string adminName = HttpContext.Session.GetString("admin");
+            
             Admin admin = adminRepository.GetAdminByUname(adminName);
             ViewBag.userList = userList;
             ViewBag.admin = admin;
@@ -42,9 +47,6 @@ namespace OnlyFundsWeb.Controllers
                 if (user != null)
                 {
                     HttpContext.Session.SetString("admin", username);
-                    /*ViewBag.User = HttpContext.Session.GetString("admin");*/
-                    /*IEnumerable<PostReport> reportList = reportRepository.GetReports();*/
-                   
                     return RedirectToAction("Success");
                 }
                 else

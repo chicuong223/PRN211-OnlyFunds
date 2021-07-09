@@ -36,7 +36,6 @@ namespace OnlyFundsWeb.Controllers
         // GET: PostsController
         public ActionResult PostList()
         {
-
             return View();
         }
 

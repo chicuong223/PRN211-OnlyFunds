@@ -2,10 +2,7 @@
 @using DataAccess.Repository
 @using DataAccess.IRepository
 @using System.Collections
-@{
-    IPostRepository postRepository = new PostRepository();
-    IEnumerable<Post> postList = postRepository.GetAllPost(1);
-}
+@model IEnumerable<Post>
 @{
     ViewData["Title"] = "Home Page";
     Layout = "_UnAuthenticatedUserLayout";
@@ -19,7 +16,7 @@
         </div>
         <div class="row">
             @{
-                foreach (var post in postList)
+                foreach (var post in Model)
                 {
                     <div class="col-12 d-flex justify-content-center" style="height: 15rem;">
                         <div class="card w-75 mb-5">

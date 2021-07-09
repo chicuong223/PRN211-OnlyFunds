@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using DataAccess.IRepository;
 using DataAccess.Repository;
@@ -18,6 +19,10 @@ namespace OnlyFundsWeb.Controllers
         IPostRepository postRepository = new PostRepository();
         public ActionResult Success(int?  page, string searchString)
         {
+            if (HttpContext.Session.GetString("user") == null)
+            {
+                return RedirectToAction("Index");
+            }
             if (page == null)
             {
                 page = 1;
@@ -30,12 +35,7 @@ namespace OnlyFundsWeb.Controllers
             {
                 end = end + 1;
             }
-
             ViewBag.end = end;
-            /*if (postList == null)
-            {
-                throw new Exception("List null");
-            }*/
             return View("Success",postList);
         }
 
@@ -116,9 +116,9 @@ namespace OnlyFundsWeb.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    userRepository.AddUser(user);
+                    TempData["newAccount"] = JsonSerializer.Serialize(user);
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(ConfirmOTP));
             }
             catch (Exception e)
             {
@@ -126,6 +126,50 @@ namespace OnlyFundsWeb.Controllers
                 return View(user);
             }
         }
+        public ActionResult ConfirmOTP()
+        {
+            Object jsonNewUser = TempData.Peek("newAccount");
+            User newUser = jsonNewUser == null ? null : JsonSerializer.Deserialize<User>((string)jsonNewUser);
+            string otp = new Random().Next(999999).ToString("D6");
+
+            EmailSender emailSender = new EmailSender();
+            string subject = "OTP";
+            string body = $"{otp} is your Funds on verification code.";
+            TempData["otp"] = otp;
+            emailSender.sendEmail(subject, body, newUser.Email);
+            ViewBag.Message = $"Sit back and & Relax! While we verify your Email address: {newUser.Email}";
+            return View();
+        }
+        [HttpPost]
+        public ActionResult ConfirmOTP(string otp)
+        {
+            if (TempData["Attempts"] == null)
+            {
+                TempData["Attempts"] = 3;
+            }
+            int attempt = int.Parse(TempData["Attempts"].ToString());
+            if (attempt == 0)
+            {
+                TempData["Attempts"] = null;
+                TempData["otp"] = null;
+                TempData["newAccount"] = null;
+                ViewBag.Message = "You ran out of attempts<br>Make sure to use your own email";
+                return View(nameof(Register));
+            }
+            Object jsonNewUser = TempData.Peek("newAccount");
+            User newUser = jsonNewUser == null ? null : JsonSerializer.Deserialize<User>((string)jsonNewUser);
+            if (otp != null && otp.Equals(TempData["otp"].ToString()))
+            {
+                userRepository.AddUser(newUser);
+                return RedirectToAction(nameof(Index));
+            }
+            ViewBag.Message = $"Sit back and & Relax! While we verify your Email address: {newUser.Email}";
+            ViewBag.Attempts = $"{attempt} attempts left";
+            attempt--;
+            TempData["Attempts"] = attempt;
+            return View();
+        }
+
 
         // GET: UserController/Edit/5
         public ActionResult UpdateUserInfo(string username)
