@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BusinessObjects;
 using Microsoft.AspNetCore.Http;
+using DataAccess;
 
 namespace OnlyFundsWeb.Controllers
 {
@@ -16,6 +17,30 @@ namespace OnlyFundsWeb.Controllers
         private IPostRepository postRepo = new PostRepository();
         public IActionResult Index()
         {
+            return View();
+        }
+
+        public IActionResult WarnUser(PostReport report)
+        {
+            EmailSender emailSender = new EmailSender();
+            Post reportedPost = postRepo.GetPostById(report.PostId.Value);
+            User reportedUser = new UserRepository().GetUserByName(reportedPost.UploaderUsername);
+            string subject = "Post Report Warning";
+            string body = $"Your post has been reported: \n" +
+                $"Post title: {reportedPost.PostTitle}";
+            emailSender.sendEmail(subject, body, reportedUser.Email);
+            IEnumerable<PostReport> reports = reportRepo.GetReportsByPost(reportedPost.PostId);
+            foreach(var r in reports)
+            {
+                reportRepo.SolveReport(r);
+            }
+            return View();
+        }
+
+        public IActionResult DeletePost(PostReport report)
+        {
+            Post reportedPost = postRepo.GetPostById(report.PostId.Value);
+            postRepo.DeletePost(reportedPost.PostId);
             return View();
         }
 
