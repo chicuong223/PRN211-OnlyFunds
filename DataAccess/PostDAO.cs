@@ -185,6 +185,7 @@ namespace DataAccess
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex.StackTrace.ToString());
                 throw new Exception(ex.Message);
             }
         }

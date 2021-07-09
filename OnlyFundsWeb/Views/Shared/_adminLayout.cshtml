@@ -26,245 +26,41 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-light shadow p-0">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <a href="#Home" class="nav-link d-flex align-items-center">
+                    <a class="nav-link d-flex align-items-center">
                         <img src="images/Logo.png"
                              style="width:90px;" height="30px">
                     </a>
-                    <!--button when navbar is collapse-->
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#navbarSupportedContent">
-                        <span class="navbar-toggler-icon"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
                 </div>
                 <!--collapse when screen is smaller than 1200px-->
                 <div class="navbar-collapse collapse" id="navbarSupportedContent">
                     <!--Left nav-->
-                    <nav class="nav navbar-nav" id="left-nav">
-                        <span class="nav-item me-3">
-                            <a href="#Explore" class="nav-link text-dark"><u>Explore</u></a>
-                        </span>
-                        <span class="nav-item dropdown me-3">
-                            <a href="#Category" class="nav-link dropdown-toggle text-dark" id="navbarDropdown"
-                               role="button" data-bs-toggle="dropdown">
-                                <u>Category</u>
-                            </a>
-                            <!-- <c:set var="begin" value="0"/>
-                                <c:set var="end" value="5"/> -->
-                            <div class="container dropdown-menu">
-                                <div class="row">
-                                    <!-- <c:forEach begin="0" end="4">
-                                            <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
-                                                <c:forEach items="${applicationScope.catList}" var="cat" begin="${begin}"
-                                                    end="${end}">
-                                                    <a class="tag" href="SearchServlet?a=searchtag&id=${cat.categoryId}">
-                                                        <c:out value="${cat.getCategoryName()}" />
-                                                    </a>
-                                                </c:forEach>
-                                            </div>
-                                            <c:set var="begin" value="${begin+7}" />
-                                            <c:set var="end" value="${end+7}" />
-                                        </c:forEach> -->
-                                    <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
-                                        <a href="" class="tag">Tag 1</a>
+                    @*<nav class="nav navbar-nav" id="left-nav">
+                            <span class="nav-item mt-1 ms-5">
+                                <form method="post" action="#search-function">
+                                    <div class="input-group input-group-sm" id="search-input">
+                                        <input type="text" class="form-control" placeholder="Search...">
+                                        <button class="input-group-text" id="basic-addon2" type="submit">
+                                            <i class="fas fa-search"></i>
+                                        </button>
                                     </div>
-                                    <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
-                                        <a href="" class="tag">Tag 1</a>
-                                    </div>
-                                    <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
-                                        <a href="" class="tag">Tag 1</a>
-                                    </div>
-                                    <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
-                                        <a href="" class="tag">Tag 1</a>
-                                    </div>
-                                    <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
-                                        <a href="" class="tag">Tag 1</a>
-                                    </div>
-                                    <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
-                                        <a href="" class="tag">Tag 1</a>
-                                    </div>
-
-
-                                </div>
-                            </div>
-                        </span>
-                        <span class="nav-item me-5">
-                            <a href="#Explore" class="nav-link text-dark"><u>About us</u></a>
-                        </span>
-                        <span class="nav-item mt-1 ms-5">
-                            <form method="post" action="#search-function">
-                                <div class="input-group input-group-sm" id="search-input">
-                                    <input type="text" class="form-control" placeholder="Search...">
-                                    <button class="input-group-text" id="basic-addon2" type="submit">
-                                        <i class="fas fa-search"></i>
-                                    </button>
-                                </div>
-                            </form>
-                        </span>
-                    </nav>
+                                </form>
+                            </span>
+                        </nav>*@
                     <!--Right nav-->
                     <nav class="nav navbar-nav ms-auto" id="right-nav">
                         <!-- For visitors -->
                         <div class="nav-item me-auto" id="btn-group">
-                            <a class="btn btn-sm rounded-pill" id="login-btn">
-                                <i class="fas fa-sign-in-alt me-1 align-middle"></i><span class="align-middle">Login</span>
-                            </a>
-                            <a class="btn btn-sm rounded-pill ms-3" id="signup-btn">
-                                <i class="fas fa-user align-middle"></i>
-                                <span class="align-middle">Register</span>
+                            <a asp-action="Index" asp-controller="Admin" class="btn btn-sm rounded-pill" id="login-btn">
+                                <i class="fas fa-sign-in-alt me-1 align-middle"></i><span class="align-middle">Logout</span>
                             </a>
                         </div>
-                        <!-- For user -->
-                        <!-- <div class="nav-item" id="notification">
-                                <a href="#Category" class="nav-link" id="navbarDropdown" role="button"
-                                    data-bs-toggle="dropdown"><i class="fas fa-bell"></i>
-                                </a>
-                                <div class="dropdown-menu p-2" id="dropdown-noti">
-                                    <a href="" class="col-xl-12 nav-link m-0 p-0 text-break border-bottom">
-                                        This is a notifcation that is extremely long and big
-                                        to test if it will break the website layout.
-                                    </a>
-                                    <a href="" class="col-xl-12 nav-link m-0 p-0 text-break border-bottom">This is a
-                                        notification</a>
-                                    <a href="" class="col-xl-12 nav-link m-0 p-0 text-break border-bottom">This is a
-                                        notification</a>
-                                    <a href="" class="col-xl-12 nav-link m-0 p-0 text-break border-bottom">This is a
-                                        notification</a>
-                                    <a href="" class="col-xl-12 nav-link m-0 p-0 text-break">This is a notification</a>
-                                </div>
-                            </div>
-                            <div class="nav-item" id="user-dropdown">
-                                <a href="#User-info" class="nav-link" id="navbarDropdown" role="button"
-                                    data-bs-toggle="dropdown"><img class="rounded-pill" src="images/Avatar.png" width=40px
-                                        height=40px alt="">
-                                </a>
-                                <div class="dropdown-menu m-0 p-0" style="width: 200px; position: absolute; left: 85vw;">
-                                    <a href="ManageAccount" class="col-12 nav-link m-0 p-0 text-center border-bottom">Manage account</a>
-                                    <a href="" class="col-12 nav-link m-0 p-0 text-center border-bottom">Manage
-                                        subscription</a>
-                                    <a href="logout" class="col-12 nav-link m-0 p-0 text-center">Logout</a>
-                                </div>
-                            </div> -->
                     </nav>
                 </div>
             </div>
         </nav>
     </div>
     <main class="mt-4">
-        <div class="container w-75">
-            <div class="row gx-5 pb-4 border-bottom">
-                <div class="col-3 my-auto d-flex justify-content-end">
-                    <img src="images/Avatar.png" alt="" class="avatar rounded-circle">
-                </div>
-                <div class="col-9 my-auto">
-                    <div class="name"><span class="fw-bold">Staff name:</span> <span>staff's name goes here</span></div>
-                    <div class="username"><span class="fw-bold">Username:</span> <span>username goes here</span></div>
-                    <div class="email"><span class="fw-bold">Staff name:</span> <span>email goes here</span></div>
-                    <div class="join-date">
-                        <span class="fw-bold">Staff name:</span> <span>
-                            join date (create date) goes
-                            here
-                        </span>
-                    </div>
-                </div>
-            </div>
-            <div class="row gx-5 pb-4 pt-4 border-bottom">
-                <div class="col-lg-3 d-flex justify-content-center">
-                    <div class="box w-100 border border-primary" id="box-primary">
-                        <div class="body text-center my-auto">
-                            <i class="fas fa-file-alt fa-2x"></i>
-                            <div class="text fw-bold">Total reports: </div>
-                            <div class="reports">300</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 d-flex justify-content-center">
-                    <div class="box w-100 border border-success" id="box-success">
-                        <div class="body text-center my-auto">
-                            <i class="fas fa-file-alt fa-2x"></i>
-                            <div class="text fw-bold">Reports solved: </div>
-                            <div class="reports">120</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 d-flex justify-content-center">
-                    <div class="box w-100 border border-warning" id="box-warning">
-                        <div class="body text-center my-auto">
-                            <i class="fas fa-file-alt fa-2x"></i>
-                            <div class="text fw-bold">Reports pending: </div>
-                            <div class="reports">190</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 d-flex justify-content-center">
-                    <div class="box w-100 border border-danger" id="box-danger">
-                        <div class="body text-center my-auto">
-                            <i class="fas fa-file-alt fa-2x"></i>
-                            <div class="text fw-bold">Accounts blocked: </div>
-                            <div class="reports">10</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row gx-5 pt-4 pb-4 text-center">
-                <div class="col-12 title">
-                    <h4>Reports</h4>
-                </div>
-                <div class="col-12">
-                    <table class="table table-striped border">
-                        <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Title</th>
-                            <th scope="col">Username</th>
-                            <th scope="col">Post's name</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Date</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <th class="text-truncate" scope="row"><a href="#report-details" class="td-link"></a>Report's id</th>
-                            <td class="text-truncate"><a href="#report-details" class="td-link"></a>Title of the report</td>
-                            <td class="text-truncate"><a href="#report-details" class="td-link"></a>Report's username</td>
-                            <!-- Từ post id -> post name -->
-                            <td class="text-truncate"><a href="#report-details" class="td-link"></a>Post's name</td>
-                            <!-- Solve rồi chữ xanh chưa solve chữ đỏ -->
-                            <td class="text-success"><a href="#report-details" class="td-link"></a>Solved</td>
-                            <!-- <td class="text-danger"><a href="#report-details" class="td-link"></a>Not solved</td> -->
-                            <td><a href="#report-details" class="td-link"></a>11/06/2002</td>
-                        </tr>
-                        <tr>
-                            <th class="text-truncate" scope="row"><a href="#report-details" class="td-link"></a>Report's id</th>
-                            <td class="text-truncate"><a href="#report-details" class="td-link"></a>Title of the report</td>
-                            <td class="text-truncate"><a href="#report-details" class="td-link"></a>Report's username</td>
-                            <!-- Từ post id -> post name -->
-                            <td class="text-truncate"><a href="#report-details" class="td-link"></a>Post's name</td>
-                            <!-- Solve rồi chữ xanh chưa solve chữ đỏ -->
-                            <td class="text-success"><a href="#report-details" class="td-link"></a>Solved</td>
-                            <!-- <td class="text-danger"><a href="#report-details" class="td-link"></a>Not solved</td> -->
-                            <td><a href="#report-details" class="td-link"></a>11/06/2002</td>
-                        </tr>
-                        <tr>
-                            <th class="text-truncate" scope="row"><a href="#report-details" class="td-link"></a>Report's id</th>
-                            <td class="text-truncate"><a href="#report-details" class="td-link"></a>Title of the report</td>
-                            <td class="text-truncate"><a href="#report-details" class="td-link"></a>Report's username</td>
-                            <!-- Từ post id -> post name -->
-                            <td class="text-truncate"><a href="#report-details" class="td-link"></a>Post's name</td>
-                            <!-- Solve rồi chữ xanh chưa solve chữ đỏ -->
-                            <td class="text-success"><a href="#report-details" class="td-link"></a>Solved</td>
-                            <!-- <td class="text-danger"><a href="#report-details" class="td-link"></a>Not solved</td> -->
-                            <td><a href="#report-details" class="td-link"></a>11/06/2002</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            @RenderBody()
-        </div>
-
+        @RenderBody()
     </main>
     <!-- JavaScript Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"

@@ -65,9 +65,6 @@
         </div>
 
         <div class="row gx-5 pt-4 pb-4 text-center">
-            <div class="col-12 title">
-                <h4>@Model.ToString()</h4>
-            </div>
             <div class="col-12">
                 <table class="table table-striped border" id="report">
                     <thead>
@@ -84,7 +81,7 @@
                         @{
                             foreach (var report in Model)
                             {
-                                <tr id="@report.PostId" class=@(report.IsSolved ? "Solved" : "Pending")>
+                                <tr id="@report.ReportId" class=@(report.IsSolved ? "Solved" : "Pending")>
                                     <th class="text-truncate" scope="row">@report.ReportId</th>
                                     <td class="text-truncate"><a class="td-link"></a>@report.ReportDescription</td>
                                     <td class="text-truncate"><a class="td-link"></a>@report.ReporterUsername</td>
@@ -117,7 +114,7 @@
                             <th scope="col">Avatar URL</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="table-hover">
                         @{
                             foreach (var user in userlist)
                             {
@@ -175,7 +172,7 @@
         });
         $("tbody tr.Pending").click(function() {
             var id = this.id;
-            window.location.href = '@Url.Action("Details", "Posts")/'+id;
+            window.location.href = '@Url.Action("Details", "Report")/'+id;
         });
     });
 </script>
