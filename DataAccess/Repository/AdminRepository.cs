@@ -9,9 +9,7 @@ namespace DataAccess.Repository
 {
     public class AdminRepository : IAdminRepository
     {
-        public Admin CheckLogin(string username, string password)
-        {
-            return AdminDAO.Instance.CheckLogin(username, password);
-        }
+        public Admin CheckLogin(string username, string password) => AdminDAO.Instance.CheckLogin(username, password);
+        public Admin GetAdminByUname(string username) => AdminDAO.Instance.GetAdminByUname(username);
     }
 }

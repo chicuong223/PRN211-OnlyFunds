@@ -11,7 +11,7 @@
     IEnumerable<User> cmtUsers = ViewBag.CmtUsers as IEnumerable<User>;
     User CurrentUser = ViewBag.CurrentUser;
     bool reported = false;
-    if (!CurrentUser.Equals(Model.UploaderUsername))
+    if (CurrentUser != null && !CurrentUser.Equals(Model.UploaderUsername))
     {
         IEnumerable<PostReport> reports = ViewBag.Reports as IEnumerable<PostReport>;
         foreach (var report in reports)
@@ -67,7 +67,7 @@
                     @if (CurrentUser != null)
                     {
                         <!-- Nếu user không phải author -->
-                        @if (!Model.UploaderUsername.Equals(CurrentUser.Username))
+                        @if (CurrentUser != null && !Model.UploaderUsername.Equals(CurrentUser.Username))
                         {
                             @if (reported == false)
                             {

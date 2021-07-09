@@ -24,7 +24,22 @@ namespace DataAccess
             }
         }
 
+        public Admin GetAdminByUname(string username)
+        {
+            Admin admin = null;
+            try
+            {
+                using var context = new PRN211_OnlyFunds_CopyContext();
+                admin = context.Admins.SingleOrDefault(ad => ad.Username.Equals(username));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
 
+            return admin;
+        }
         public Admin CheckLogin(string username, string password)
         {
             Admin user = null;

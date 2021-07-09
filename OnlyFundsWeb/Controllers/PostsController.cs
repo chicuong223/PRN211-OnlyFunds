@@ -69,11 +69,11 @@ namespace OnlyFundsWeb.Controllers
         // GET: PostsController/Details/5
         public ActionResult Details(int? id)
         {
-            if(HttpContext.Session.GetString("user") == null)
+            if (HttpContext.Session.GetString("user") == null)
                 return RedirectToAction("Index", "User");
             try
             {
-                if(id == null)
+                if (id == null)
                 {
                     return NotFound();
                 }
@@ -82,18 +82,15 @@ namespace OnlyFundsWeb.Controllers
                     return NotFound();
                 IEnumerable<Comment> cmt = cmtRepository.GetCommentsByPost(post.PostId);
                 List<User> cmtUsers = new List<User>();
-                foreach(Comment c in cmt)
+                foreach (Comment c in cmt)
                 {
                     User user = userRepository.GetUserByName(c.Username);
                     cmtUsers.Add(user);
                 }
-                if (!HttpContext.Session.GetString("user").Equals(post.UploaderUsername))
-                {
-                    ViewBag.CurrentUser = userRepository.GetUserByName(HttpContext.Session.GetString("user"));
-                    IReportRepository reportRepo = new ReportRepository();
-                    IEnumerable<PostReport> reports = reportRepo.GetReportsByPost(post.PostId);
-                    ViewBag.Reports = reports;
-                }
+                IReportRepository reportRepo = new ReportRepository();
+                IEnumerable<PostReport> reports = reportRepo.GetReportsByPost(post.PostId);
+                ViewBag.Reports = reports;
+                ViewBag.CurrentUser = userRepository.GetUserByName(HttpContext.Session.GetString("user"));
                 ViewBag.CmtUsers = cmtUsers;
                 ViewBag.Comments = cmt;
                 return View(post);
@@ -132,7 +129,7 @@ namespace OnlyFundsWeb.Controllers
                 post.UploadDate = DateTime.Now;
                 post.FileUrl = fileName;
                 postRepository.InsertPost(post);
-                foreach(int catID in category)
+                foreach (int catID in category)
                 {
                     PostCategoryMap map = new PostCategoryMap
                     {
@@ -189,7 +186,7 @@ namespace OnlyFundsWeb.Controllers
                     post.FileUrl = Utilities.UploadFile(file, env, "postfiles");
                 }
                 IEnumerable<Category> postCatList = categoryRepository.GetCategoriesByPost(post.PostId);
-                foreach(var category in postCatList)
+                foreach (var category in postCatList)
                 {
                     postCategoryMapRepository.DeletePostMap(post, category);
                 }
