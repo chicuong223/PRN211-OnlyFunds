@@ -6,17 +6,26 @@
 
 @{
     ViewData["Title"] = "Details";
-    Layout = "~/Views/Shared/_userLayout.cshtml";
+    string username = Context.Session.GetString("user");
+    string admin = Context.Session.GetString("admin");
+    if (admin != null)
+    {
+        Layout = "_adminLayout";
+    }
+    else
+    {
+        Layout = "~/Views/Shared/_userLayout.cshtml";
+    }
     IEnumerable<Comment> comments = ViewBag.Comments as IEnumerable<Comment>;
     IEnumerable<User> cmtUsers = ViewBag.CmtUsers as IEnumerable<User>;
-    string currentUsername = Context.Session.GetString("user");
+    User CurrentUser = ViewBag.CurrentUser;
     bool reported = false;
-    if (!currentUsername.Equals(Model.UploaderUsername))
+    if (CurrentUser != null &&!CurrentUser.Equals(Model.UploaderUsername))
     {
         IEnumerable<PostReport> reports = ViewBag.Reports as IEnumerable<PostReport>;
         foreach (var report in reports)
         {
-            if (report.ReporterUsername.Equals(currentUsername))
+            if (report.ReporterUsername.Equals(CurrentUser.Username))
             {
                 reported = true;
                 break;
@@ -67,9 +76,9 @@
                     </a>
                     <text>
                         <!-- Nếu user không phải author -->
-                        @if (currentUsername != null)
+                        @if (CurrentUser != null)
                         {
-                            @if (!Model.UploaderUsername.Equals(currentUsername))
+                            @if (!Model.UploaderUsername.Equals(CurrentUser.Username))
                             {
                                 @if (reported == false)
                                 {
@@ -157,19 +166,22 @@
                     </text>
                 </div>
                 <!-- Write a comment -->
-                <div class="comment-input mt-3">
-                    <div class="comment-ava">
-                        <img src="blalbla ble ble"/>
-                        @*<img src="~/images/@user.AvatarUrl" alt="">*@
-                    </div>
-                    <div class="comment-text">
-                        <form asp-route-postid="@Model.PostId" asp-action="Add" asp-controller="Comment" method="post">
-                            <input class="rounded-pill ps-2" type="text" placeholder="Write a comment..." name="content"
-                                   id="content">
-                            <button type="submit" class="btn btn-sm rounded-pill btn-warning">Post</button>
-                        </form>
-                    </div>
-                </div>
+                if (admin == null && username != null)
+                    {
+                        <div class="comment-input mt-3">
+                            <div class="comment-ava">
+                                <img src="blalbla ble ble"/>
+                                @*<img src="~/images/@user.AvatarUrl" alt="">*@
+                            </div>
+                            <div class="comment-text">
+                                <form asp-route-postid="@Model.PostId" asp-action="Add" asp-controller="Comment" method="post">
+                                    <input class="rounded-pill ps-2" type="text" placeholder="Write a comment..." name="content"
+                                           id="content">
+                                    <button type="submit" class="btn btn-sm rounded-pill btn-warning">Post</button>
+                                </form>
+                            </div>
+                        </div>
+                    }
                 <!-- List of comments -->
                 <div class="comment-list">
                     @{
@@ -211,7 +223,7 @@
                                             </a>
                                         </li>
                                         @{
-                                            if (cmt.Username.Equals(currentUsername))
+                                            if (CurrentUser != null &&cmt.Username.Equals(CurrentUser.Username))
                                             {
                                                 <li>
                                                     <a href="#" data-bs-toggle="modal" data-bs-target="#modalEdit-@cmt.CommentId">
