@@ -7,13 +7,12 @@ using BusinessObjects;
 
 namespace DataAccess
 {
-    class PostLikeDAO
+    class CommentLikeDAO
     {
-        private static PostLikeDAO instance = null;
-
+        private static CommentLikeDAO instance = null;
         private static readonly object instanceLock = new object();
 
-        public static PostLikeDAO Instance
+        public static CommentLikeDAO Instance
         {
             get
             {
@@ -21,21 +20,23 @@ namespace DataAccess
                 {
                     if (instance == null)
                     {
-                        instance = new PostLikeDAO();
+                        instance = new CommentLikeDAO();
                     }
 
                     return instance;
                 }
             }
         }
-
-        public PostLike GetPostLike(string username, int postId)
+        //-------------------------
+        public CommentLike GetCommentLike(string username, int commentId)
         {
-            PostLike postLike = null;
+            CommentLike commentLike = null;
             try
             {
                 using var context = new PRN211_OnlyFunds_CopyContext();
-                postLike = context.PostLikes.SingleOrDefault(l => l.Username.Equals(username) && l.PostId == postId);
+                commentLike =
+                    context.CommentLikes.SingleOrDefault(l => l.Username.Equals(username) && l.CommentId == commentId);
+
             }
             catch (Exception e)
             {
@@ -43,24 +44,25 @@ namespace DataAccess
                 throw;
             }
 
-            return postLike;
+            return commentLike;
         }
 
-        public void AddPostLike(PostLike like)
+        public void AddCommentLike(CommentLike like)
         {
             try
             {
-                PostLike _like = GetPostLike(like.Username, like.PostId);
+                CommentLike _like = GetCommentLike(like.Username, like.CommentId);
                 if (_like == null)
                 {
                     using var context = new PRN211_OnlyFunds_CopyContext();
-                    context.PostLikes.Add(like);
+                    context.CommentLikes.Add(like);
                     context.SaveChanges();
                 }
                 else
                 {
-                    throw new Exception("Already Liked");
+                    throw new Exception("Already liked");
                 }
+
             }
             catch (Exception e)
             {
@@ -73,11 +75,11 @@ namespace DataAccess
         {
             try
             {
-                PostLike like = GetPostLike(username, postId);
+                CommentLike like = GetCommentLike(username, postId);
                 if (like != null)
                 {
                     using var context = new PRN211_OnlyFunds_CopyContext();
-                    context.PostLikes.Remove(like);
+                    context.CommentLikes.Remove(like);
                     context.SaveChanges();
                 }
             }
@@ -88,28 +90,13 @@ namespace DataAccess
             }
         }
 
-        public int CountPostLike(int postId)
+        public CommentLike CheckCommentLike(string username, int commentId) 
         {
             try
             {
                 using var context = new PRN211_OnlyFunds_CopyContext();
-                int count = context.PostLikes.Count(l => l.PostId == postId);
-                return count;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-        }
-
-        public PostLike CheckUserLike(string username, int postId)
-        {
-            try
-            {
-                using var context = new PRN211_OnlyFunds_CopyContext();
-                PostLike like =
-                    context.PostLikes.FirstOrDefault(l => l.Username.Equals(username) && l.PostId == postId);
+                CommentLike like =
+                    context.CommentLikes.FirstOrDefault(l => l.Username.Equals(username) && l.CommentId == commentId);
                 return like;
             }
             catch (Exception e)

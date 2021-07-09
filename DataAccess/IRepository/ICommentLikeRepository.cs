@@ -7,13 +7,11 @@ using BusinessObjects;
 
 namespace DataAccess.IRepository
 {
-    public interface IPostLikeRepository
+    public interface ICommentLikeRepository
     {
-        PostLike GetPostLike(string username, int postId);
-
-        void AddPostLike(PostLike like);
+        CommentLike GetCommentLike(string username, int commentId);
+        void AddCommentLike(CommentLike like);
         void DeleteLike(string username, int postId);
-        int CountPostLike(int postId);
-        PostLike CheckUserLike(string username, int id);
+        CommentLike CheckCommentLike(string username, int commentId);
     }
 }

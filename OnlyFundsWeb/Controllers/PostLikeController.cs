@@ -13,40 +13,45 @@ namespace OnlyFundsWeb.Controllers
     public class PostLikeController : Controller
     {
         private IPostLikeRepository postLikeRepository = null;
+        private IPostRepository postRepository = null;
         public PostLikeController()
         {
             postLikeRepository = new PostLikeRepository();
+            postRepository = new PostRepository();
         }
         public IActionResult Index()
         {
             return View();
         }
 
-        [HttpPost]
-        public IActionResult AddLike(int postId, string username)
+        public IActionResult AddLike(string username, int postId)
         {
             if (HttpContext.Session.GetString("user") == null)
             {
                 return RedirectToAction("Index", "User");
             }
-
-            if (HttpContext.Session.GetString("admin") == null)
-            {
-                return RedirectToAction("Index", "Admin");
-            }
-
             try
             {
-                PostLike like = new PostLike();
-                postLikeRepository.CountPostLike(postId);
+                PostLike _like = postLikeRepository.CheckUserLike(username, postId);
+                if (_like == null)
+                {
+                    PostLike like = new PostLike();
+                    like.Username = username;
+                    like.PostId = postId;
+                    postLikeRepository.AddPostLike(like);
+                    return RedirectToAction("Details", "Posts", new { id = postId });
+                }
+                else
+                {
+                    postLikeRepository.DeleteLike(username, postId);
+                    return RedirectToAction("Details", "Posts", new {id = postId});
+                }
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
-                throw;
+                ViewBag.Error = e.Message;
+                return View("Error");
             }
-
-            return View();
         }
     }
 }

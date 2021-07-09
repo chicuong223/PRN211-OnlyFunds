@@ -23,6 +23,8 @@ namespace OnlyFundsWeb.Controllers
         private ICategoryRepository categoryRepository =null;
         private IPostCategoryMapRepository postCategoryMapRepository = null;
         private ICommentRepository cmtRepository = null;
+        private IPostLikeRepository postLikeRepository = null;
+        private ICommentLikeRepository commentLikeRepository = null;
 
         public PostsController(IWebHostEnvironment env)
         {
@@ -32,6 +34,8 @@ namespace OnlyFundsWeb.Controllers
             categoryRepository = new CategoryRepository();
             postCategoryMapRepository = new PostCategoryMapRepository();
             cmtRepository = new CommentRepository();
+            postLikeRepository = new PostLikeRepository();
+            commentLikeRepository = new CommentLikeRepository();
         }
         // GET: PostsController
         public ActionResult PostList()
@@ -125,6 +129,8 @@ namespace OnlyFundsWeb.Controllers
                     return NotFound();
                 IEnumerable<Comment> cmt = cmtRepository.GetCommentsByPost(post.PostId);
                 List<User> cmtUsers = new List<User>();
+                int postLike = postLikeRepository.CountPostLike(id.Value);
+                int postComment = cmt.Count();
                 foreach (Comment c in cmt)
                 {
                     User user = userRepository.GetUserByName(c.Username);
@@ -136,8 +142,11 @@ namespace OnlyFundsWeb.Controllers
                     IEnumerable<PostReport> reports = reportRepo.GetReportsByPost(post.PostId);
                     ViewBag.Reports = reports;
                 }
+
                 ViewBag.CmtUsers = cmtUsers;
                 ViewBag.Comments = cmt;
+                ViewBag.PostLike = postLike;
+                ViewBag.PostComment = postComment;
                 return View(post);
             }
             catch

@@ -18,6 +18,8 @@
     }
     IEnumerable<Comment> comments = ViewBag.Comments as IEnumerable<Comment>;
     IEnumerable<User> cmtUsers = ViewBag.CmtUsers as IEnumerable<User>;
+    int postLike = ViewBag.PostLike;
+    int postComment = ViewBag.PostComment;
     User CurrentUser = ViewBag.CurrentUser;
     bool reported = false;
     if (CurrentUser != null &&!CurrentUser.Equals(Model.UploaderUsername))
@@ -63,16 +65,17 @@
                 }
                 <div class="col-12 pb-2 border-bottom" style="position: relative;" id="icon-bar">
                     <!-- Like button, đếm số like của 1 post -->
-                    <a asp-controller="" class="like me-4">
+
+                    <a asp-controller="PostLike" asp-action="AddLike" asp-route-username="@username" asp-route-postId="@Model.PostId" class="like me-4">
                         <i class="far fa-thumbs-up"></i>
-                        421
+                        @ViewBag.PostLike
                         <!-- Đã like thì chuyển thành nút này -->
                         <!-- <i class="fas fa-thumbs-up"></i> -->
                     </a>
                     <!-- Đếm số comment của post -->
                     <a href="#AJAX" class="comment">
                         <i class="fas fa-comment"></i>
-                        110
+                       @ViewBag.PostComment
                     </a>
                     <text>
                         <!-- Nếu user không phải author -->
