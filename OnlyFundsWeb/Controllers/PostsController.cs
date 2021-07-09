@@ -56,7 +56,7 @@ namespace OnlyFundsWeb.Controllers
                 }
                 if (page == null)
                     page = 1;
-                IEnumerable<Post> postList = postRepository.GetPostByUser(user, page.Value);
+                var postList = postRepository.GetPostByUser(user, page.Value);
                 int pageSize = 3;
                 int count = postRepository.CountPostByUser(user);
                 int end = count / pageSize;

@@ -22,7 +22,7 @@ namespace OnlyFundsWeb.Controllers
             {
                 page = 1;
             }
-            IEnumerable<Post> postList = postRepository.GetAllPost(page.Value);
+            var postList = postRepository.GetAllPost(page.Value);
             int pageSize = 3;
             int count = postRepository.CountAllPost();
             int end = count / pageSize;
@@ -32,13 +32,23 @@ namespace OnlyFundsWeb.Controllers
             }
 
             ViewBag.end = end;
-            ViewBag["PostList"] = postList;
-
-            return View("Success");
+            /*if (postList == null)
+            {
+                throw new Exception("List null");
+            }*/
+            return View("Success",postList);
         }
 
         public ActionResult ChangePassword()
         {
+
+            return View("PasswordChange");
+        }
+
+        [HttpPost]
+        public ActionResult ChangePassword(string username, string newPassword)
+        {
+
             return View("PasswordChange");
         }
         // GET: UserController
@@ -63,7 +73,7 @@ namespace OnlyFundsWeb.Controllers
                 {
                     HttpContext.Session.SetString("user", username);
                     ViewBag.User = HttpContext.Session.GetString("user");
-                    return View("Success");
+                    return RedirectToAction("Success");
                 }
                 else
                 {

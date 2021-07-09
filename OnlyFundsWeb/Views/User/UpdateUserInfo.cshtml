@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "UpdateUserInfo";
+    Layout = "_userLayout";
 }
 
 
@@ -42,7 +43,7 @@
                                         <h6 class="mb-0"><label asp-for="Email" class="control-label"></label></h6>
                                     </div>
                                     <div class="col-sm-9 text-secondary">
-                                        <input asp-for="Email" class="form-control"/>
+                                        <input readonly asp-for="Email" class="form-control"/>
                                         <span asp-validation-for="Email" class="text-danger"></span>
                                     </div>
                                 </div>

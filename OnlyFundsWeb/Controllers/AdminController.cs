@@ -23,27 +23,29 @@ namespace OnlyFundsWeb.Controllers
         }
         public IActionResult Success()
         {
-            IEnumerable<Category> categories = categoryRepository.GetCategories();
-            ViewBag["categories"] = categories;
-            return View("Success");
+            /*IEnumerable<Category> categories = categoryRepository.GetCategories();
+            ViewBag["categories"] = categories;*/
+            IEnumerable<PostReport> reportLIst = reportRepository.GetReports();
+            IEnumerable<User> userList = userRepository.GetUsers(1);
+            string adminName = HttpContext.Session.GetString("admin");
+            Admin admin = adminRepository.GetAdminByUname(adminName);
+            ViewBag.userList = userList;
+            ViewBag.admin = admin;
+            return View("Success", reportLIst);
         }
         [HttpPost]
-        public IActionResult Login(string username, string password, int? page)
+        public IActionResult Login(string username, string password)
         {
             if (username != null && password != null)
             {
                 Admin user = adminRepository.CheckLogin(username, password);
                 if (user != null)
                 {
-                    TempData["userList"] = userRepository.GetUsers(1);
-                    TempData["reportList"] = reportRepository.GetReports();
-                    TempData["reportSolved"] = reportRepository.GetReportByStatus(true); 
-                    TempData["reportPending"] = reportRepository.GetReportByStatus(false);
-                    HttpContext.Session.SetString("user", username);
-                    ViewBag.User = HttpContext.Session.GetString("user");
-                    IEnumerable<PostReport> reportList = reportRepository.GetReports();
+                    HttpContext.Session.SetString("admin", username);
+                    /*ViewBag.User = HttpContext.Session.GetString("admin");*/
+                    /*IEnumerable<PostReport> reportList = reportRepository.GetReports();*/
                    
-                    return View("Success", reportList);
+                    return RedirectToAction("Success");
                 }
                 else
                 {
@@ -55,7 +57,7 @@ namespace OnlyFundsWeb.Controllers
             return View("Index");
         }
 
-        public IActionResult UserList(int? page)
+        /*public IActionResult UserList(int? page)
         {
             IEnumerable<User> userList = userRepository.GetUsers(page.Value);
             if (page == null)
@@ -72,53 +74,6 @@ namespace OnlyFundsWeb.Controllers
             }
             ViewBag.end = end;
             return View("Success", userList);
-        }
-
-        /*
-        public IActionResult ReportSolved(int? page)
-        {
-            if (page == null)
-            {
-                page = 1;
-            }
-
-            int pageSize = 6;
-            int count = context.Users.Count();
-            int end = count / pageSize;
-            IEnumerable<PostReport> reportSolved = context.PostReports.Where(r => r.IsSolved).ToList();
-            ViewBag.end = end;
-            return View("Success", reportSolved);
-        }
-
-        public IActionResult ReportPending(int? page)
-        {
-            if (page == null)
-            {
-                page = 1;
-            }
-
-            int pageSize = 6;
-            int count = context.Users.Count();
-            int end = count / pageSize;
-            IEnumerable<PostReport> reportPending = context.PostReports.Where(r => !r.IsSolved).ToList();
-            ViewBag.end = end;
-            return View("Success", reportPending);
-        }
-
-        public IActionResult TotalReport(int? page)
-        {
-            if (page == null)
-            {
-                page = 1;
-            }
-
-            int pageSize = 6;
-            int count = context.Users.Count();
-            int end = count / pageSize;
-            IEnumerable<PostReport> reports = reportRepository.GetReports();
-            ViewBag.end = end;
-            return View("Success", reports);
         }*/
-
     }
 }

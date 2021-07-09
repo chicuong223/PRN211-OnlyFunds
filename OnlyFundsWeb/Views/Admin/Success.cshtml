@@ -3,16 +3,11 @@
 @using DataAccess
 @using DataAccess.Repository
 @using System.Collections
-@*@model IEnumerable<BusinessObjects.PostReport>*@
+@model IEnumerable<BusinessObjects.PostReport>
 @{
     Layout = "_adminLayout";
-    IEnumerable<PostReport> reportList = TempData["reportList"] as IEnumerable<PostReport>;
-    IEnumerable<PostReport> reportSolved = TempData["reportSolved"] as IEnumerable<PostReport>;
-    IEnumerable<PostReport> reportPending =TempData["reportPending"] as IEnumerable<PostReport>;
-    IEnumerable<User> userList = TempData["userList"] as IEnumerable<User>;
-    IAdminRepository adminRepository = new AdminRepository();
-    string adminName = Context.Session.GetString("user");
-    Admin admin = adminRepository.GetAdminByUname(adminName);
+    Admin admin = ViewBag.admin;
+    IEnumerable<User> userlist =(IEnumerable<User>) ViewBag.userList;
 }
 <html>
 <head>
@@ -36,7 +31,7 @@
                     <div class="body text-center my-auto">
                         <i class="fas fa-file-alt fa-2x"></i>
                         <div class="text fw-bold">Total reports: </div>
-                        <div class="reports">@reportList.Count()</div>
+                        <div class="reports">@Model.Count()</div>
                     </div>
                 </a>
             </div>
@@ -45,7 +40,7 @@
                     <div class="body text-center my-auto">
                         <i class="fas fa-file-alt fa-2x"></i>
                         <div class="text fw-bold">Reports solved: </div>
-                        <div class="reports">@reportList.Count(r => r.IsSolved)</div>
+                        <div class="reports">@Model.Count(r => r.IsSolved)</div>
                     </div>
                 </a>
             </div>
@@ -54,7 +49,7 @@
                     <div class="body text-center my-auto">
                         <i class="fas fa-file-alt fa-2x"></i>
                         <div class="text fw-bold">Reports pending: </div>
-                        <div class="reports">@reportList.Count( r => !r.IsSolved)</div>
+                        <div class="reports">@Model.Count( r => !r.IsSolved)</div>
                     </div>
                 </a>
             </div>
@@ -63,7 +58,7 @@
                     <div class="body text-center my-auto">
                         <i class="fas fa-file-alt fa-2x"></i>
                         <div class="text fw-bold">Accounts total: </div>
-                        <div class="reports">@userList.Count()</div>
+                        <div class="reports">@userlist.Count()</div>
                     </div>
                 </a>
             </div>
@@ -87,7 +82,7 @@
                     </thead>
                     <tbody>
                     @{
-                        foreach (var report in TempData["reportList"] as List<PostReport>)
+                        foreach (var report in Model)
                         {
                             <tr id="@report.PostId" class=@(report.IsSolved ? "Solved" : "Pending")>
                                 <th class="text-truncate" scope="row">@report.ReportId</th>
@@ -124,7 +119,7 @@
                     </thead>
                     <tbody>
                         @{
-                            foreach (var user in TempData["userList"] as IEnumerable<User>)
+                            foreach (var user in userlist)
                             {
                                 <tr>
                                     <td class="text-truncate"><a class="td-link"></a>@user.FirstName</td>
