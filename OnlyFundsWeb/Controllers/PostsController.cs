@@ -108,6 +108,11 @@ namespace OnlyFundsWeb.Controllers
                 ViewBag.CmtUsers = cmtUsers;
                 ViewBag.Comments = cmt;
                 ViewBag.IsAdmin = isAdmin;
+
+
+
+                //for Bookmark
+                ViewBag.IsBookmarked = true;
                 Console.WriteLine(isAdmin);
                 return View(post);
             }
@@ -187,8 +192,8 @@ namespace OnlyFundsWeb.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, Post post, IFormFile file, int[] cate)
         {
-            try
-            {
+            //try
+            //{
                 Post oldPost = postRepository.GetPostById(id);
                 if (oldPost == null)
                     throw new Exception("Post not found");
@@ -217,12 +222,12 @@ namespace OnlyFundsWeb.Controllers
                 }
                 postRepository.UpdatePost(post);
                 return RedirectToAction(nameof(Details), new { id = post.PostId });
-            }
-            catch (Exception ex)
-            {
-                ViewBag.error = ex.Message;
-                return View("Error");
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    ViewBag.error = ex.Message;
+            //    return View("Error");
+            //}
         }
 
         // POST: PostsController/Delete/5
