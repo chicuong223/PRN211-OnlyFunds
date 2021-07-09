@@ -25,31 +25,31 @@
 </head>
 <body>
 <div class="container w-75">
-        <div class="row">
-            <div class="col-12 d-flex w-75 align-items-center mx-auto">
-                <div class='col-lg-8'>   
-                    <form method="post" action="#search-function">
-                        <div class="input-group input-group-sm" id="search-input">
-                            <input type="text" class="form-control" placeholder="Search...">
-                            <button @*onclick="location.href = '@Url.Action("Success",)'"*@ class="input-group-text" id="basic-addon2" type="submit">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </form>
-                </div>
-                <div class='col-lg-4 d-flex justify-content-end'>
-                    <button onclick="location.href = '@Url.Action("Create", "Posts")'" class='btn btn-danger btn-user rounded-pill mx-auto' id="register-btn">
-                        New Post
-                    </button>
-                    <button onclick="location.href = '@Url.Action("GetPostByUser", "Posts", new {username = @Context.Session.GetString("user")})'"  class='btn btn-success rounded-pill'>
-                        Your Post
-                    </button>
-                </div>  
-            </div>       
-        </div>
-        <div class="row pt-4 mb-4 text-center">
-            <h4>Recent Posts</h4>
-        </div>
+    <div class="row">
+        <div class="col-12 d-flex w-75 align-items-center mx-auto">
+            <div class='col-lg-8'>   
+                <form method="post" action="#search-function">
+                    <div class="input-group input-group-sm" id="search-input">
+                        <input type="text" class="form-control" placeholder="Search...">
+                        <button @*onclick="location.href = '@Url.Action("Success",)'"*@ class="input-group-text" id="basic-addon2" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class='col-lg-4 d-flex justify-content-end'>
+                <button onclick="location.href = '@Url.Action("Create", "Posts")'" class='btn btn-danger btn-user rounded-pill mx-auto' id="register-btn">
+                    New Post
+                </button>
+                <button onclick="location.href = '@Url.Action("GetPostByUser", "Posts", new {username = @Context.Session.GetString("user")})'"  class='btn btn-success rounded-pill'>
+                    Your Post
+                </button>
+            </div>  
+        </div>       
+    </div>
+    <div class="row pt-4 mb-4 text-center">
+        <h4>Recent Posts</h4>
+    </div>
     <div class="row">
         @{
             foreach (var post in Model)
@@ -78,22 +78,12 @@
     </div>
     <nav aria-label="Page navigation example" class="text-center font-weight-bold mx-auto">
         <ul class="pagination justify-content-center">
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
             @for (int index = 1; index <= ViewBag.end; index++)
             {
                 <li>
                     <a class="page-link" asp-action="Success" asp-route-page="@index">@index</a>
                 </li>
             }
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
         </ul>
     </nav>
 </div>

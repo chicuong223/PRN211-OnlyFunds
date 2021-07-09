@@ -1,7 +1,9 @@
 ﻿@model IEnumerable<BusinessObjects.Post>
 @using Microsoft.AspNetCore.Http
+@using BusinessObjects
 @{
     ViewData["Title"] = "Index";
+    Category cate = ViewBag.Category;
     string session = Context.Session.GetString("user");
     if (session == null)
     {
@@ -18,45 +20,55 @@
     <h1 style="text-align: center">@ViewBag.Category.CategoryName</h1>
     }
 }*@
-@foreach (var item in Model)
-{
-    <div class="container w-75">
-        <div class="col-12 d-flex justify-content-center" style="height: 15rem;">
-            <div class="card w-75 mb-5">
-                <div class="card-header fw-bold">
-                    @item.PostTitle -
-                    @item.UploaderUsername -
-                    @item.UploadDate.Value.ToString("dd/MMM/yyyy")
-                </div>
-                <!-- If user is not allowed to see the post -->
-                <div class="card-body border">
-                    @item.PostDescription
-                </div>
-                <div class="card-footer text-center p-1">
-                    @{
-                        if (session == null)
-                        {
-                            <a asp-controller="User" asp-action="Index" asp-route-id="@item.PostId" class=" stretched-link link-post">
-                                <span>See more</span>
-                                <i class="fas fa-angle-double-right"></i>
-                            </a>
+<div class="container w-75">
+    <div class="row pt-4 mb-4 text-center">
+        <h4>@cate.CategoryName Post</h4>
+    </div>
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-12 d-flex justify-content-center" style="height: 15rem;">
+                <div class="card w-75 mb-5">
+                    <div class="card-header fw-bold">
+                        @item.PostTitle -
+                        @item.UploaderUsername -
+                        @item.UploadDate.Value.ToString("dd/MMM/yyyy")
+                    </div>
+                    <!-- If user is not allowed to see the post -->
+                    <div class="card-body border">
+                        @item.PostDescription
+                    </div>
+                    <div class="card-footer text-center p-1">
+                        @{
+                            if (session == null)
+                            {
+                                <a asp-controller="User" asp-action="Index" asp-route-id="@item.PostId" class=" stretched-link link-post">
+                                    <span>See more</span>
+                                    <i class="fas fa-angle-double-right"></i>
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Posts" asp-action="Details" asp-route-id="@item.PostId" class=" stretched-link link-post">
+                                    <span>See more</span>
+                                    <i class="fas fa-angle-double-right"></i>
+                                </a>
+                            }
                         }
-                        else
-                        {
-                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@item.PostId" class=" stretched-link link-post">
-                                <span>See more</span>
-                                <i class="fas fa-angle-double-right"></i>
-                            </a>
-                        }
-                    }
+                    </div>
                 </div>
             </div>
-        </div>
+        }
     </div>
-}
-<div class="text-center font-weight-bold">
-    @for (int index = 1; index <= ViewBag.end; index++)
-    {
-        <a asp-action="GetPostByUser" asp-route-username="@ViewBag.user" asp-route-page="@index">@index</a>
-    }
+
+    <nav aria-label="Page navigation example" class="text-center font-weight-bold mx-auto">
+        <ul class="pagination justify-content-center">
+            @for (int index = 1; index <= ViewBag.end; index++)
+            {
+                <li>
+                    <a class="page-link" asp-action="GetPostByUser" asp-route-username="@ViewBag.user" asp-route-page="@index">@index</a>
+                </li>
+            }
+        </ul>
+    </nav>
 </div>
