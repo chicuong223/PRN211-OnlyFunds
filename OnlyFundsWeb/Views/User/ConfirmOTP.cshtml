@@ -2,13 +2,44 @@
     ViewData["Title"] = "ConfirmOTP";
 }
 
-<h1>ConfirmOTP</h1>
-<h4>@ViewBag.Message</h4>
-<h5>Enter the OTP below when you have received it through your email</h5>
-<h5>@ViewBag.Attempts</h5>
-@{//<a asp-action="ConfirmOTP">Resend OTP</a>
-}
-<form asp-action="ConfirmOTP">
-    <input name="otp" type="text"/>
-    <input value="Confirm" type="submit"/>
-</form>
+<div class="container w-50 mt-5">
+    @{//<a asp-action="ConfirmOTP">Resend OTP</a>
+    }
+    <div class="card">
+        <header class="card-header">
+            <div class="alert alert-success" role="alert">
+                @ViewBag.Message <br/>
+                Enter the OTP below when you have received it through your email!
+            </div>
+            @if (@ViewBag.Attempts is not null)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @ViewBag.Attempts
+                </div>
+            }
+            
+        </header>
+        <div class="card-body">
+            <form asp-action="ConfirmOTP">
+                <div class="row">
+                    <div class="mb-3 row">
+                        <div class="col-sm-3">
+                            <label for="otp" class="form-label">OTP number</label>
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="otp" aria-describedby="idHelp" name="otp">
+                        </div>
+                    </div>
+                    <div class="mb-3 col-12">
+                        <input value="Confirm" type="submit" id="confirm" name="confirm" class="btn btn-success"/>
+                    </div>
+                </div>
+                
+                
+            </form>
+        </div>
+
+    </div>
+    
+    
+</div>
