@@ -123,10 +123,10 @@ namespace OnlyFundsWeb.Controllers
                     throw new Exception("Title is required");
                 if (string.IsNullOrWhiteSpace(post.PostDescription))
                     throw new Exception("Description is required");
-                string fileName = Utilities.UploadFile(file, env, "postfiles");
                 post.PostId = postRepository.GetMaxPostId() + 1;
                 post.UploaderUsername = HttpContext.Session.GetString("user");
                 post.UploadDate = DateTime.Now;
+                string fileName = Utilities.UploadPostFile(file, env, post.PostId);
                 post.FileUrl = fileName;
                 postRepository.InsertPost(post);
                 foreach (int catID in category)
@@ -183,7 +183,7 @@ namespace OnlyFundsWeb.Controllers
                 else
                 {
                     Utilities.DeleteFile(oldPost.FileUrl, env, "postfiles");
-                    post.FileUrl = Utilities.UploadFile(file, env, "postfiles");
+                    post.FileUrl = Utilities.UploadPostFile(file, env, post.PostId);
                 }
                 IEnumerable<Category> postCatList = categoryRepository.GetCategoriesByPost(post.PostId);
                 foreach (var category in postCatList)

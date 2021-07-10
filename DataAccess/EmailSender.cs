@@ -37,6 +37,7 @@ namespace DataAccess
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 throw new Exception(ex.Message);
             }
         }

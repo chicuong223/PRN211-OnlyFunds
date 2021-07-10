@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "ConfirmOTP";
+}
+
+<h1>ConfirmOTP</h1>
+<h4>@ViewBag.Message</h4>
+<h5>Enter the OTP below when you have received it through your email</h5>
+<h5>@ViewBag.Attempts</h5>
+@{//<a asp-action="ConfirmOTP">Resend OTP</a>
+}
+<form asp-action="ConfirmOTP">
+    <input name="otp" type="text" />
+    <input value="Confirm" type="submit" />
+</form>

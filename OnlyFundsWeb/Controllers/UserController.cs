@@ -8,6 +8,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using DataAccess.IRepository;
 using DataAccess.Repository;
+using System.Text.Json;
+using OnlyFundsWeb.Helpers;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace OnlyFundsWeb.Controllers
 {
@@ -16,6 +20,8 @@ namespace OnlyFundsWeb.Controllers
         IUserRepository userRepository= new UserRepository();
 
         private PRN211_OnlyFunds_CopyContext context = new PRN211_OnlyFunds_CopyContext();
+        private IWebHostEnvironment env;
+        public UserController(IWebHostEnvironment env) => this.env = env;
 
         public ActionResult Success()
         {
@@ -79,16 +85,73 @@ namespace OnlyFundsWeb.Controllers
 
         // POST: UserController/Create
         [HttpPost]
+        [RequestFormLimits(MultipartBodyLengthLimit = 104857600)]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(User user)
+        public ActionResult Register(User user, IFormFile AvatarUrl)
         {
-            if (ModelState.IsValid)
+            try
             {
-                context.Users.Add(user);
-                context.SaveChanges();
+                if (ModelState.IsValid)
+                {
+                    user.AvatarUrl = Utilities.UploadAvatar(AvatarUrl, env, user.Username);
+                    TempData["newAccount"] = JsonSerializer.Serialize(user);
+                }
+                return RedirectToAction(nameof(ConfirmOTP));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return View(user);
+            }
+        }
+
+        public ActionResult ConfirmOTP()
+        {
+            Object jsonNewUser = TempData.Peek("newAccount");
+            User newUser = jsonNewUser == null ? null : JsonSerializer.Deserialize<User>((string)jsonNewUser);
+            string otp = new Random().Next(999999).ToString("D6");
+
+            EmailSender emailSender = new EmailSender();
+            string subject = "OTP";
+            string body = $"{otp} is your Funds on verification code.";
+            TempData["otp"] = otp;
+            emailSender.sendEmail(subject, body, newUser.Email);
+            ViewBag.Message = $"Sit back and & Relax! While we verify your Email address: {newUser.Email}";
+            return View();
+        }
+        [HttpPost]
+        [RequestFormLimits(MultipartBodyLengthLimit = 104857600)]
+        public ActionResult ConfirmOTP(string otp)
+        {
+            if (TempData["Attempts"] == null)
+            {
+                TempData["Attempts"] = 3;
+            }
+            int attempt = int.Parse(TempData["Attempts"].ToString());
+            if (attempt == 0)
+            {
+                object jsonUser = TempData.Peek("newAccount");
+                User currUser = JsonSerializer.Deserialize<User>(jsonUser.ToString());
+                Utilities.DeleteFile(currUser.AvatarUrl, env, "images");
+                TempData["Attempts"] = null;
+                TempData["otp"] = null;
+                TempData["newAccount"] = null;
+                ViewBag.Message = "You ran out of attempts<br>Make sure to use your own email";
+                return View(nameof(Register));
+            }
+            object jsonNewUser = TempData.Peek("newAccount");
+            User newUser = jsonNewUser == null ? null : JsonSerializer.Deserialize<User>((string)jsonNewUser);
+            if (otp != null && otp.Equals(TempData["otp"].ToString()))
+            {
+                IFormFile file = (IFormFile)TempData["Avatar"];
+                userRepository.AddUser(newUser);
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
+            ViewBag.Message = $"Sit back and & Relax! While we verify your Email address: {newUser.Email}";
+            ViewBag.Attempts = $"{attempt} attempts left";
+            attempt--;
+            TempData["Attempts"] = attempt;
+            return View();
         }
 
         // GET: UserController/Edit/5
