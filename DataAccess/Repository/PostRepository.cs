@@ -19,9 +19,10 @@ namespace DataAccess.Repository
         public void DeletePost(int postId) => PostDAO.Instance.DeletePost(postId);
         public Post GetPostById(int postId) => PostDAO.Instance.GetPostByID(postId);
         public IEnumerable<Post> GetAllPost(int pageIndex) => PostDAO.Instance.GetAllPost(pageIndex);
-        public IEnumerable<Post> SearchPostsByTitle(string title) => PostDAO.Instance.SearchPostByTitle(title);
+        public IEnumerable<Post> SearchPostsByTitle(string title, int pageIndex) => PostDAO.Instance.SearchPostByTitle(title, pageIndex);
         public int GetMaxPostId() => PostDAO.Instance.GetMaxPostId();
         public int CountAllPost() => PostDAO.Instance.CountAllPost();
+        public int CountSearchPost(string searchString) => PostDAO.Instance.CountSearchPost(searchString);
         public void UpdatePost(Post editedPost) => PostDAO.Instance.UpdatePost(editedPost);
         public IEnumerable<PostReport> GetReportsByPost(int postId) => ReportDAO.Instance.GetReportsByPost(postId);
     }

@@ -21,6 +21,7 @@
     int postLike = ViewBag.PostLike;
     int postComment = ViewBag.PostComment;
     User CurrentUser = ViewBag.CurrentUser;
+    PostLike checkPostLike = ViewBag.CheckPostLiked;
     bool reported = false;
     if (CurrentUser != null &&!CurrentUser.Equals(Model.UploaderUsername))
     {
@@ -66,11 +67,21 @@
                 <div class="col-12 pb-2 border-bottom" style="position: relative;" id="icon-bar">
                     <!-- Like button, đếm số like của 1 post -->
 
-                    <a asp-controller="PostLike" asp-action="AddLike" asp-route-username="@username" asp-route-postId="@Model.PostId" class="like me-4">
-                        <i class="far fa-thumbs-up"></i>
-                        @ViewBag.PostLike
+                    <a onclick="clickLikePost(@username, @Model.PostId)" id="postLike" asp-controller="PostLike" asp-action="AddLike" asp-route-username="@username" asp-route-postId="@Model.PostId" class="like me-4">
+                        @*Check da like post chua*@
+                        @{
+                            if (checkPostLike != null)
+                            {
+                                <i name="liked" class="fas fa-thumbs-up"></i>
+                                @ViewBag.PostLike
+                            }
+                            else
+                            {
+                                <i class="far fa-thumbs-up"></i>
+                                @ViewBag.PostLike
+                            }
+                        }
                         <!-- Đã like thì chuyển thành nút này -->
-                        <!-- <i class="fas fa-thumbs-up"></i> -->
                     </a>
                     <!-- Đếm số comment của post -->
                     <a href="#AJAX" class="comment">
@@ -221,8 +232,21 @@
                                     <ul class="p-0">
                                         <li>
                                             <a asp-action="AddCommentLike" asp-controller="CommentLike" asp-route-postId="@Model.PostId" asp-route-username="@username" asp-route-commentId="@cmt.CommentId" class="like">
-                                                <i class="far fa-thumbs-up"></i>
-                                                @cmt.CommentLikes.Count
+                                                @*Check user da like comment chua
+                                                *@
+                                                @{
+                                                    if (cmt.CommentLikes.Any(l => l.CommentId == cmt.CommentId && l.Username.Equals(username)))
+                                                    {
+                                                        <i class="fas fa-thumbs-up"></i>
+                                                        @cmt.CommentLikes.Count
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="far fa-thumbs-up"></i>
+                                                        @cmt.CommentLikes.Count
+                                                    }
+
+                                                }
                                                 <!-- Đã like thì chuyển thành nút này -->
                                                 <!-- <i class="fas fa-thumbs-up"></i> -->
                                             </a>
@@ -306,7 +330,41 @@
 <script>
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
     var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
-        return new bootstrap.Tooltip(tooltipTriggerEl)
+        return new bootstrap.Tooltip(tooltipTriggerEl);
     });
-
+</script>
+<script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script defer>
+    function clickLikePost(username, postId) {
+        alert("here");
+        var likePost = document.querySelector("#postLike");
+        if (likePost.tagName("liked")) {
+            //call action likePost
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("AddLike", "PostLike")',
+                data: {
+                    username: username,
+                    postId: postId
+                },
+                cache: false,
+                success: function() {
+                    alert("liked");
+                }
+            });
+        } else {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("AddLike", "PostLike")',
+                data: {
+                    username: username,
+                    postId: postId
+                },
+                cache: false,
+                success: function() {
+                    alert("dislike");
+                }
+            });
+        }
+        }
 </script>

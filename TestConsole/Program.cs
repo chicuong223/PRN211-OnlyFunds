@@ -3,6 +3,7 @@ using DataAccess.IRepository;
 using DataAccess.Repository;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using BusinessObjects;
 using DataAccess.IRepository;
 using DataAccess.Repository;
@@ -15,7 +16,13 @@ namespace TestConsole
         static void Main(string[] args)
         {
             IPostRepository postRepository = new PostRepository();
-            Console.WriteLine(postRepository.GetAllPost(1));
+            IEnumerable<Post> posts = postRepository.SearchPostsByTitle("t", 1);
+            Console.WriteLine(posts.Count());
+            foreach (var post in posts)
+            {
+                Console.WriteLine(post);
+            }
+            Console.ReadLine();
         }
     }
 }

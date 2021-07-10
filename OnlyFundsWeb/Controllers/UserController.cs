@@ -19,24 +19,33 @@ namespace OnlyFundsWeb.Controllers
         IPostRepository postRepository = new PostRepository();
         public ActionResult Success(int?  page, string searchString)
         {
+            ViewData["CurrentFilter"] = searchString;
             string username = HttpContext.Session.GetString("user");
             if (username == null)
             {
                 return RedirectToAction("Index");
             }
+
             if (page == null)
             {
                 page = 1;
             }
             var postList = postRepository.GetAllPost(page.Value);
-            int pageSize = 3;
             int count = postRepository.CountAllPost();
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                postList = postRepository.SearchPostsByTitle(searchString, page.Value);
+                count = postRepository.CountSearchPost(searchString);
+            }
+            int pageSize = 3;
+            
+            /*int count = postList.Count();*/
             int end = count / pageSize;
             if (count % 3 != 0)
             {
                 end = end + 1;
             }
-
+           
             User user = userRepository.GetUserByName(username);
             ViewBag.User = user;
             ViewBag.end = end;

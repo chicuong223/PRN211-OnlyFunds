@@ -33,6 +33,7 @@ namespace OnlyFundsWeb.Controllers
             try
             {
                 PostLike _like = postLikeRepository.CheckUserLike(username, postId);
+                ViewBag.CheckPostLiked = _like;
                 if (_like == null)
                 {
                     PostLike like = new PostLike();

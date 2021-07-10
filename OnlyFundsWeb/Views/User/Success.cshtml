@@ -26,8 +26,8 @@
             <div class='col-lg-8'>   
                 <form method="post" action="#search-function">
                     <div class="input-group input-group-sm" id="search-input">
-                        <input type="text" class="form-control" placeholder="Search...">
-                        <button @*onclick="location.href = '@Url.Action("Success",)'"*@ class="input-group-text" id="basic-addon2" type="submit">
+                        <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" class="form-control" placeholder="Search...">
+                        <button onclick="location.href = '@Url.Action("Success", "User", new {searchString = @ViewData["CurrentFilter"]})'" class="input-group-text" id="basic-addon2" type="submit">
                             <i class="fas fa-search"></i>
                         </button>
                     </div>
@@ -45,6 +45,10 @@
     </div>
     <div class="row pt-4 mb-4 text-center">
         <h4>Recent Posts</h4>
+        @if (Model != null)
+        {
+            <h1>Null roi lew lew</h1>
+        }
     </div>
     <div class="row">
         @{

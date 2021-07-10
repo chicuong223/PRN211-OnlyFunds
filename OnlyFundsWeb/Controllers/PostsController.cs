@@ -142,11 +142,16 @@ namespace OnlyFundsWeb.Controllers
                         {
                             comment.CommentLikes.Add(commentLike);
                         }
+
+                        CommentLike checkCommentLiked =
+                            commentLikeRepository.CheckCommentLike(username, comment.CommentId);
                     }
                 }
                 //-----------------
                 int postLike = postLikeRepository.CountPostLike(id.Value);
                 int postComment = cmt.Count();
+                PostLike checkPostLiked = postLikeRepository.CheckUserLike(username, id.Value);
+                
                 //-------------
                 foreach (Comment c in cmt)
                 {
@@ -161,6 +166,7 @@ namespace OnlyFundsWeb.Controllers
                 IEnumerable<PostReport> reports = reportRepo.GetReportsByPost(post.PostId);
                 ViewBag.Reports = reports;
                 User currentUser = userRepository.GetUserByName(username);
+                ViewBag.CheckPostLiked = checkPostLiked;
                 ViewBag.CurrentUser = currentUser;
                 ViewBag.CmtUsers = cmtUsers;
                 ViewBag.Comments = cmt;
