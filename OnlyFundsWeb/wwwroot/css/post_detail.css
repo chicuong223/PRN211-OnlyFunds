@@ -19,12 +19,19 @@ img[alt*="avatar"] {
 }
 
 .comment, .comment-input {
+    position: relative;
     clear: both;
 }
 
+    .comment:after {
+        content: " ";
+        display: table;
+        clear: both;
+    }
+
 .comment-ava {
     width: 50px;
-    height: 50px;
+    height: 20%;
 }
 
 .comment-body {
@@ -40,22 +47,36 @@ img[alt*="avatar"] {
     vertical-align: baseline;
 }
 
-.comment-text input {
-    width: 83%;
-    height: 2rem;
-}
+    .comment-text input {
+        width: 83%;
+        height: 2rem;
+    }
 
-.comment-text button {
-    width: 7%;
-    height: 2rem;
-}
+    .comment-text button {
+        width: 7%;
+        height: 2rem;
+    }
 
-.comment-text input:focus {
-    outline: 0px !important;
-    -webkit-appearance: none;
-    box-shadow: none !important;
-}
+    .comment-text input:focus {
+        outline: 0px !important;
+        -webkit-appearance: none;
+        box-shadow: none !important;
+    }
 
 .comment-ava, .comment-body, .comment-input {
     float: left;
+}
+
+ul.p-0 {
+    margin-bottom: 0;
+}
+
+.line {
+    position: absolute;
+    left: 0.95rem;
+    background-color: black;
+    bottom: 0;
+    max-height: 100%;
+    top: 45px;
+    border: 1px solid black;
 }
