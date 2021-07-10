@@ -143,11 +143,11 @@
                                     //Book mark ajax
                                     if (!IsBookmarked)
                                     {
-                                        <i id="btnBookmark" onclick="clickBookmarkBtn(@CurrentUser.Username, @Model.PostId)" class="far fa-bookmark"></i>
+                                        <i id="btnBookmark" onclick="clickBookmarkBtn('@CurrentUser.Username', @Model.PostId)" class="far fa-bookmark"></i>
                                     }
                                     else
                                     {
-                                        <i id="btnBookmark" onclick="clickBookmarkBtn(@CurrentUser.Username, @Model.PostId)" class="fas fa-bookmark"></i>
+                                        <i id="btnBookmark" onclick="clickBookmarkBtn('@CurrentUser.Username', @Model.PostId)" class="fas fa-bookmark"></i>
                                     }
 
                                 }
@@ -426,5 +426,5 @@
                 alert("liked post");
             }
         });
-        }
+    }
 </script>

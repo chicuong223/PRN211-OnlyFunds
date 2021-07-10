@@ -7,24 +7,31 @@ li {
     display: inline-block;
 }
 
-a[id*="author-link"]:hover {
+a[id="author-link"]:hover {
     color: black;
     text-decoration: underline;
 }
 
-img[alt*="avatar"] {
+img[alt="avatar"] {
     width: 40px;
     height: 40px;
     border-radius: 50%;
 }
 
 .comment, .comment-input {
+    position: relative;
+    clear: both;
+}
+
+.comment:after {
+    content: " ";
+    display: table;
     clear: both;
 }
 
 .comment-ava {
     width: 50px;
-    height: 50px;
+    height: 20%;
 }
 
 .comment-body {
@@ -58,4 +65,18 @@ img[alt*="avatar"] {
 
 .comment-ava, .comment-body, .comment-input {
     float: left;
+}
+
+ul.p-0 {
+    margin-bottom: 0;
+}
+
+.line {
+    position: absolute;
+    left: 0.95rem;
+    background-color: black;
+    bottom: 0;
+    max-height: 100%;
+    top: 45px;
+    border: 1px solid black;
 }
