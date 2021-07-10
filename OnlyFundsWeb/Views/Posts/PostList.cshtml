@@ -16,7 +16,13 @@
 }
 <div class="container w-75">
     <div class="row pt-4 mb-4 text-center">
+        
         @{
+            //--If list post == null
+            if (@Model.Count() == 0)
+            {
+                <h1>CC</h1>
+            }
             if (cate != null)
             {
                 <h4>@cate.CategoryName Post</h4>
@@ -72,6 +78,15 @@
                         </li>
                     }
                 }
+                if (ViewBag.IsBookMarkedPage != null)
+                {
+                    @for (int index = 1; index <= ViewBag.end; index++)
+                    {
+                        <li>
+                            <a class="page-link" asp-action="BookmarkedPosts" asp-route-username="@session" asp-route-page="@index">@index</a>
+                        </li>
+                    }
+                }
                 else
                 {
                     @for (int index = 1; index <= ViewBag.end; index++)
@@ -82,7 +97,6 @@
                     }
                 }
             }
-
         </ul>
     </nav>
 </div>

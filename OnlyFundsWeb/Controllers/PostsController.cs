@@ -26,7 +26,7 @@ namespace OnlyFundsWeb.Controllers
         private ICommentRepository cmtRepository = null;
         private IPostLikeRepository postLikeRepository = null;
         private ICommentLikeRepository commentLikeRepository = null;
-
+        private IBookmarkRepository bookmarkRepository = null;
         public PostsController(IWebHostEnvironment env)
         {
             this.env = env;
@@ -37,13 +37,40 @@ namespace OnlyFundsWeb.Controllers
             cmtRepository = new CommentRepository();
             postLikeRepository = new PostLikeRepository();
             commentLikeRepository = new CommentLikeRepository();
+            bookmarkRepository = new BookmarkRepository();
         }
         // GET: PostsController
         public ActionResult PostList()
         {
             return View();
         }
-
+        public ActionResult BookmarkedPosts(int? page)
+        {
+            string username = HttpContext.Session.GetString("user");
+            if (username == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
+            if (page == null)
+            {
+                page = 1;
+            }
+            var postList = bookmarkRepository.GetPostsByBookmark(username, page.Value);
+            int pageSize = 3;
+            int count = bookmarkRepository.CountBookMarkPost(username);
+            int end = count / pageSize;
+            if (count % 3 != 0)
+            {
+                end = end + 1;
+            }
+            User user = userRepository.GetUserByName(username);
+            //----
+            ViewBag.IsBookMarkedPage = true;
+            //------
+            ViewBag.User = user;
+            ViewBag.end = end;
+            return View("PostList", postList);
+        }
         public ActionResult GetPostByUser(string username, int? page)
         {
             try
@@ -162,6 +189,8 @@ namespace OnlyFundsWeb.Controllers
                 {
                     
                 }*/
+                Bookmark bookmark = bookmarkRepository.GetBookmark(username, id.Value);
+                ViewBag.IsBookmarked = bookmark != null;
                 IReportRepository reportRepo = new ReportRepository();
                 IEnumerable<PostReport> reports = reportRepo.GetReportsByPost(post.PostId);
                 ViewBag.Reports = reports;

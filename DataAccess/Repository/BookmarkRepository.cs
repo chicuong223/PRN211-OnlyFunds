@@ -18,5 +18,7 @@ namespace DataAccess.Repository
 
         public IEnumerable<Post> GetPostsByBookmark(string username, int pageIndex)
         => BookmarkDAO.Instance.GetPostsByBookmark(username, pageIndex);
+
+        public int CountBookMarkPost(string username) => BookmarkDAO.Instance.CountBookMarkPost(username);
     }
 }

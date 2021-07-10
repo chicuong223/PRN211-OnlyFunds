@@ -51,7 +51,6 @@ namespace OnlyFundsWeb.Controllers
             ViewBag.end = end;
             return View("Success",postList);
         }
-
         public ActionResult ChangePassword()
         {
 

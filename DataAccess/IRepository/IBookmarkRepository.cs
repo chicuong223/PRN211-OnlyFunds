@@ -13,5 +13,6 @@ namespace DataAccess.IRepository
         Bookmark GetBookmark(string username, int postId);
         void DeleteBookmark(Bookmark bookmark);
         IEnumerable<Post> GetPostsByBookmark(string username, int pageIndex);
+        int CountBookMarkPost(string username);
     }
 }
