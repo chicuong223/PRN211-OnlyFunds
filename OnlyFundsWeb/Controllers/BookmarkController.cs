@@ -17,16 +17,32 @@ namespace OnlyFundsWeb.Controllers
         {
             bookmarkRepository = new BookmarkRepository();
         }
-        public ActionResult AddBookmark(string username, int postId)
+        //public ActionResult AddBookmark(string username, int postId)
+        //{
+        //    bookmarkRepository.AddBookmark(username, postId);
+        //    return RedirectToAction("Details", "Posts", new { id = postId });
+        //}
+
+        //public ActionResult RemoveBookmark(string username, int postId)
+        //{
+        //    Bookmark bookmark = bookmarkRepository.GetBookmark(username, postId);
+        //    bookmarkRepository.DeleteBookmark(bookmark);
+        //    return RedirectToAction("Details", "Posts", new { id = postId });
+        //}
+
+
+
+        //testing ajax/ do not use
+        [HttpPost]
+        public void AddBookmark(string username, int postId)
         {
             bookmarkRepository.AddBookmark(username, postId);
-            return RedirectToAction("Details", "Posts", new { id = postId });
         }
-        public ActionResult RemoveBookmark(string username, int postId)
+        [HttpPost]
+        public void RemoveBookmark(string username, int postId)
         {
             Bookmark bookmark = bookmarkRepository.GetBookmark(username, postId);
             bookmarkRepository.DeleteBookmark(bookmark);
-            return RedirectToAction("Details", "Posts", new { id = postId });
         }
     }
 }

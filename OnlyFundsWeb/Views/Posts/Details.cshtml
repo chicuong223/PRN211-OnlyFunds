@@ -22,7 +22,7 @@
     int postComment = ViewBag.PostComment;
     User CurrentUser = ViewBag.CurrentUser;
     bool reported = false;
-    if (CurrentUser != null &&!CurrentUser.Equals(Model.UploaderUsername))
+    if (CurrentUser != null && !CurrentUser.Equals(Model.UploaderUsername))
     {
         IEnumerable<PostReport> reports = ViewBag.Reports as IEnumerable<PostReport>;
         foreach (var report in reports)
@@ -37,7 +37,7 @@
 }
 
 <head>
-    <link rel="stylesheet" href="~/css/post_detail.css"/>
+    <link rel="stylesheet" href="~/css/post_detail.css" />
 </head>
 <!-- Main content -->
 <main class="mt-3">
@@ -56,16 +56,17 @@
                     if (!IsBookmarked)
                     {
                         @Html.ActionLink("Add Bookmark", "AddBookMark", "BookMark", new { username = CurrentUser.Username, postId = Model.PostId })
-
+                        <button id="btnBookmark" onclick="clickBookmarkBtn('@CurrentUser.Username', @Model.PostId)">Add Bookmark</button>
                     }
                     else
                     {
                         @Html.ActionLink("Remove Bookmark", "RemoveBookMark", "BookMark", new { username = CurrentUser.Username, postId = Model.PostId })
+                        <button id="btnBookmark" onclick="clickBookmarkBtn('@CurrentUser.Username', @Model.PostId)">Remove Bookmark</button>
                     }
                 }
             </div>
         </div>
-        
+
         <div class="row border border-dark rounded p-3 mb-5">
             <div class="col-12 pb-3 text-break" id="post-content">
                 @Model.PostDescription
@@ -91,7 +92,7 @@
                     <!-- Đếm số comment của post -->
                     <a href="#AJAX" class="comment">
                         <i class="fas fa-comment"></i>
-                       @ViewBag.PostComment
+                        @ViewBag.PostComment
                     </a>
                     <text>
                         <!-- Nếu user không phải author -->
@@ -134,9 +135,9 @@
                                     else
                                     {
                                         <span href="#" data-bs-toggle="tooltip" data-bs-placement="top"
-                              title="Tooltip on top" style="position: absolute; right: 0;">
-                            <i class="fas fa-exclamation-triangle"></i>
-                        </span>
+                                              title="Tooltip on top" style="position: absolute; right: 0;">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        </span>
                                     }
 
                                 }
@@ -188,21 +189,21 @@
                 </div>
                 <!-- Write a comment -->
                 if (admin == null && username != null)
-                    {
-                        <div class="comment-input mt-3">
-                            <div class="comment-ava">
-                                <img src="blalbla ble ble"/>
-                                @*<img src="~/images/@user.AvatarUrl" alt="">*@
-                            </div>
-                            <div class="comment-text">
-                                <form asp-route-postid="@Model.PostId" asp-action="Add" asp-controller="Comment" method="post">
-                                    <input class="rounded-pill ps-2" type="text" placeholder="Write a comment..." name="content"
-                                           id="content">
-                                    <button type="submit" class="btn btn-sm rounded-pill btn-warning">Post</button>
-                                </form>
-                            </div>
+                {
+                    <div class="comment-input mt-3">
+                        <div class="comment-ava">
+                            <img src="blalbla ble ble" />
+                            @*<img src="~/images/@user.AvatarUrl" alt="">*@
                         </div>
-                    }
+                        <div class="comment-text">
+                            <form asp-route-postid="@Model.PostId" asp-action="Add" asp-controller="Comment" method="post">
+                                <input class="rounded-pill ps-2" type="text" placeholder="Write a comment..." name="content"
+                                       id="content">
+                                <button type="submit" class="btn btn-sm rounded-pill btn-warning">Post</button>
+                            </form>
+                        </div>
+                    </div>
+                }
                 <!-- List of comments -->
                 <div class="comment-list">
                     @{
@@ -244,7 +245,7 @@
                                             </a>
                                         </li>
                                         @{
-                                            if (CurrentUser != null &&cmt.Username.Equals(CurrentUser.Username))
+                                            if (CurrentUser != null && cmt.Username.Equals(CurrentUser.Username))
                                             {
                                                 <li>
                                                     <a href="#" data-bs-toggle="modal" data-bs-target="#modalEdit-@cmt.CommentId">
@@ -321,8 +322,58 @@
         crossorigin="anonymous"></script>
 <script>
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-    var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
         return new bootstrap.Tooltip(tooltipTriggerEl)
     });
 
+</script>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script defer>
+    function clickBookmarkBtn(username, postId) {
+        alert("here");
+        event.preventDefault();
+        var btnBookmark = document.querySelector("#btnBookmark");
+        if (btnBookmark.innerHTML === "Add Bookmark") {
+            
+            //Call action Bookmark/AddBookmark
+            $.ajax({
+                type: "POST",
+                //url: "../Bookmark/AddBookmark?username=" + username + "&postId=" + postId,
+                url: '@Url.Action("AddBookmark", "Bookmark")',
+                data: {
+                    username: username,
+                    postId: postId
+                },
+                cache: false,
+                success: function () {
+                    alert('success');
+                    //Change button from add Book mark to
+                    //change this code
+                    btnBookmark.innerHTML = "Remove Bookmark";
+                }
+            });
+        }
+        else {
+            
+            //Call action Bookmark/RemoveBookmark
+            $.ajax({
+                type: "POST",
+                //url: "../Bookmark/RemoveBookmark?username=" + username + "&postId=" + postId,
+                url: '@Url.Action("RemoveBookmark", "Bookmark")',
+                data: {
+                    username: username,
+                    postId: postId
+                },
+                cache: false,
+                success: function () {
+                    alert('success');
+                    //Change button from add Book mark to
+                    //change this code
+                    btnBookmark.innerHTML = "Add Bookmark";
+                }
+            });
+        }
+    }
 </script>
