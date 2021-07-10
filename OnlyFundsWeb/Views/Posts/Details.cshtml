@@ -55,12 +55,12 @@
                     bool IsBookmarked = (bool)ViewBag.IsBookmarked;
                     if (!IsBookmarked)
                     {
-                        @Html.ActionLink("Add Bookmark", "AddBookMark", "BookMark", new { username = CurrentUser.Username, postId = Model.PostId })
+                        @Html.ActionLink("Add Bookmark DO NOT USE", "AddBookMark", "BookMark", new { username = CurrentUser.Username, postId = Model.PostId })
                         <button id="btnBookmark" onclick="clickBookmarkBtn('@CurrentUser.Username', @Model.PostId)">Add Bookmark</button>
                     }
                     else
                     {
-                        @Html.ActionLink("Remove Bookmark", "RemoveBookMark", "BookMark", new { username = CurrentUser.Username, postId = Model.PostId })
+                        @Html.ActionLink("Remove Bookmark DO NOT USE", "RemoveBookMark", "BookMark", new { username = CurrentUser.Username, postId = Model.PostId })
                         <button id="btnBookmark" onclick="clickBookmarkBtn('@CurrentUser.Username', @Model.PostId)">Remove Bookmark</button>
                     }
                 }
@@ -340,8 +340,8 @@
             //Call action Bookmark/AddBookmark
             $.ajax({
                 type: "POST",
-                //url: "../Bookmark/AddBookmark?username=" + username + "&postId=" + postId,
-                url: '@Url.Action("AddBookmark", "Bookmark")',
+                url: '/Bookmark/AddBookmark',
+                //url: '@Url.Action("AddBookmark", "Bookmark")',
                 data: {
                     username: username,
                     postId: postId
@@ -360,8 +360,8 @@
             //Call action Bookmark/RemoveBookmark
             $.ajax({
                 type: "POST",
-                //url: "../Bookmark/RemoveBookmark?username=" + username + "&postId=" + postId,
-                url: '@Url.Action("RemoveBookmark", "Bookmark")',
+                url: '/Bookmark/RemoveBookmark',
+                //url: '@Url.Action("RemoveBookmark", "Bookmark")',
                 data: {
                     username: username,
                     postId: postId
