@@ -1,17 +1,43 @@
 ﻿.btn-user {
-  border-radius: 45px;
+    border-radius: 45px;
 }
+
 ul .nav-item a {
-  text-decoration: none;
+    text-decoration: none;
 }
+
 ul .nav-item a:link {
-  text-decoration: none;
+    text-decoration: none;
 }
 
 ul .nav-item a:visited {
-  text-decoration: none;
+    text-decoration: none;
 }
 
-ul .nav-item a:hover {
-  text-decoration: underline;
+.button {
+    text-align: center;
+    min-width: 60px;
+    overflow: hidden;
+}
+
+.button span {
+    cursor: pointer;
+    position: relative;
+    transition: 0.5s;
+}
+
+.button span:after {
+    content: attr(id);
+    position: absolute;
+    opacity: 0;
+    transition: 1.5s;
+}
+
+.button:hover span {
+    padding-right: 110px;
+}
+
+.button:hover span:after {
+    opacity: 1;
+    right: 0;
 }

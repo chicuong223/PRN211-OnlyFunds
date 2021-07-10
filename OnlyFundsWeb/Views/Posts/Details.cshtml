@@ -65,137 +65,137 @@
                            style="font-size: 17px; color: red; text-decoration: underline;">@Model.FileUrl</a>
                     </div>
                 }
-                <div class="col-12 pb-2 border-bottom" style="position: relative;" id="icon-bar">
+                <div class="col-12 pb-2 border-bottom my-auto" style="position: relative;" id="icon-bar">
                     <!-- Like button, đếm số like của 1 post -->
+                    @*Check da like post chua*@
+                    @{
+                        if (checkPostLike != null)
+                        {
+                            <i id="postLike" onclick="clickLikePost('@username', @Model.PostId)" name="liked" class="fas fa-thumbs-up" style="cursor: pointer;"></i>
 
-
-                        @*Check da like post chua*@
-                        @{
-                            if (checkPostLike != null)
-                            {
-                                <i id="postLike" onclick="clickLikePost('@username', @Model.PostId)" name="liked" class="fas fa-thumbs-up"></i>
-                                
-                                <span id="countPostLike">@ViewBag.PostLike</span>
-                            }
-                            else
-                            {
-                                <i id="postLike" onclick="clickLikePost('@username', @Model.PostId)" class="far fa-thumbs-up"></i>
-                                <span id="countPostLike">@ViewBag.PostLike</span>
-                            }
+                            <span id="countPostLike">@ViewBag.PostLike</span>
                         }
-                        <!-- Đã like thì chuyển thành nút này -->
-        
+                        else
+                        {
+                            <i id="postLike" onclick="clickLikePost('@username', @Model.PostId)" class="far fa-thumbs-up" style="cursor: pointer;"></i>
+                            <span id="countPostLike">@ViewBag.PostLike</span>
+                        }
+                    }
+                    <!-- Đã like thì chuyển thành nút này -->
                     <!-- Đếm số comment của post -->
-                    <a href="#AJAX" class="comment">
+                    <a href="#AJAX" class="count-comment">
                         <i class="fas fa-comment"></i>
                         @ViewBag.PostComment
                     </a>
-                    <text>
-                        <!-- Nếu user không phải author -->
-                        @{
-                            if (CurrentUser != null)
+                    <!-- Nếu user không phải author -->
+                    @{
+                        if (CurrentUser != null)
+                        {
+                            if (!Model.UploaderUsername.Equals(CurrentUser.Username))
                             {
-                                if (!Model.UploaderUsername.Equals(CurrentUser.Username))
+                                if (reported == false)
                                 {
-                                    if (reported == false)
-                                    {
-                                        <a href="#" data-bs-toggle="modal" data-bs-target="#report-form" class="report"
-                                           style="position: absolute; right: 0;">
-                                            <i class="fas fa-exclamation-triangle"></i>
-                                        </a>
-                                        <div class="modal fade" id="report-form" tabindex="-1">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title">Report post</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                                aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <form asp-action="Add" asp-controller="Report" method="Post"
-                                                              asp-route-postid="@Model.PostId" id="report-form">
-                                                            <div>
-                                                                <label for="desc">Description</label>
-                                                                <input type="text" name="desc" class="form-control" />
-                                                            </div>
-                                                        </form>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <input type="submit" form="report-form" class="btn btn-primary" value="Submit" />
-                                                        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <span href="#" data-bs-toggle="tooltip" data-bs-placement="top"
-                                              title="Tooltip on top" style="position: absolute; right: 0;">
-                                            <i class="fas fa-exclamation-triangle"></i>
-                                        </span>
-                                    }
-                                    @*<a onclick="clickBookmarkBtn(@username, @Model.PostId)" $1$asp-controller="Bookmark" asp-action="AddBookmark" asp-route-username="@username" asp-route-postId="@Model.PostId#1# class="bookmark me-4 float-end">
-                                            <i class="far fa-bookmark"></i>
-                                            <!-- Đã bookmark thì chuyển thành nút này -->
-                                            <!-- <i class="fas fa-thumbs-up"></i> -->
-                                        </a>*@
-                                    //Book mark ajax
-                                    if (!IsBookmarked)
-                                    {
-                                        <i id="btnBookmark" onclick="clickBookmarkBtn('@CurrentUser.Username', @Model.PostId)" class="far fa-bookmark"></i>
-                                    }
-                                    else
-                                    {
-                                        <i id="btnBookmark" onclick="clickBookmarkBtn('@CurrentUser.Username', @Model.PostId)" class="fas fa-bookmark"></i>
-                                    }
-
-                                }
-                                else
-                                {
-                                    <!-- Xoá post-->
-                                    <a href="#" class="me-4" data-bs-toggle="modal" data-bs-target="#modal-delete"
-                                       style="position: absolute; right: 0;">
-                                        <i class="fas fa-trash-alt"></i>
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#report-form" class="report"
+                                       style="float: right;">
+                                        <i class="fas fa-exclamation-triangle"></i>
                                     </a>
-                                    <!-- Sửa post-->
-                                    <a asp-controller="Posts" asp-action="Edit" asp-route-id="@Model.PostId" style="position: absolute; right: 0;">
-                                        <i class="fas fa-pencil-alt"></i>
-                                    </a>
-                                    <div class="modal fade" id="modal-delete" tabindex="-1">
+                                    <div class="modal fade" id="report-form" tabindex="-1">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title">Delete Post</h5>
+                                                    <h5 class="modal-title">Report post</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                             aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <h5>This action will delete: </h5>
-                                                    <ul>
-                                                        <li>All information of this post</li>
-                                                        <li>Comments of this post</li>
-                                                        <li>Likes of this post</li>
-                                                    </ul>
-                                                    <p class="text-danger">Are you sure you want to delete this post</p>
+                                                    <form asp-action="Add" asp-controller="Report" method="Post"
+                                                          asp-route-postid="@Model.PostId" id="report-form">
+                                                        <div>
+                                                            <label for="desc">Description</label>
+                                                            <input type="text" name="desc" class="form-control" />
+                                                        </div>
+                                                    </form>
                                                 </div>
                                                 <div class="modal-footer">
-                                                    <form class="form-inline" asp-action="Delete" method="post"
-                                                          asp-route-id="@Model.PostId">
-                                                        <input type="submit" class="btn btn-danger" value="Delete" />
-                                                        <button class="btn btn-secondary" data-bs-dismiss="modal"
-                                                                aria-label="Close">
-                                                            Cancel
-                                                        </button>
-                                                    </form>
+                                                    <input type="submit" form="report-form" class="btn btn-primary" value="Submit" />
+                                                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 }
+                                else
+                                {
+                                    <span href="#" data-bs-toggle="tooltip" data-bs-placement="top"
+                                          title="You have already reported this post!" style="float: right;">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                    </span>
+                                }
+                                @*<a onclick="clickBookmarkBtn(@username, @Model.PostId)" $1$asp-controller="Bookmark" asp-action="AddBookmark" asp-route-username="@username" asp-route-postId="@Model.PostId#1# class="bookmark me-4 float-end">
+                                        <i class="far fa-bookmark"></i>
+                                        <!-- Đã bookmark thì chuyển thành nút này -->
+                                        <!-- <i class="fas fa-thumbs-up"></i> -->
+                                    </a>*@
+                                //Book mark ajax
+                                if (!IsBookmarked)
+                                {
+                                    <span class="me-2" style="cursor: pointer; float: right;">
+                                        <i id="btnBookmark" onclick="clickBookmarkBtn('@CurrentUser.Username', @Model.PostId)" class="far fa-bookmark"></i>
+                                    </span>
+
+                                }
+                                else
+                                {
+                                    <span class="me-2" style="cursor: pointer; float: right;">
+                                        <i id="btnBookmark" onclick="clickBookmarkBtn('@CurrentUser.Username', @Model.PostId)" class="fas fa-bookmark"></i>
+                                    </span>
+                                }
+
+                            }
+                            else
+                            {
+                                <!-- Xoá post-->
+                                <a href="#" class="ms-2" data-bs-toggle="modal" data-bs-target="#modal-delete"
+                                   style="float: right;">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                                <!-- Sửa post-->
+                                <a asp-controller="Posts" asp-action="Edit" asp-route-id="@Model.PostId" style="float: right;">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                                <div class="modal fade" id="modal-delete" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Delete Post</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h5>This action will delete: </h5>
+                                                <ul>
+                                                    <li>All information of this post</li>
+                                                    <li>Comments of this post</li>
+                                                    <li>Likes of this post</li>
+                                                </ul>
+                                                <p class="text-danger">Are you sure you want to delete this post</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <form class="form-inline" asp-action="Delete" method="post"
+                                                      asp-route-id="@Model.PostId">
+                                                    <input type="submit" class="btn btn-danger" value="Delete" />
+                                                    <button class="btn btn-secondary" data-bs-dismiss="modal"
+                                                            aria-label="Close">
+                                                        Cancel
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             }
                         }
-                    </text>
+                    }
                 </div>
                 <!-- Write a comment -->
                 if (admin == null && username != null)
@@ -219,14 +219,14 @@
                     @{
                         foreach (Comment cmt in comments)
                         {
-                            <div class="comment">
+                            <div class="comment mb-3 mt-3">
                                 <div class="comment-ava">
                                     @{
                                         foreach (User user in cmtUsers)
                                         {
                                             if (user.Username.Equals(cmt.Username))
                                             {
-                                                <img src="~/images/@user.AvatarUrl" alt="@user.Username-avatar" />
+                                                <img src="~/images/@user.AvatarUrl" alt="@user.Username-avatar" id="avatar" />
                                                 break;
                                             }
                                         }

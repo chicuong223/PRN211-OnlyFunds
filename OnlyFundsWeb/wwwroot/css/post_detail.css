@@ -12,10 +12,11 @@ a[id="author-link"]:hover {
     text-decoration: underline;
 }
 
-img[alt="avatar"] {
+img[id="avatar"] {
     width: 40px;
     height: 40px;
     border-radius: 50%;
+    overflow: hidden;
 }
 
 .comment, .comment-input {
@@ -32,6 +33,7 @@ img[alt="avatar"] {
 .comment-ava {
     width: 50px;
     height: 20%;
+    overflow: hidden;
 }
 
 .comment-body {
