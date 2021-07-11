@@ -65,17 +65,24 @@ namespace OnlyFundsWeb.Controllers
             ViewBag.end = end;
             return View("Success",postList);
         }
-        public ActionResult ChangePassword()
+        public ActionResult ChangePassword(string username)
         {
+            User user = userRepository.GetUserByName(username);
 
-            return View("PasswordChange");
+            return View("PasswordChange", user);
         }
 
         [HttpPost]
         public ActionResult ChangePassword(string username, string newPassword)
         {
+            if (username == null)
+            {
+                return NotFound();
+            }
 
-            return View("PasswordChange");
+            User user = userRepository.GetUserByName(username);
+            userRepository.ChangePassword(user, newPassword);
+            return RedirectToAction("Success");
         }
         // GET: UserController
         public ActionResult Index()
@@ -97,7 +104,10 @@ namespace OnlyFundsWeb.Controllers
                 User user = userRepository.CheckLogin(username, password);
                 if(user != null)
                 {
+                    string userStr = JsonSerializer.Serialize(user);
+                    HttpContext.Session.SetString("userLayout", userStr);
                     HttpContext.Session.SetString("user", username);
+                    
                     ViewBag.User = HttpContext.Session.GetString("user");
                     return RedirectToAction("Success");
                 }
@@ -224,18 +234,29 @@ namespace OnlyFundsWeb.Controllers
 
         // POST: UserController/Edit/5
         [HttpPost]
+        [RequestFormLimits(MultipartBodyLengthLimit = 104857600)]
         [ValidateAntiForgeryToken]
-        public ActionResult UpdateUserInfo(string username, User user)
+        public ActionResult UpdateUserInfo(string username, User user, IFormFile AvatarUrl)
         {
             if (!username.Equals(user.Username))
             {
                 return NotFound();
             }
 
+            User oldUser = userRepository.GetUserByName(username);
             if (ModelState.IsValid)
             {
+                if (AvatarUrl != null)
+                {
+                    Utilities.DeleteFile(oldUser.AvatarUrl, env, "images");
+                    user.AvatarUrl= Utilities.UploadAvatar(AvatarUrl, env, user.Username);
+                }
+                else
+                {
+                    user.AvatarUrl = oldUser.AvatarUrl;
+                }
                 userRepository.UpdateUser(user);
-                return RedirectToAction(nameof(DetailsUser));
+                return RedirectToAction(nameof(DetailsUser), new {username = username});
             }
             return View(user);
         }

@@ -5,12 +5,13 @@
 @using System.Collections
 @using System.Text.Json
 @{
-    ICategoryRepository categoryRepository = new CategoryRepository();
     IUserRepository userRepository = new UserRepository();
     var cateStr = Context.Session.GetString("CategoryList");
     IEnumerable<Category> categoryList = JsonSerializer.Deserialize<IEnumerable<Category>>(cateStr);
     string username = Context.Session.GetString("user");
-    User user = userRepository.GetUserByName(username);
+    /*User user = userRepository.GetUserByName(username);*/
+    var userStr = Context.Session.GetString("userLayout");
+    User user = JsonSerializer.Deserialize<User>(userStr);
 }
 <!DOCTYPE html>
 <html>
@@ -75,7 +76,7 @@
                                         <a asp-action="DetailsUser" asp-controller="User" asp-route-username="@username" class="dropdown-item">Manage account</a>
                                     </li>
                                     <li>
-                                        <a asp-action="ChangePassword" asp-controller="User" class="dropdown-item">
+                                        <a asp-action="ChangePassword" asp-controller="User" asp-route-username="@username" class="dropdown-item">
                                             Change password
                                         </a>
                                     </li>

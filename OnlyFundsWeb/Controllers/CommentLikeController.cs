@@ -22,12 +22,12 @@ namespace OnlyFundsWeb.Controllers
         {
             return View();
         }
-
-        public IActionResult AddCommentLike(string username, int commentId, int postId)
+        [HttpPost]
+        public void AddCommentLike(string username, int commentId, int postId)
         {
             if (HttpContext.Session.GetString("user") == null) 
             {
-                return RedirectToAction("Index", "User");
+                /*return RedirectToAction("Index", "User");*/
             }
 
             try
@@ -39,18 +39,18 @@ namespace OnlyFundsWeb.Controllers
                     like.Username = username;
                     like.CommentId = commentId;
                     commentLikeRepository.AddCommentLike(like);
-                    return RedirectToAction("Details", "Posts", new {id = postId});
+                    /*return RedirectToAction("Details", "Posts", new {id = postId});*/
                 }
                 else
                 {
                     commentLikeRepository.DeleteLike(username, commentId);
-                    return RedirectToAction("Details", "Posts", new {id = postId});
+                    /*return RedirectToAction("Details", "Posts", new {id = postId});*/
                 }
             }
             catch (Exception e)
             {
                 ViewBag.Error = e.Message;
-                return View("Error");
+                /*return View("Error");*/
             }
         }
     }

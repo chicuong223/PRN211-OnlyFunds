@@ -18,11 +18,11 @@ namespace OnlyFundsWeb.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Add(int postid, string content)
+        public void Add(int postid, string content)
         {
             if (HttpContext.Session.GetString("user") == null)
             {
-                return RedirectToAction("Index", "User");
+                /*return RedirectToAction("Index", "User");*/
             }
             try
             {
@@ -33,12 +33,12 @@ namespace OnlyFundsWeb.Controllers
                 cmt.Content = content;
                 cmt.Username = HttpContext.Session.GetString("user");
                 cmtRepo.AddComment(cmt);
-                return RedirectToAction("Details", "Posts", new { id = postid });
+                /*return RedirectToAction("Details", "Posts", new { id = postid });*/
             }
             catch (Exception ex)
             {
                 ViewBag.Error = ex.Message;
-                return View("Error");
+                /*return View("Error");*/
             }
         }
 

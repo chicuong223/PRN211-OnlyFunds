@@ -6,11 +6,12 @@
 
 @{
     ViewData["Title"] = "Details";
+    Layout = "_userLayout";
     string username = Context.Session.GetString("user");
     string admin = Context.Session.GetString("admin");
-    Layout = "_userLayout";
     IEnumerable<Comment> comments = ViewBag.Comments as IEnumerable<Comment>;
     IEnumerable<User> cmtUsers = ViewBag.CmtUsers as IEnumerable<User>;
+    int maxCommentId = ViewBag.maxCommentId;
     int postLike = ViewBag.PostLike;
     int postComment = ViewBag.PostComment;
     User CurrentUser = ViewBag.CurrentUser;
@@ -199,7 +200,7 @@
                             @*<img src="~/images/@user.AvatarUrl" alt="">*@
                         </div>
                         <div class="comment-text">
-                            <form asp-route-postid="@Model.PostId" asp-action="Add" asp-controller="Comment" method="post">
+                            <form onsubmit="SubmitComment(@Model.PostId, @maxCommentId)" id="comment-content">
                                 <input class="rounded-pill ps-2" type="text" placeholder="Write a comment..." name="content"
                                        id="content">
                                 <button type="submit" class="btn btn-sm rounded-pill btn-warning">Post</button>
@@ -208,7 +209,7 @@
                     </div>
                 }
                 <!-- List of comments -->
-                <div class="comment-list">
+                <div id="cmtList" class="comment-list">
                     @{
                         foreach (Comment cmt in comments)
                         {
@@ -240,19 +241,18 @@
                                     <!-- Icons -->
                                     <ul id="commentIcon" class="p-0">
                                         <li>
-                                            <a asp-action="AddCommentLike" asp-controller="CommentLike" asp-route-postId="@Model.PostId" asp-route-username="@username" asp-route-commentId="@cmt.CommentId" class="like">
-                                                @*Check user da like comment chua
-                                                *@
+                                            <a onclick="clickLikeCmt('@CurrentUser.Username', @cmt.CommentId, @Model.PostId)" class="like">
+                                                @*check user da like coment chwa*@
                                                 @{
                                                     if (cmt.CommentLikes.Any(l => l.CommentId == cmt.CommentId && l.Username.Equals(username)))
                                                     {
-                                                        <i class="fas fa-thumbs-up"></i>
-                                                        @cmt.CommentLikes.Count
+                                                        <i id="cmtLike-@cmt.CommentId" class="fas fa-thumbs-up"></i>
+                                                        <span id="countCmtLink-@cmt.CommentId">@cmt.CommentLikes.Count</span>
                                                     }
                                                     else
                                                     {
-                                                        <i class="far fa-thumbs-up"></i>
-                                                        @cmt.CommentLikes.Count
+                                                        <i id="cmtLike-@cmt.CommentId" class="far fa-thumbs-up"></i>
+                                                        <span id="countCmtLink-@cmt.CommentId">@cmt.CommentLikes.Count</span>
                                                     }
 
                                                 }
@@ -390,8 +390,6 @@
             });
         }
     }
-</script>
-<script defer>
     function clickLikePost(username, postId) {
         alert("here");
         var likePost = document.querySelector("#postLike");
@@ -419,5 +417,151 @@
                 alert("liked post");
             }
         });
+    }
+    function clickLikeCmt(username, cmtId, postId) {
+        alert("here");
+        console.log(username, cmtId, postId);
+        event.preventDefault();
+        var likeCmt = document.querySelector("#cmtLike-" + cmtId);
+        var countCmtLike = document.querySelector("#countCmtLink-" + cmtId);
+        var numOfLike = countCmtLike.innerHTML;
+        if (likeCmt.className === "fas fa-thumbs-up") {
+            //call action likeCmt
+            numOfLike--;
+            countCmtLike.innerHTML = numOfLike;
+            likeCmt.className = ("far fa-thumbs-up");
+        } else {
+            numOfLike++;
+            countCmtLike.innerHTML = numOfLike;
+            likeCmt.className = ("fas fa-thumbs-up");
+        }
+        $.ajax({
+            type: "POST",
+            url: '@Url.Action("AddCommentLike", "CommentLike")',
+            data: {
+                username: username,
+                commentId: cmtId,
+                postId: postId
+            },
+            cache: false,
+            success: function() {
+                alert("liked comment");
+            }
+        });
+    }
+    let countNewComment = 0;
+    function SubmitComment(postId, maxCmtId) {
+        alert("Ditconme vào được code rồi");
+        thisCmtId = maxCmtId + countNewComment + 1;
+        countNewComment++;
+        event.preventDefault();
+        var today = new Date();
+        var dd = String(today.getDate()).padStart(2, '0');
+        var months = ["Jan", "Feb", "Mar", "Apr",
+            "May", "Jun", "Jul", "Aug", "Sep", "Oct",
+            "Nov", "Dec"];
+        var mmm = months[today.getMonth()];
+        var yyyy = today.getFullYear();
+        today = dd + '-' + mmm + '-' + yyyy;
+        let cmtInput = document.getElementById('content');
+        $.ajax({
+            type: "POST",
+            url: '/Comment/Add',
+            //url: '@Url.Action("Add", "Comment")',
+            data: {
+                postId: postId,
+                content: cmtInput.value
+            },
+            cache: false,
+            success: function () {
+                alert('Địt con mẹ vào được success rồi');
+                let htmlString = `
+                                <div class="comment mb-3 mt-3">
+                                    <div class="comment-ava">
+                                        <img src="/images/@CurrentUser.AvatarUrl" alt="@CurrentUser.Username-avatar" id="avatar" />
+                                    </div>
+                                    <div class="comment-body">
+                                        <div class="main-content border rounded p-2 pt-1">
+                                            <!-- Comment's author -->
+                                            <div class="comment-name pb-1 border-bottom">
+                                                <a href="#author-page" class="info fw-bold" id="author-link">@CurrentUser.Username</a>
+                                                <span> commented on today</span>
+                                            </div>
+                                            <!-- Comment's content -->
+                                            <p class="mb-0">
+                                                ` + cmtInput.value + `
+                                            </p>
+                                        </div>
+                                        <!-- Icons -->
+                                        <ul id="commentIcon" class="p-0">
+                                            <li>
+                                                <a onclick="clickLikeCmt('@CurrentUser.Username',`+ thisCmtId +` , @Model.PostId)" class="like">
+                                                    <i id="cmtLike-`+ thisCmtId +`" class="far fa-thumbs-up"></i>
+                                                    <span id="countCmtLink-`+ thisCmtId +`">0</span>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#" data-bs-toggle="modal" data-bs-target="#modalEdit-` + thisCmtId + `">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                <div class="modal fade" id="modalEdit-` + thisCmtId + `" tabindex="-1">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Edit</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                                        aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form method="post" id="form-` + thisCmtId + `" action="/Comment/Edit/` + thisCmtId + `?postid=@Model.PostId">
+                                                                    <textarea name="newContent" class="form-control"
+                                                                     style="resize:none">` + cmtInput.value + `</textarea>
+                                                                </form>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <input type="submit" form="form-` + thisCmtId + `"
+                                                                        class="btn btn-primary" value="Edit" />
+                                                                <button class="btn btn-secondary"
+                                                                        data-bs-dismiss="modal">
+                                                                    Cancel
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <a href="#" data-bs-toggle="modal" data-bs-target="#modal-` + thisCmtId + `">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </a>
+                                                <div class="modal fade" id="modal-` + thisCmtId + `" tabindex="-1">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Delete Comment</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                Are you sure you want to delete this comment ?
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                @*<form class="form-inline" asp-action="Delete" asp-controller="Comment" method="post" asp-route-id="`+thisCmtId+`" asp-route-postid="@Model.PostId">*@
+                                                                <form method="post" class="form-inline" action=/Comment/Delete/` + thisCmtId + `?postid=@Model.PostId>
+                                                                    <input type="submit" class="btn btn-danger" value="Delete" />
+                                                                    <button class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="line"></div>
+                            </div>
+                               `;
+                    document.getElementById('cmtList').innerHTML = htmlString + document.getElementById('cmtList').innerHTML;
+                }
+            });
     }
 </script>

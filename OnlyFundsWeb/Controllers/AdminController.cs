@@ -17,6 +17,7 @@ namespace OnlyFundsWeb.Controllers
         private IAdminRepository adminRepository = new AdminRepository();
         private IUserRepository userRepository = new UserRepository();
         private ICategoryRepository categoryRepository = new CategoryRepository();
+        private IPostRepository postRepository = new PostRepository();
         public IActionResult Index()
         {
             return View();
@@ -31,6 +32,10 @@ namespace OnlyFundsWeb.Controllers
             /*IEnumerable<Category> categories = categoryRepository.GetCategories();
             ViewBag["categories"] = categories;*/
             IEnumerable<PostReport> reportLIst = reportRepository.GetReports();
+            foreach (var report in reportLIst)
+            {
+                report.Post = postRepository.GetPostById(report.PostId);
+            }
             IEnumerable<User> userList = userRepository.GetUsers(1);
             
             Admin admin = adminRepository.GetAdminByUname(adminName);

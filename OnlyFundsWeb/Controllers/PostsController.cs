@@ -196,6 +196,7 @@ namespace OnlyFundsWeb.Controllers
                 ViewBag.Reports = reports;
                 User currentUser = userRepository.GetUserByName(username);
                 ViewBag.CheckPostLiked = checkPostLiked;
+                ViewBag.maxCommentId = cmtRepository.GetMaxCommentId(); 
                 ViewBag.CurrentUser = currentUser;
                 ViewBag.CmtUsers = cmtUsers;
                 ViewBag.Comments = cmt;

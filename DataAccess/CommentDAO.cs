@@ -49,7 +49,7 @@ namespace DataAccess
             try
             {
                 using var context = new PRN211_OnlyFunds_CopyContext();
-                lst = context.Comments.Where(cmt => cmt.PostId == postId).ToList();
+                lst = context.Comments.Where(cmt => cmt.PostId == postId).OrderByDescending(cmt => cmt.CommentId).ToList();
             }
             catch (Exception ex)
             {

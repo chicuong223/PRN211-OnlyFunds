@@ -66,10 +66,6 @@
         </div>
 
         <div class="row gx-5 pt-4 pb-4 text-center">
-            <div class="col-12 title">
-                <h4>@Model.ToString()</h4>
-            </div>
-
             @*Begin div for search *@
             <div class="col-md-6 ms-auto">
                 @* Search input *@
@@ -105,7 +101,7 @@
                                     <td class="text-truncate"><a class="td-link"></a>@report.ReportDescription</td>
                                     <td class="text-truncate"><a class="td-link"></a>@report.ReporterUsername</td>
                                     <!-- Từ post id -> post name -->
-                                    <td class="text-truncate"><a class="td-link"></a>@report.PostId</td>
+                                    <td class="text-truncate"><a class="td-link"></a>@report.Post.PostTitle</td>
                                     <!-- Solve rồi chữ xanh chưa solve chữ đỏ -->
                                     @{
                                         <td class="text-success ">
