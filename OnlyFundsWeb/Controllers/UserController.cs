@@ -153,6 +153,18 @@ namespace OnlyFundsWeb.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    User existed = userRepository.GetUserByEmail(user.Email);
+                    if (existed != null)
+                    {
+                        ViewBag.Message = "Email existed";
+                        return View();
+                    }
+                    existed = userRepository.GetUserByName(user.Username);
+                    if (existed != null)
+                    {
+                        ViewBag.Message = "Username existed";
+                        return View();
+                    }
                     user.AvatarUrl = Utilities.UploadAvatar(AvatarUrl, env, user.Username);
                     TempData["newAccount"] = JsonSerializer.Serialize(user);
                 }
@@ -177,17 +189,19 @@ namespace OnlyFundsWeb.Controllers
             TempData["otp"] = otp;
             emailSender.sendEmail(subject, body, newUser.Email);
             ViewBag.Message = $"Sit back and & Relax! While we verify your Email address: {newUser.Email}";
+            TempData["Attempts"] = 3;
             return View();
         }
         [HttpPost]
         [RequestFormLimits(MultipartBodyLengthLimit = 104857600)]
         public ActionResult ConfirmOTP(string otp)
         {
-
+            /*
             if (TempData["Attempts"] == null)
             {
                 TempData["Attempts"] = 3;
             }
+            */
             int attempt = int.Parse(TempData["Attempts"].ToString());
 
             if (attempt == 0)
@@ -203,7 +217,7 @@ namespace OnlyFundsWeb.Controllers
             }
             Object jsonNewUser = TempData.Peek("newAccount");
             User newUser = jsonNewUser == null ? null : JsonSerializer.Deserialize<User>((string)jsonNewUser);
-            if (otp != null && otp.Equals(TempData["otp"].ToString()))
+            if (otp != null && otp.Equals(TempData.Peek("otp").ToString()))
             {
                 userRepository.AddUser(newUser);
                 return RedirectToAction(nameof(Index));
