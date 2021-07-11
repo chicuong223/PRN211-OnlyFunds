@@ -57,29 +57,33 @@
     </div>
     <div class="row">
         @{
+            if (@Model.ToArray().Length == 0)
+            {
+                <h1>No post here !!</h1>
+            }
             foreach (var post in Model)
-                {
-                    <div class="col-12 d-flex justify-content-center" style="height: 15rem;">
-                        <div class="card w-75 mb-5">
-                            <div class="card-header fw-bold">
-                                @post.PostTitle -
-                                <a asp-action="GetPostByUser" asp-controller="Posts" asp-route-username="@post.UploaderUsername">@post.UploaderUsername</a>
-                                 -
-                                @post.UploadDate.Value.ToString("dd/MMM/yyyy")
-                            </div>
-                            <!-- If user is not allowed to see the post -->
-                            <div class="card-body border">
-                                @post.PostDescription
-                            </div>
-                            <div class="card-footer text-center p-1">
-                                <a asp-controller="Posts" asp-action="Details" asp-route-id="@post.PostId" class=" link-post">
-                                    <span>See more</span>
-                                    <i class="fas fa-angle-double-right"></i>
-                                </a>
-                            </div>
+            {
+                <div class="col-12 d-flex justify-content-center" style="height: 15rem;">
+                    <div class="card w-75 mb-5">
+                        <div class="card-header fw-bold">
+                            @post.PostTitle -
+                            <a asp-action="GetPostByUser" asp-controller="Posts" asp-route-username="@post.UploaderUsername">@post.UploaderUsername</a>
+                            -
+                            @post.UploadDate.Value.ToString("dd/MMM/yyyy")
+                        </div>
+                        <!-- If user is not allowed to see the post -->
+                        <div class="card-body border">
+                            @post.PostDescription
+                        </div>
+                        <div class="card-footer text-center p-1">
+                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@post.PostId" class=" link-post">
+                                <span>See more</span>
+                                <i class="fas fa-angle-double-right"></i>
+                            </a>
                         </div>
                     </div>
-                }
+                </div>
+            }
         }
     </div>
     <nav aria-label="Page navigation example" class="text-center font-weight-bold mx-auto">

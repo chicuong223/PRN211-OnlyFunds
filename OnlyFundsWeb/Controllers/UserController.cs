@@ -153,7 +153,28 @@ namespace OnlyFundsWeb.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    user.AvatarUrl = Utilities.UploadAvatar(AvatarUrl, env, user.Username);
+                    User existed = userRepository.GetUserByEmail(user.Email);
+                    if (existed != null)
+                    {
+                        ViewBag.Message = "Email existed";
+                        return View();
+                    }
+                    existed = userRepository.GetUserByName(user.Username);
+                    if (existed != null)
+                    {
+                        ViewBag.Message = "Username existed";
+                        return View();
+                    }
+
+                    if (AvatarUrl == null)
+                    {
+                        user.AvatarUrl = "Avatar.png";
+                    }
+                    else
+                    {
+                        user.AvatarUrl = Utilities.UploadAvatar(AvatarUrl, env, user.Username);
+
+                    }
                     TempData["newAccount"] = JsonSerializer.Serialize(user);
                 }
                 return RedirectToAction(nameof(ConfirmOTP));
@@ -177,6 +198,9 @@ namespace OnlyFundsWeb.Controllers
             TempData["otp"] = otp;
             emailSender.sendEmail(subject, body, newUser.Email);
             ViewBag.Message = $"Sit back and & Relax! While we verify your Email address: {newUser.Email}";
+            //-----
+            TempData["Attempts"] = 4;
+            //----------
             return View();
         }
         [HttpPost]
@@ -184,10 +208,13 @@ namespace OnlyFundsWeb.Controllers
         public ActionResult ConfirmOTP(string otp)
         {
 
-            if (TempData["Attempts"] == null)
+            /*if (TempData["Attempts"] == null)
             {
                 TempData["Attempts"] = 3;
-            }
+            }*/
+            //--------
+
+            //-----------
             int attempt = int.Parse(TempData["Attempts"].ToString());
 
             if (attempt == 0)
@@ -203,14 +230,14 @@ namespace OnlyFundsWeb.Controllers
             }
             Object jsonNewUser = TempData.Peek("newAccount");
             User newUser = jsonNewUser == null ? null : JsonSerializer.Deserialize<User>((string)jsonNewUser);
-            if (otp != null && otp.Equals(TempData["otp"].ToString()))
+            if (otp != null && otp.Equals(TempData.Peek("otp").ToString()))
             {
                 userRepository.AddUser(newUser);
                 return RedirectToAction(nameof(Index));
             }
             ViewBag.Message = $"Sit back and & Relax! While we verify your Email address: {newUser.Email}";
-            ViewBag.Attempts = $"{attempt} attempts left";
             attempt--;
+            ViewBag.Attempts = $"{attempt} attempts left";
             TempData["Attempts"] = attempt;
             return View();
         }
@@ -248,7 +275,10 @@ namespace OnlyFundsWeb.Controllers
             {
                 if (AvatarUrl != null)
                 {
-                    Utilities.DeleteFile(oldUser.AvatarUrl, env, "images");
+                    if (!oldUser.AvatarUrl.Equals("Avatar.png"))
+                    {
+                        Utilities.DeleteFile(oldUser.AvatarUrl, env, "images");
+                    }
                     user.AvatarUrl= Utilities.UploadAvatar(AvatarUrl, env, user.Username);
                 }
                 else
