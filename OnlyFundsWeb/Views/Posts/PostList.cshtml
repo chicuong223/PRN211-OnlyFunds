@@ -21,7 +21,7 @@
             //--If list post == null
             if (!@Model.Any())
             {
-                <h1>CC</h1>
+                <h1>Don't have any post here</h1>
             }
             if (cate != null)
             {
@@ -84,6 +84,15 @@
                     {
                         <li>
                             <a class="page-link" asp-action="BookmarkedPosts" asp-route-username="@session" asp-route-page="@index">@index</a>
+                        </li>
+                    }
+                }
+                else if (ViewBag.user != null)
+                {
+                    @for (int index = 1; index <= ViewBag.end; index++)
+                    {
+                        <li>
+                            <a class="page-link" asp-action="GetPostByUser" asp-route-username="@ViewBag.user" asp-route-page="@index">@index</a>
                         </li>
                     }
                 }

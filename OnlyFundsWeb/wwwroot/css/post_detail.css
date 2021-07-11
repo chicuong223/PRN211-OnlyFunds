@@ -3,7 +3,10 @@ a {
     color: black;
 }
 
-li {
+/*.comment-body li {
+    display: inline-block;
+}*/
+#commentIcon li {
     display: inline-block;
 }
 
