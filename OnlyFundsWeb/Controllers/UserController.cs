@@ -56,7 +56,7 @@ namespace OnlyFundsWeb.Controllers
             }
             var postList = bookmarkRepository.GetPostsByBookmark( username, page.Value);
             int pageSize = 3;
-            int count = postRepository.CountAllPost();
+            int count = postList.ToArray().Length;
             int end = count / pageSize;
             if (count % 3 != 0)
             {
