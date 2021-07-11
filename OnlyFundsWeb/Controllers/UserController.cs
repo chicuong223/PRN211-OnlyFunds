@@ -20,12 +20,13 @@ namespace OnlyFundsWeb.Controllers
         private IWebHostEnvironment env;
         IUserRepository userRepository= null;
         IPostRepository postRepository = null;
-
+        private ICategoryRepository categoryRepository = null;
         public UserController(IWebHostEnvironment env)
         {
             this.env = env;
             userRepository = new UserRepository();
             postRepository = new PostRepository();
+            categoryRepository = new CategoryRepository();
         }
         public ActionResult Success(int?  page, string searchString)
         {
@@ -57,6 +58,9 @@ namespace OnlyFundsWeb.Controllers
             }
            
             User user = userRepository.GetUserByName(username);
+            IEnumerable<Category> categoryList = categoryRepository.GetCategories();
+            string categoryString = JsonSerializer.Serialize(categoryList);
+            HttpContext.Session.SetString("CategoryList", categoryString);
             ViewBag.User = user;
             ViewBag.end = end;
             return View("Success",postList);

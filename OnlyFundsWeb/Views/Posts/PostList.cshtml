@@ -78,7 +78,7 @@
                         </li>
                     }
                 }
-                if (ViewBag.IsBookMarkedPage != null)
+                else if (ViewBag.IsBookMarkedPage != null)
                 {
                     @for (int index = 1; index <= ViewBag.end; index++)
                     {

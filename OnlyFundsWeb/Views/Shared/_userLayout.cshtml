@@ -3,10 +3,12 @@
 @using DataAccess.IRepository;
 @using BusinessObjects;
 @using System.Collections
+@using System.Text.Json
 @{
     ICategoryRepository categoryRepository = new CategoryRepository();
     IUserRepository userRepository = new UserRepository();
-    IEnumerable<Category> cateList = categoryRepository.GetCategories();
+    var cateStr = Context.Session.GetString("CategoryList");
+    IEnumerable<Category> categoryList = JsonSerializer.Deserialize<IEnumerable<Category>>(cateStr);
     string username = Context.Session.GetString("user");
     User user = userRepository.GetUserByName(username);
 }
@@ -48,11 +50,20 @@
                                 <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Category
                                 </a>
+<<<<<<< HEAD
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     @{
                                         foreach (var category in cateList)
                                         {
                                             <li><a asp-action="GetPostByCategory" asp-controller="Posts" asp-route-categoryId="@category.CategoryId" class="dropdown-item tag">@category.CategoryName</a></li>
+=======
+                                <ul class="dropdown-menu"  aria-labelledby="navbarDropdown">
+                                        @{
+                                            foreach (var category in categoryList)
+                                            {
+                                                <li><a asp-action="GetPostByCategory" asp-controller="Posts" asp-route-categoryId="@category.CategoryId" class="dropdown-item tag">@category.CategoryName</a></li>
+                                            }
+>>>>>>> e6e38f2 (before pull)
                                         }
                                     }
                                 </ul>
@@ -64,7 +75,7 @@
                             <li class="nav-item dropdown" id="user-dropdown">
                                 <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button"
                                    data-bs-toggle="dropdown">
-                                    <img class="rounded-pill" src="~/images/square.png" width=40px
+                                    <img class="rounded-pill" src="~/images/@user.AvatarUrl" width=40px
                                          height=40px alt="">
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">

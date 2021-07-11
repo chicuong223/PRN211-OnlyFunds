@@ -8,14 +8,7 @@
     ViewData["Title"] = "Details";
     string username = Context.Session.GetString("user");
     string admin = Context.Session.GetString("admin");
-    if (admin is not null)
-    {
-        Layout = "_adminLayout";
-    }
-    else
-    {
-        Layout = "~/Views/Shared/_userLayout.cshtml";
-    }
+    Layout = "_userLayout";
     IEnumerable<Comment> comments = ViewBag.Comments as IEnumerable<Comment>;
     IEnumerable<User> cmtUsers = ViewBag.CmtUsers as IEnumerable<User>;
     int postLike = ViewBag.PostLike;

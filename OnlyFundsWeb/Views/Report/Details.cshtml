@@ -56,7 +56,7 @@
                         <div class="row mt-2 border-bottom"></div>
                         <div class="row text-center">
                             <button type="submit" class="btn btn-success">Finish</button>
-                            <button type="button" class="btn btn-danger" onclick="@Url.Action("Success", "Admin")">Cancel</button>
+                            <button type="button" class="btn btn-danger" onclick="location.href= '@Url.ActionLink("Success", "Admin")'">Cancel</button>
                         </div>
                     </div>
                 </form>

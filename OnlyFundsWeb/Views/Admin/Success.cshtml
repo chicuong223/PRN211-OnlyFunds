@@ -125,14 +125,12 @@
                 <table id="account" class="table table-striped border">
 
                     <thead>
-                        <tr>
-                            <th scope="col">First name</th>
-                            <th scope="col">Last name</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Username</th>
-                            <th scope="col">Password</th>
-                            <th scope="col">Avatar URL</th>
-                        </tr>
+                    <tr>
+                        <th scope="col">First name</th>
+                        <th scope="col">Last name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Username</th>
+                    </tr>
                     </thead>
                     <tbody>
                         @{
@@ -146,8 +144,6 @@
                                     <!-- Solve rồi chữ xanh chưa solve chữ đỏ -->
                                     <td class="text-success"><a class="td-link"></a>@user.Username</td>
                                     <!-- <td class="text-danger"><a href="#report-details" class="td-link"></a>Not solved</td> -->
-                                    <td><a class="td-link"></a>*******</td>
-                                    <td><a class="td-link"></a>@user.AvatarUrl</td>
                                 </tr>
                             }
                         }
