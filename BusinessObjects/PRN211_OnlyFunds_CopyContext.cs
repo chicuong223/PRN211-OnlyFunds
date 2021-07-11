@@ -244,9 +244,7 @@ namespace BusinessObjects
                     .IsUnicode(false)
                     .IsRequired();
 
-                entity.Property(e => e.IsSolved)
-                    .HasDefaultValue(false)
-                    .IsRequired();
+                entity.Property(e => e.IsSolved);
 
                 entity.HasOne(d => d.Post)
                     .WithMany(p => p.PostReports)

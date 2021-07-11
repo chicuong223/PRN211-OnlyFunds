@@ -203,8 +203,9 @@ namespace OnlyFundsWeb.Controllers
                 ViewBag.PostComment = postComment;
                 return View(post);
             }
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine(e);
                 return RedirectToAction(nameof(PostList));
             }
         }
