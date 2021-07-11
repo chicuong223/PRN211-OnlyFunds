@@ -2,8 +2,12 @@
 @using DataAccess.Repository
 @using DataAccess.IRepository
 @using System.Collections
+@using System.Text.Json
+@using Microsoft.AspNetCore.Http
 @{
-    IEnumerable<Category> cateList = ViewBag.CategoryList;
+    /*IEnumerable<Category> cateList = ViewBag.CategoryList;*/
+    var cateStr = Context.Session.GetString("CategoryList");
+    IEnumerable<Category> categoryList = JsonSerializer.Deserialize<IEnumerable<Category>>(cateStr);
 }
 
 <!DOCTYPE html>
@@ -46,7 +50,7 @@
                                 </a>
                                 <ul class="dropdown-menu"  aria-labelledby="navbarDropdown">
                                         @{
-                                            foreach (var category in cateList)
+                                            foreach (var category in categoryList)
                                             {
                                                 <li><a asp-action="GetPostByCategory" asp-controller="Posts" asp-route-categoryId="@category.CategoryId" class="dropdown-item tag">@category.CategoryName</a></li>
                                             }

@@ -33,6 +33,7 @@ namespace DataAccess
             try
             {
                 using var context = new PRN211_OnlyFunds_CopyContext();
+                //report.IsSolved = false;
                 context.PostReports.Add(report);
                 context.SaveChanges();
             }
@@ -48,8 +49,8 @@ namespace DataAccess
             try
             {
                 using var context = new PRN211_OnlyFunds_CopyContext();
-                report.IsSolved = true;
-                context.Entry<PostReport>(report).Property(r => r.IsSolved).IsModified = true;
+                //report.IsSolved = true;
+                context.Entry<PostReport>(report).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
                 context.SaveChanges();
             }
             catch (Exception ex)
@@ -75,20 +76,6 @@ namespace DataAccess
             return report;
         }
 
-        public IEnumerable<PostReport> GetReportByStatus(bool status)
-        {
-            try
-            {
-                using var context = new PRN211_OnlyFunds_CopyContext();
-                IEnumerable<PostReport> reports = context.PostReports.Where(r => r.IsSolved == status).ToList();
-                return reports;
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-                throw;
-            }
-        }
         public IEnumerable<PostReport> GetReports()
         {
             try
@@ -102,6 +89,7 @@ namespace DataAccess
                 throw new Exception(ex.Message);
             }
         }
+
         public IEnumerable<PostReport> GetReportsByPost(int postId)
         {
             List<PostReport> lst = new List<PostReport>();
@@ -115,6 +103,7 @@ namespace DataAccess
                 Console.WriteLine(ex.Message);
                 throw new Exception(ex.Message);
             }
+            lst.ForEach(r => Console.WriteLine(r));
             return lst;
         }
 
@@ -124,11 +113,8 @@ namespace DataAccess
             try
             {
                 using var context = new PRN211_OnlyFunds_CopyContext();
-                reportId = context.PostReports.Max(r => r.ReportId);
-                if (reportId == 0)
-                {
-                    throw new Exception("no report");
-                }
+                if (context.PostReports.Count() >= 0)
+                    reportId = context.PostReports.Max(r => r.ReportId);
             }
             catch (Exception e)
             {
@@ -137,6 +123,20 @@ namespace DataAccess
             }
 
             return reportId;
+        }
+        public IEnumerable<PostReport> GetReportByStatus(bool status)
+        {
+            try
+            {
+                using var context = new PRN211_OnlyFunds_CopyContext();
+                IEnumerable<PostReport> reports = context.PostReports.Where(r => r.IsSolved == status).ToList();
+                return reports;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }

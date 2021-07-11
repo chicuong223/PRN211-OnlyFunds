@@ -25,7 +25,24 @@ namespace OnlyFundsWeb.Helpers
             ));
             return hashedPassword;
         }
-
+        public static string UploadAvatar(IFormFile file, IWebHostEnvironment env, string username)
+        {
+            if (file == null || file.Length < 0)
+            {
+                return "";
+            }
+            string wwwPath = env.WebRootPath;
+            string path = Path.Combine(wwwPath, "images");
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            using (FileStream stream = new FileStream(Path.Combine(path, username + Path.GetExtension(file.FileName)), FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+            return username + Path.GetExtension(file.FileName);
+        }
         public static string UploadFile(IFormFile file, IWebHostEnvironment env, string folderName)
         {
             if (file == null || file.Length < 0)
@@ -44,6 +61,24 @@ namespace OnlyFundsWeb.Helpers
                 file.CopyTo(stream);
             }
             return fileName;
+        }
+        public static string UploadPostFile(IFormFile file, IWebHostEnvironment env, int postId)
+        {
+            if (file == null || file.Length < 0)
+            {
+                return "";
+            }
+            string wwwPath = env.WebRootPath;
+            string path = Path.Combine(wwwPath, "postfiles");
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            using (FileStream stream = new FileStream(Path.Combine(path, postId.ToString() + Path.GetExtension(file.FileName)), FileMode.Create))
+            {
+                file.CopyTo(stream);
+            }
+            return postId.ToString() + Path.GetExtension(file.FileName);
         }
         public static void DeleteFile(string fileName, IWebHostEnvironment env, string folderName)
         {

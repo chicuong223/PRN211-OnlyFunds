@@ -14,6 +14,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script src="https://kit.fontawesome.com/30877617bb.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="~/css/.vs/css/v16/"/>
     <style>
         .error, .success {
             display: none;
@@ -57,7 +58,7 @@
         <h2 class="motto">Create your own works and earn money!</h2>
     </header>
     <div class="mx-auto p-3 shadow" style="width: 40%;">
-        <form asp-action="Register" id="reg-form" autocomplete="off">
+        <form enctype="multipart/form-data" asp-action="Register" id="reg-form" autocomplete="off">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <h2 class="text-center">Register</h2>
             <div class="row">

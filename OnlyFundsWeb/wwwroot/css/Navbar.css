@@ -1,12 +1,13 @@
 * {
   font-family: "Helvetica Neue", "Sans-Serif";
   font-size: 20px;
+  
 }
-
+.navbar {
+    margin-bottom: 1rem;
+    box-shadow: 0 1rem 3rem rgba(0,0,0,.175);
+}
 /* Them margin giup dieu chinh do dai thanh search :D */
-.col-sm-4.nav-link.m-0.p-0.text-center.text-dark:hover {
-  text-decoration: underline;
-}
 .form-control,
 .input-group-text {
   background-color: #eeeeee;
@@ -42,9 +43,6 @@ ul .nav-item a:visited {
   text-decoration: none;
 }
 
-ul .nav-item a:hover {
-  text-decoration: underline;
-}
 @media (min-width: 1200px) {
   #dropdown-noti {
     width: 300px;

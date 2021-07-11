@@ -26,7 +26,7 @@ namespace OnlyFundsWeb.Controllers
         private ICommentRepository cmtRepository = null;
         private IPostLikeRepository postLikeRepository = null;
         private ICommentLikeRepository commentLikeRepository = null;
-
+        private IBookmarkRepository bookmarkRepository = null;
         public PostsController(IWebHostEnvironment env)
         {
             this.env = env;
@@ -37,13 +37,40 @@ namespace OnlyFundsWeb.Controllers
             cmtRepository = new CommentRepository();
             postLikeRepository = new PostLikeRepository();
             commentLikeRepository = new CommentLikeRepository();
+            bookmarkRepository = new BookmarkRepository();
         }
         // GET: PostsController
         public ActionResult PostList()
         {
             return View();
         }
-
+        public ActionResult BookmarkedPosts(int? page)
+        {
+            string username = HttpContext.Session.GetString("user");
+            if (username == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
+            if (page == null)
+            {
+                page = 1;
+            }
+            var postList = bookmarkRepository.GetPostsByBookmark(username, page.Value);
+            int pageSize = 3;
+            int count = bookmarkRepository.CountBookMarkPost(username);
+            int end = count / pageSize;
+            if (count % 3 != 0)
+            {
+                end = end + 1;
+            }
+            User user = userRepository.GetUserByName(username);
+            //----
+            ViewBag.IsBookMarkedPage = true;
+            //------
+            ViewBag.User = user;
+            ViewBag.end = end;
+            return View("PostList", postList);
+        }
         public ActionResult GetPostByUser(string username, int? page)
         {
             try
@@ -142,11 +169,16 @@ namespace OnlyFundsWeb.Controllers
                         {
                             comment.CommentLikes.Add(commentLike);
                         }
+
+                        CommentLike checkCommentLiked =
+                            commentLikeRepository.CheckCommentLike(username, comment.CommentId);
                     }
                 }
                 //-----------------
                 int postLike = postLikeRepository.CountPostLike(id.Value);
                 int postComment = cmt.Count();
+                PostLike checkPostLiked = postLikeRepository.CheckUserLike(username, id.Value);
+                
                 //-------------
                 foreach (Comment c in cmt)
                 {
@@ -157,10 +189,14 @@ namespace OnlyFundsWeb.Controllers
                 {
                     
                 }*/
+                Bookmark bookmark = bookmarkRepository.GetBookmark(username, id.Value);
+                ViewBag.IsBookmarked = bookmark != null;
                 IReportRepository reportRepo = new ReportRepository();
                 IEnumerable<PostReport> reports = reportRepo.GetReportsByPost(post.PostId);
                 ViewBag.Reports = reports;
                 User currentUser = userRepository.GetUserByName(username);
+                ViewBag.CheckPostLiked = checkPostLiked;
+                ViewBag.maxCommentId = cmtRepository.GetMaxCommentId(); 
                 ViewBag.CurrentUser = currentUser;
                 ViewBag.CmtUsers = cmtUsers;
                 ViewBag.Comments = cmt;
@@ -168,8 +204,9 @@ namespace OnlyFundsWeb.Controllers
                 ViewBag.PostComment = postComment;
                 return View(post);
             }
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine(e);
                 return RedirectToAction(nameof(PostList));
             }
         }
@@ -197,7 +234,7 @@ namespace OnlyFundsWeb.Controllers
                     throw new Exception("Title is required");
                 if (string.IsNullOrWhiteSpace(post.PostDescription))
                     throw new Exception("Description is required");
-                string fileName = Utilities.UploadFile(file, env, "postfiles");
+                string fileName = Utilities.UploadPostFile(file, env, post.PostId);
                 post.PostId = postRepository.GetMaxPostId() +1;
                 post.UploaderUsername = HttpContext.Session.GetString("user");
                 post.UploadDate = DateTime.Now;
@@ -257,7 +294,7 @@ namespace OnlyFundsWeb.Controllers
                 else
                 {
                     Utilities.DeleteFile(oldPost.FileUrl, env, "postfiles");
-                    post.FileUrl = Utilities.UploadFile(file, env, "postfiles");
+                    post.FileUrl = Utilities.UploadPostFile(file, env, post.PostId);
                 }
                 IEnumerable<Category> postCatList = categoryRepository.GetCategoriesByPost(post.PostId);
                 foreach (var category in postCatList)
