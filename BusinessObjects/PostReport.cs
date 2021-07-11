@@ -9,7 +9,7 @@ namespace BusinessObjects
     {
         public int ReportId { get; set; }
         public string ReporterUsername { get; set; }
-        public int? PostId { get; set; }
+        public int PostId { get; set; }
         public string ReportDescription { get; set; }
         public DateTime? ReportDate { get; set; }
         public bool IsSolved { get; set; }

@@ -13,8 +13,8 @@ namespace DataAccess.IRepository
         void SolveReport(PostReport report);
         PostReport GetReportById(int reportId);
         IEnumerable<PostReport> GetReports();
-        IEnumerable<PostReport> GetReportByStatus(bool status);
+        IEnumerable<PostReport> GetReportsByPost(int postID);
         int GetMaxReportId();
-        IEnumerable<PostReport> GetReportsByPost(int postId);
+        IEnumerable<PostReport> GetReportsByStatus(bool status);
     }
 }

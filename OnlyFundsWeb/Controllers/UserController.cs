@@ -9,14 +9,24 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using DataAccess.IRepository;
 using DataAccess.Repository;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using OnlyFundsWeb.Helpers;
 
 namespace OnlyFundsWeb.Controllers
 {
     public class UserController : Controller
     {
-        IUserRepository userRepository= new UserRepository();
-        IPostRepository postRepository = new PostRepository();
+        private IWebHostEnvironment env;
+        IUserRepository userRepository= null;
+        IPostRepository postRepository = null;
+
+        public UserController(IWebHostEnvironment env)
+        {
+            this.env = env;
+            userRepository = new UserRepository();
+            postRepository = new PostRepository();
+        }
         public ActionResult Success(int?  page, string searchString)
         {
             ViewData["CurrentFilter"] = searchString;
@@ -121,13 +131,15 @@ namespace OnlyFundsWeb.Controllers
 
         // POST: UserController/Create
         [HttpPost]
+        [RequestFormLimits(MultipartBodyLengthLimit = 104857600)]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(User user)
+        public ActionResult Register(User user, IFormFile AvatarUrl)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
+                    user.AvatarUrl = Utilities.UploadAvatar(AvatarUrl, env, user.Username);
                     TempData["newAccount"] = JsonSerializer.Serialize(user);
                 }
                 return RedirectToAction(nameof(ConfirmOTP));
@@ -138,6 +150,7 @@ namespace OnlyFundsWeb.Controllers
                 return View(user);
             }
         }
+        // GET: UserController/Create
         public ActionResult ConfirmOTP()
         {
             Object jsonNewUser = TempData.Peek("newAccount");
@@ -153,15 +166,21 @@ namespace OnlyFundsWeb.Controllers
             return View();
         }
         [HttpPost]
+        [RequestFormLimits(MultipartBodyLengthLimit = 104857600)]
         public ActionResult ConfirmOTP(string otp)
         {
+
             if (TempData["Attempts"] == null)
             {
                 TempData["Attempts"] = 3;
             }
             int attempt = int.Parse(TempData["Attempts"].ToString());
+
             if (attempt == 0)
             {
+                object jsonUser = TempData.Peek("newAccount");
+                BusinessObjects.User currentUser = JsonSerializer.Deserialize<User>(jsonUser.ToString());
+                Utilities.DeleteFile(currentUser.AvatarUrl, env, "images");
                 TempData["Attempts"] = null;
                 TempData["otp"] = null;
                 TempData["newAccount"] = null;
