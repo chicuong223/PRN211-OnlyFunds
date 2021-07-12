@@ -9,7 +9,7 @@
 }
 
 <div class="text-center">
-    <h1>Welcome To OnlyFunds</h1>
+    <h1 style="color: #ff75c1;">Welcome To OnlyFunds</h1>
     <div class="container w-75">
         <div class="row pt-4 mb-4 text-center">
             <h4>Recent Posts</h4>
@@ -19,14 +19,21 @@
                 foreach (var post in Model)
                 {
                     <div class="col-12 d-flex justify-content-center" style="height: 15rem;">
-                        <div class="card w-75 mb-5">
-                            <div class="card-header fw-bold">
-                                @post.PostTitle -
-                                @post.UploaderUsername -
-                                @post.UploadDate.Value.ToString("dd/MMM/yyyy")
+                        <div class="card w-75 mb-5 shadow">
+                            <div class="card-header p-2" style="text-align: left;">
+                                <span class=" fw-bold">
+                                    @post.PostTitle
+                                </span>
+                                by
+                                <span class="fw-bold" style="text-decoration: none; color: black;">
+                                    @post.UploaderUsername
+                                </span>
+                                <span style="position: absolute; right: 1rem;">
+                                    @post.UploadDate.Value.ToString("dd/MMM/yyyy")
+                                </span>
                             </div>
                             <!-- If user is not allowed to see the post -->
-                            <div class="card-body border">
+                            <div class="card-body border p-2" style="font-size: 18px; text-align: left">
                                 @post.PostDescription
                             </div>
                             <div class="card-footer text-center p-1">

@@ -2,7 +2,11 @@
 @using DataAccess.Repository;
 @using DataAccess.IRepository;
 @using BusinessObjects;
-
+@using System.Text.Json
+@{
+    var cateStr = Context.Session.GetString("CategoryList");
+    IEnumerable<Category> categoryList = JsonSerializer.Deserialize<IEnumerable<Category>>(cateStr);
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,46 +42,21 @@
                     <!--collapse when screen is smaller than 1200px-->
                     <div class="navbar-collapse collapse" id="navbarSupportedContent">
                         <!--Left nav-->
-                        <nav class="nav navbar-nav" id="left-nav">
-                            <span class="nav-item dropdown me-3">
-                                <a href="#Category" class="nav-link dropdown-toggle text-dark" id="navbarDropdown"
-                                   role="button" data-bs-toggle="dropdown">
-                                    <u>Category</u>
+                        <ul class="navbar-nav me-3 mb-2 mb-lg-0" id="left-nav">
+                            <li class="nav-item dropdown me-3">
+                                <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Category
                                 </a>
-                                <div class="container dropdown-menu">
-                                    <div class="row">
-                                        <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
-                                            <a href="" class="tag">Tag 1</a>
-                                        </div>
-                                        <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
-                                            <a href="" class="tag">Tag 1</a>
-                                        </div>
-                                        <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
-                                            <a href="" class="tag">Tag 1</a>
-                                        </div>
-                                        <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
-                                            <a href="" class="tag">Tag 1</a>
-                                        </div>
-                                        <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
-                                            <a href="" class="tag">Tag 1</a>
-                                        </div>
-                                        <div class="col-sm-4 nav-link m-0 p-0 text-center text-dark">
-                                            <a href="" class="tag">Tag 1</a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </span>
-                            <span class="nav-item mt-1 ms-5">
-                                <form asp-action="Search" asp-controller="Posts" method="get">
-                                    <div class="input-group input-group-sm" id="search-input">
-                                        <input type="text" class="form-control" placeholder="Search Post...">
-                                        <button class="input-group-text" id="basic-addon2" type="submit">
-                                            <i class="fas fa-search"></i>
-                                        </button>
-                                    </div>
-                                </form>
-                            </span>
-                        </nav>
+                                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    @{
+                                        foreach (var category in categoryList)
+                                        {
+                                            <li><a asp-action="GetPostByCategory" asp-controller="Posts" asp-route-categoryId="@category.CategoryId" class="dropdown-item tag">@category.CategoryName</a></li>
+                                        }
+                                    }
+                                </ul>
+                            </li>
+                        </ul>
                         <!--Right nav-->
                         <nav class="nav navbar-nav ms-auto" id="right-nav">
                             @{

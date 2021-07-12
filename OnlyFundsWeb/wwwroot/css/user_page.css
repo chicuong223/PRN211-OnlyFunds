@@ -35,3 +35,10 @@ a span{
 .link-post:hover i {
     left: 58%;
 }
+.card.w-75.mb-5.shadow {
+    transition: all 0.5s;
+}
+.card.w-75.mb-5.shadow:hover {
+    transform: scale(1.05);
+    box-shadow: 0 1rem 3rem rgba(0,0,0,.175);
+}

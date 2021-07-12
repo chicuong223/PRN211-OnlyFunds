@@ -37,11 +37,12 @@
                         </div>
                         <!-- Nếu report có description thì in row này ra không thì bỏ -->
                         <div class="row mt-3">
-                            <div class="col-12">
-                                <label for="report-description">Description: </label>
+                            <div class="col-4">
+                                Description:
+                            </div>
+                            <div class="col-8">
                                 <textarea readonly class="form-control" style="height: 14rem; resize: none">@Model.ReportDescription</textarea>
                             </div>
-
                         </div>
                         <div class="row mt-3 pb-3">
                             <div class="col-4">Choose action:</div>
@@ -53,10 +54,9 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="row mt-2 border-bottom"></div>
-                        <div class="row text-center">
-                            <button type="submit" class="btn btn-success">Finish</button>
-                            <button type="button" class="btn btn-danger" onclick="location.href= '@Url.ActionLink("Success", "Admin")'">Cancel</button>
+                        <div class="row mt-2 d-flex justify-content-evenly">
+                            <button style="width: 100px;" type="submit" class="btn btn-success">Finish</button>
+                            <a style="width: 100px;" class='btn btn-danger' value="Cancel" onclick="history.back(-1)">Cancel</a>
                         </div>
                     </div>
                 </form>
