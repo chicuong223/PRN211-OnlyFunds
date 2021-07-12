@@ -44,13 +44,13 @@
         <h2 class="motto">Create your own works and earn money!</h2>
     </header>
 
-    <div class="mx-auto w-25 p-3 shadow">
+    <div class="mx-auto w-25 p-3 shadow" style="background: white">
         <form asp-area="" asp-controller="Admin" asp-action="Login" id="loginForm">
             <h2 class="text-center">Welcome</h2>
             <p class="text-center text-danger" id="error">@ViewBag.Message</p>
             <div class="form-floating">
                 <i class="fas fa-user"></i>
-                <input type="text" class="form-control" name="username" id="username" value="" 
+                <input autocomplete="off" type="text" class="form-control" name="username" id="username" value="" 
                        style="padding-left: 2.6rem;" placeholder="Username" />
                 <label for="username" style="padding-left: 2.9rem;">Username</label>
                 <p class="text-danger" id="usernameError"></p>

@@ -77,7 +77,7 @@
                     @for (int index = 1; index <= ViewBag.end; index++)
                     {
                         <li>
-                            <a class="page-link" asp-action="GetPostByCategory" asp-route-categoryId="@cate.CategoryId" asp-route-page="@index">@index</a>
+                            <a class="page-link fw-bold" asp-action="GetPostByCategory" asp-route-categoryId="@cate.CategoryId" asp-route-page="@index">@index</a>
                         </li>
                     }
                 }
@@ -86,7 +86,7 @@
                     @for (int index = 1; index <= ViewBag.end; index++)
                     {
                         <li>
-                            <a class="page-link" asp-action="BookmarkedPosts" asp-route-username="@session" asp-route-page="@index">@index</a>
+                            <a class="page-link fw-bold" asp-action="BookmarkedPosts" asp-route-username="@session" asp-route-page="@index">@index</a>
                         </li>
                     }
                 }
@@ -95,7 +95,7 @@
                     @for (int index = 1; index <= ViewBag.end; index++)
                     {
                         <li>
-                            <a class="page-link" asp-action="GetPostByUser" asp-route-username="@ViewBag.user" asp-route-page="@index">@index</a>
+                            <a class="page-link fw-bold" asp-action="GetPostByUser" asp-route-username="@ViewBag.user" asp-route-page="@index">@index</a>
                         </li>
                     }
                 }
@@ -104,7 +104,7 @@
                     @for (int index = 1; index <= ViewBag.end; index++)
                     {
                         <li>
-                            <a class="page-link" asp-action="GetPostByUser" asp-route-username="@session" asp-route-page="@index">@index</a>
+                            <a class="page-link fw-bold" asp-action="GetPostByUser" asp-route-username="@session" asp-route-page="@index">@index</a>
                         </li>
                     }
                 }
