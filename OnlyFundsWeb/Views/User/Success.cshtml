@@ -94,55 +94,10 @@
     </div>
     <nav aria-label="Page navigation example" class="text-center font-weight-bold mx-auto">
         <ul class="pagination justify-content-center">
-            @if (currentPage == 1)
-            {
-                <li class="page-item">
-                    <span style="font-weight: bold" class="page-link">
-                        <i class="fas fa-angle-double-left"></i>
-                    </span>
-                </li>
-            }
-            else
-            {
-                <li class="page-item">
-                    <a style="font-weight: bold" asp-action="Index" asp-controller="Home" asp-route-page="@(currentPage-1)" class="page-link">
-                        <i class="fas fa-angle-double-left"></i>
-                    </a>
-                </li>
-            }
             @for (int index = 1; index <= ViewBag.end; index++)
             {
-                if (index == currentPage)
-                {
-                    <li class="page-item active">
-                        <span style="font-weight: bold" class="page-link">
-                            @index
-                        </span>
-                    </li>
-                }
-                else
-                {
-                    <li class="page-item">
-                        <a style="font-weight: bold" asp-action="Index" asp-controller="Home" asp-route-page="@index" class="page-link">
-                            @index
-                        </a>
-                    </li>
-                }
-            }
-            @if (currentPage == ViewBag.end)
-            {
-                <li class="page-item">
-                    <span style="font-weight: bold" class="page-link">
-                        <i class="fas fa-angle-double-right"></i>
-                    </span>
-                </li>
-            }
-            else
-            {
                 <li>
-                    <a style="font-weight: bold" asp-action="Index" asp-controller="Home" asp-route-page="@(currentPage+1)" class="page-link">
-                        <i class="fas fa-angle-double-right"></i>
-                    </a>
+                    <a class="page-link fw-bold" asp-action="Success" asp-route-page="@index">@index</a>
                 </li>
             }
         </ul>
