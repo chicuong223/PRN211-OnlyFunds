@@ -63,6 +63,7 @@ namespace OnlyFundsWeb.Controllers
             HttpContext.Session.SetString("CategoryList", categoryString);
             ViewBag.User = user;
             ViewBag.end = end;
+            ViewBag.currentPage = page;
             return View("Success",postList);
         }
         public ActionResult ChangePassword(string username)
