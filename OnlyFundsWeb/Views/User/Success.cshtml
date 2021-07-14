@@ -25,9 +25,9 @@
     <div class="row">
         <div class="col-12 d-flex w-75 align-items-center mx-auto">
             <div class='col-lg-7'>   
-                <form method="post" action="#search-function">
+                <form method="post">
                     <div class="input-group input-group-sm" id="search-input">
-                        <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" class="form-control" placeholder="Search...">
+                        <input autocomplete="off" type="text" name="SearchString" value="@ViewData["CurrentFilter"]" class="form-control" placeholder="Search...">
                         <button onclick="location.href = '@Url.Action("Success", "User", new {searchString = @ViewData["CurrentFilter"]})'" class="input-group-text" id="basic-addon2" type="submit">
                             <i class="fas fa-search"></i>
                         </button>

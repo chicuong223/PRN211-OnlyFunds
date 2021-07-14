@@ -21,11 +21,11 @@
             //--If list post == null
             if (!@Model.Any())
             {
-                <h1>Don't have any post here</h1>
+                <h1 style="font-weight: bold">Don't have any post here</h1>
             }
             if (cate != null)
             {
-                <h4>@cate.CategoryName Post</h4>
+                <h1 style="font-weight: bold">@cate.CategoryName Post</h1>
             }
         }
     </div>
