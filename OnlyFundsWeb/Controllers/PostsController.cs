@@ -21,7 +21,7 @@ namespace OnlyFundsWeb.Controllers
         IWebHostEnvironment env;
         private IPostRepository postRepository = null;
         private IUserRepository userRepository = null;
-        private ICategoryRepository categoryRepository =null;
+        private ICategoryRepository categoryRepository = null;
         private IPostCategoryMapRepository postCategoryMapRepository = null;
         private ICommentRepository cmtRepository = null;
         private IPostLikeRepository postLikeRepository = null;
@@ -46,30 +46,38 @@ namespace OnlyFundsWeb.Controllers
         }
         public ActionResult BookmarkedPosts(int? page)
         {
-            string username = HttpContext.Session.GetString("user");
-            if (username == null)
+            try
             {
-                return RedirectToAction("Index", "User");
+                string username = HttpContext.Session.GetString("user");
+                if (username == null)
+                {
+                    return RedirectToAction("Index", "User");
+                }
+                if (page == null)
+                {
+                    page = 1;
+                }
+                var postList = bookmarkRepository.GetPostsByBookmark(username, page.Value);
+                int pageSize = 3;
+                int count = bookmarkRepository.CountBookMarkPost(username);
+                int end = count / pageSize;
+                if (count % 3 != 0)
+                {
+                    end = end + 1;
+                }
+                User user = userRepository.GetUserByName(username);
+                //----
+                ViewBag.IsBookMarkedPage = true;
+                //------
+                ViewBag.User = user;
+                ViewBag.end = end;
+                return View("PostList", postList);
             }
-            if (page == null)
+            catch (Exception e)
             {
-                page = 1;
+                ViewBag.error = e.Message;
+                return View("Error");
             }
-            var postList = bookmarkRepository.GetPostsByBookmark(username, page.Value);
-            int pageSize = 3;
-            int count = bookmarkRepository.CountBookMarkPost(username);
-            int end = count / pageSize;
-            if (count % 3 != 0)
-            {
-                end = end + 1;
-            }
-            User user = userRepository.GetUserByName(username);
-            //----
-            ViewBag.IsBookMarkedPage = true;
-            //------
-            ViewBag.User = user;
-            ViewBag.end = end;
-            return View("PostList", postList);
         }
         public ActionResult GetPostByUser(string username, int? page)
         {
@@ -178,7 +186,7 @@ namespace OnlyFundsWeb.Controllers
                 int postLike = postLikeRepository.CountPostLike(id.Value);
                 int postComment = cmt.Count();
                 PostLike checkPostLiked = postLikeRepository.CheckUserLike(username, id.Value);
-                
+
                 //-------------
                 foreach (Comment c in cmt)
                 {
@@ -196,7 +204,7 @@ namespace OnlyFundsWeb.Controllers
                 ViewBag.Reports = reports;
                 User currentUser = userRepository.GetUserByName(username);
                 ViewBag.CheckPostLiked = checkPostLiked;
-                ViewBag.maxCommentId = cmtRepository.GetMaxCommentId(); 
+                ViewBag.maxCommentId = cmtRepository.GetMaxCommentId();
                 ViewBag.CurrentUser = currentUser;
                 ViewBag.CmtUsers = cmtUsers;
                 ViewBag.Comments = cmt;
@@ -214,12 +222,20 @@ namespace OnlyFundsWeb.Controllers
         // GET: PostsController/Create
         public ActionResult Create()
         {
-            ViewBag.CategoryList = categoryRepository.GetCategories();
-            if (HttpContext.Session.GetString("user") == null)
+            try
             {
-                return RedirectToAction("Index", "User");
+                ViewBag.CategoryList = categoryRepository.GetCategories();
+                if (HttpContext.Session.GetString("user") == null)
+                {
+                    return RedirectToAction("Index", "User");
+                }
+                return View();
             }
-            return View();
+            catch (Exception e)
+            {
+                ViewBag.error = e.Message;
+                return View("Error");
+            }
         }
 
         // POST: PostsController/Create
@@ -235,7 +251,7 @@ namespace OnlyFundsWeb.Controllers
                 if (string.IsNullOrWhiteSpace(post.PostDescription))
                     throw new Exception("Description is required");
                 string fileName = Utilities.UploadPostFile(file, env, post.PostId);
-                post.PostId = postRepository.GetMaxPostId() +1;
+                post.PostId = postRepository.GetMaxPostId() + 1;
                 post.UploaderUsername = HttpContext.Session.GetString("user");
                 post.UploadDate = DateTime.Now;
                 post.FileUrl = fileName;
@@ -261,21 +277,29 @@ namespace OnlyFundsWeb.Controllers
         // GET: PostsController/Edit/5
         public ActionResult Edit(int? id)
         {
-            string username = HttpContext.Session.GetString("user");
-            if (username == null)
-                return RedirectToAction("Index", "User");
-            if (id == null)
-                return NotFound();
-            Post post = postRepository.GetPostById(id.Value);
-            if (post == null)
-                return NotFound();
-            ViewBag.CategoryList = categoryRepository.GetCategories();
-            if (!username.Equals(post.UploaderUsername))
+            try
             {
-                ViewBag.Error = "You are not allowed to edit posts of others";
+                string username = HttpContext.Session.GetString("user");
+                if (username == null)
+                    return RedirectToAction("Index", "User");
+                if (id == null)
+                    return NotFound();
+                Post post = postRepository.GetPostById(id.Value);
+                if (post == null)
+                    return NotFound();
+                ViewBag.CategoryList = categoryRepository.GetCategories();
+                if (!username.Equals(post.UploaderUsername))
+                {
+                    ViewBag.Error = "You are not allowed to edit posts of others";
+                    return View("Error");
+                }
+                return View(post);
+            }
+            catch (Exception e)
+            {
+                ViewBag.error = e.Message;
                 return View("Error");
             }
-            return View(post);
         }
         // POST: PostsController/Edit/5
         [HttpPost]

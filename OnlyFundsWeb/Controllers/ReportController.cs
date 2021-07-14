@@ -19,96 +19,144 @@ namespace OnlyFundsWeb.Controllers
 
         public IActionResult Details(int? id)
         {
-            if (id == null)
-                return NotFound();
-            PostReport report = reportRepo.GetReportById(id.Value);
-            if (report == null)
-                return NotFound();
-            ViewBag.Post = postRepo.GetPostById(report.PostId);
-            return View(report);
+            try
+            {
+                if (id == null)
+                    return NotFound();
+                PostReport report = reportRepo.GetReportById(id.Value);
+                if (report == null)
+                    return NotFound();
+                ViewBag.Post = postRepo.GetPostById(report.PostId);
+                return View(report);
+            }
+            catch (Exception e)
+            {
+                ViewBag.error = e.Message;
+                return View("Error");
+            }
         }
 
         public IActionResult WarnUser(int id)
         {
-            EmailSender emailSender = new EmailSender();
-            PostReport report = reportRepo.GetReportById(id);
-            Post reportedPost = postRepo.GetPostById(report.PostId);
-            User reportedUser = new UserRepository().GetUserByName(reportedPost.UploaderUsername);
-            string subject = "Post Report Warning";
-            string body = $"Your post has been reported: \n" +
-                $"Post title: {reportedPost.PostTitle}";
-            emailSender.sendEmail(subject, body, reportedUser.Email);
-            IEnumerable<PostReport> reports = reportRepo.GetReportsByPost(reportedPost.PostId);
-            foreach (var r in reports)
+            try
             {
-                r.IsSolved = true;
-                reportRepo.SolveReport(r);
+                EmailSender emailSender = new EmailSender();
+                PostReport report = reportRepo.GetReportById(id);
+                Post reportedPost = postRepo.GetPostById(report.PostId);
+                User reportedUser = new UserRepository().GetUserByName(reportedPost.UploaderUsername);
+                string subject = "Post Report Warning";
+                string body = $"Your post has been reported: \n" +
+                    $"Post title: {reportedPost.PostTitle}";
+                emailSender.sendEmail(subject, body, reportedUser.Email);
+                IEnumerable<PostReport> reports = reportRepo.GetReportsByPost(reportedPost.PostId);
+                foreach (var r in reports)
+                {
+                    r.IsSolved = true;
+                    reportRepo.SolveReport(r);
+                }
+                return RedirectToAction("Success", "Admin");
             }
-            return RedirectToAction("Success", "Admin");
+            catch (Exception e)
+            {
+                ViewBag.error = e.Message;
+                return View("Error");
+            }
         }
 
         public IActionResult DeletePost(int id)
         {
-            PostReport report = reportRepo.GetReportById(id);
-            Post reportedPost = postRepo.GetPostById(report.PostId);
-            IEnumerable<Comment> cmtList = cmtRepo.GetCommentsByPost(reportedPost.PostId);
-            if (cmtList.Count() > 0)
+            try
             {
-                foreach (var cmt in cmtList)
-                    cmtRepo.DeleteComment(cmt);
+                PostReport report = reportRepo.GetReportById(id);
+                Post reportedPost = postRepo.GetPostById(report.PostId);
+                IEnumerable<Comment> cmtList = cmtRepo.GetCommentsByPost(reportedPost.PostId);
+                if (cmtList.Count() > 0)
+                {
+                    foreach (var cmt in cmtList)
+                        cmtRepo.DeleteComment(cmt);
+                }
+                postRepo.DeletePost(reportedPost.PostId);
+                return RedirectToAction("Success", "Admin");
             }
-            postRepo.DeletePost(reportedPost.PostId);
-            return RedirectToAction("Success", "Admin");
+            catch (Exception e)
+            {
+                ViewBag.error = e.Message;
+                return View("Error");
+            }
         }
 
         [HttpPost]
         public IActionResult Solve(int? reportId, string action)
         {
-            if (reportId == null)
-                return NotFound();
-            PostReport report = reportRepo.GetReportById(reportId.Value);
-            if (report == null)
-                return NotFound();
-            if (action.Equals("del-post"))
-                return RedirectToAction(nameof(DeletePost), new { id = report.ReportId });
-            if (action.Equals("warn-user"))
-                return RedirectToAction(nameof(WarnUser), new { id = report.ReportId });
-            return RedirectToAction(nameof(Ignore), new { id = report.ReportId });
+            try
+            {
+                if (reportId == null)
+                    return NotFound();
+                PostReport report = reportRepo.GetReportById(reportId.Value);
+                if (report == null)
+                    return NotFound();
+                if (action.Equals("del-post"))
+                    return RedirectToAction(nameof(DeletePost), new { id = report.ReportId });
+                if (action.Equals("warn-user"))
+                    return RedirectToAction(nameof(WarnUser), new { id = report.ReportId });
+                return RedirectToAction(nameof(Ignore), new { id = report.ReportId });
+            }
+            catch (Exception e)
+            {
+                ViewBag.error = e.Message;
+                return View("Error");
+            }
         }
 
         public IActionResult Ignore(int id)
         {
-            PostReport report = reportRepo.GetReportById(id);
-            Post reportedPost = postRepo.GetPostById(report.PostId);
-            IEnumerable<PostReport> reports = reportRepo.GetReportsByPost(reportedPost.PostId);
-            foreach (var r in reports)
+            try
             {
-                r.IsSolved = true;
-                reportRepo.SolveReport(r);
+                PostReport report = reportRepo.GetReportById(id);
+                Post reportedPost = postRepo.GetPostById(report.PostId);
+                IEnumerable<PostReport> reports = reportRepo.GetReportsByPost(reportedPost.PostId);
+                foreach (var r in reports)
+                {
+                    r.IsSolved = true;
+                    reportRepo.SolveReport(r);
+                }
+                return RedirectToAction("Success", "Admin");
             }
-            return RedirectToAction("Success", "Admin");
+            catch (Exception e)
+            {
+                ViewBag.error = e.Message;
+                return View("Error");
+            }
         }
 
         [HttpPost]
         public IActionResult Add(int? postid, string desc)
         {
-            if (postid == null)
-                return NotFound();
-            Post post = postRepo.GetPostById(postid.Value);
-            if (post == null)
-                return NotFound();
-            PostReport report = new PostReport
+            try
             {
-                ReportId = reportRepo.GetMaxReportId() + 1,
-                ReportDescription = desc,
-                PostId = postid.Value,
-                ReporterUsername = HttpContext.Session.GetString("user"),
-                ReportDate = DateTime.Now,
-                IsSolved = false
-            };
-            reportRepo.AddReport(report);
-            Console.WriteLine(report.IsSolved);
-            return RedirectToAction("Details", "Posts", new { id = postid });
+                if (postid == null)
+                    return NotFound();
+                Post post = postRepo.GetPostById(postid.Value);
+                if (post == null)
+                    return NotFound();
+                PostReport report = new PostReport
+                {
+                    ReportId = reportRepo.GetMaxReportId() + 1,
+                    ReportDescription = desc,
+                    PostId = postid.Value,
+                    ReporterUsername = HttpContext.Session.GetString("user"),
+                    ReportDate = DateTime.Now,
+                    IsSolved = false
+                };
+                reportRepo.AddReport(report);
+                Console.WriteLine(report.IsSolved);
+                return RedirectToAction("Details", "Posts", new { id = postid });
+            }
+            catch (Exception e)
+            {
+                ViewBag.error = e.Message;
+                return View("Error");
+            }
         }
     }
 }

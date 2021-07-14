@@ -24,44 +24,60 @@ namespace OnlyFundsWeb.Controllers
         }
         public IActionResult Success()
         {
-            string adminName = HttpContext.Session.GetString("admin");
-            if (adminName == null)
+            try
             {
-                return RedirectToAction("Index");
+                string adminName = HttpContext.Session.GetString("admin");
+                if (adminName == null)
+                {
+                    return RedirectToAction("Index");
+                }
+                /*IEnumerable<Category> categories = categoryRepository.GetCategories();
+                ViewBag["categories"] = categories;*/
+                IEnumerable<PostReport> reportLIst = reportRepository.GetReports();
+                foreach (var report in reportLIst)
+                {
+                    report.Post = postRepository.GetPostById(report.PostId);
+                }
+                IEnumerable<User> userList = userRepository.GetUsers(1);
+
+                Admin admin = adminRepository.GetAdminByUname(adminName);
+                ViewBag.userList = userList;
+                ViewBag.admin = admin;
+                return View("Success", reportLIst);
             }
-            /*IEnumerable<Category> categories = categoryRepository.GetCategories();
-            ViewBag["categories"] = categories;*/
-            IEnumerable<PostReport> reportLIst = reportRepository.GetReports();
-            foreach (var report in reportLIst)
+            catch (Exception e)
             {
-                report.Post = postRepository.GetPostById(report.PostId);
+                ViewBag.error = e.Message;
+                return View("Error");
             }
-            IEnumerable<User> userList = userRepository.GetUsers(1);
-            
-            Admin admin = adminRepository.GetAdminByUname(adminName);
-            ViewBag.userList = userList;
-            ViewBag.admin = admin;
-            return View("Success", reportLIst);
         }
         [HttpPost]
         public IActionResult Login(string username, string password)
         {
-            if (username != null && password != null)
+            try
             {
-                Admin user = adminRepository.CheckLogin(username, password);
-                if (user != null)
+                if (username != null && password != null)
                 {
-                    HttpContext.Session.SetString("admin", username);
-                    return RedirectToAction("Success");
+                    Admin user = adminRepository.CheckLogin(username, password);
+                    if (user != null)
+                    {
+                        HttpContext.Session.SetString("admin", username);
+                        return RedirectToAction("Success");
+                    }
+                    else
+                    {
+                        ViewBag.Message = "Incorrect Username or Password";
+                        return View("Index");
+                    }
                 }
-                else
-                {
-                    ViewBag.Message = "Incorrect Username or Password";
-                    return View("Index");
-                }
+                ViewBag.Message = "Error";
+                return View("Index");
             }
-            ViewBag.Message = "Error";
-            return View("Index");
+            catch (Exception e)
+            {
+                ViewBag.error = e.Message;
+                return View("Error");
+            }
         }
 
         /*public IActionResult UserList(int? page)
