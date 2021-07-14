@@ -106,7 +106,7 @@
             else
             {
                 <li class="page-item">
-                    <a style="font-weight: bold" asp-action="Index" asp-controller="Home" asp-route-page="@(currentPage-1)" class="page-link">
+                    <a style="font-weight: bold" asp-action="Success"  asp-route-page="@(currentPage-1)" class="page-link">
                         <i class="fas fa-angle-double-left"></i>
                     </a>
                 </li>
@@ -124,7 +124,8 @@
                 else
                 {
                     <li class="page-item">
-                        <a style="font-weight: bold" asp-action="Index" asp-controller="Home" asp-route-page="@index" class="page-link">
+                        @*moi sua*@
+                        <a style="font-weight: bold" asp-action="Success" asp-route-page="@index" class="page-link">
                             @index
                         </a>
                     </li>
@@ -141,7 +142,7 @@
             else
             {
                 <li>
-                    <a style="font-weight: bold" asp-action="Index" asp-controller="Home" asp-route-page="@(currentPage+1)" class="page-link">
+                    <a style="font-weight: bold" asp-action="Success" asp-route-page="@(currentPage+1)" class="page-link">
                         <i class="fas fa-angle-double-right"></i>
                     </a>
                 </li>
