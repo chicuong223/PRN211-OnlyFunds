@@ -77,13 +77,13 @@ namespace OnlyFundsWeb.Controllers
             {
                 if (username == null)
                 {
-                    return NotFound();
+                    return View("Error");
                 }
 
                 User user = userRepository.GetUserByName(username);
                 if (user == null)
                 {
-                    return NotFound();
+                    return View("Error");
                 }
                 if (page == null)
                     page = 1;
@@ -112,13 +112,13 @@ namespace OnlyFundsWeb.Controllers
             {
                 if (categoryId == 0)
                 {
-                    return NotFound();
+                    return View("Error");
                 }
 
                 Category category = categoryRepository.GetCategoryById(categoryId);
                 if (category == null)
                 {
-                    return NotFound();
+                    return View("Error");
                 }
                 if (page == null)
                 {
@@ -151,11 +151,11 @@ namespace OnlyFundsWeb.Controllers
                 string username = HttpContext.Session.GetString("user");
                 if (id == null)
                 {
-                    return NotFound();
+                    return View("Error");
                 }
                 Post post = postRepository.GetPostById(id.Value);
                 if (post == null)
-                    return NotFound();
+                    return View("Error");
                 //-------------
                 IEnumerable<Comment> cmt = cmtRepository.GetCommentsByPost(post.PostId);
                 List<User> cmtUsers = new List<User>();
@@ -254,7 +254,7 @@ namespace OnlyFundsWeb.Controllers
             catch (Exception ex)
             {
                 ViewBag.error = ex.Message;
-                return View();
+                return View("Error");
             }
         }
 

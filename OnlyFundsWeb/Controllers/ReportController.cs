@@ -20,10 +20,10 @@ namespace OnlyFundsWeb.Controllers
         public IActionResult Details(int? id)
         {
             if (id == null)
-                return NotFound();
+                return View("Error");
             PostReport report = reportRepo.GetReportById(id.Value);
             if (report == null)
-                return NotFound();
+                return View("Error");
             ViewBag.Post = postRepo.GetPostById(report.PostId);
             return View(report);
         }
@@ -65,10 +65,10 @@ namespace OnlyFundsWeb.Controllers
         public IActionResult Solve(int? reportId, string action)
         {
             if (reportId == null)
-                return NotFound();
+                return View("Error");
             PostReport report = reportRepo.GetReportById(reportId.Value);
             if (report == null)
-                return NotFound();
+                return View("Error");
             if (action.Equals("del-post"))
                 return RedirectToAction(nameof(DeletePost), new { id = report.ReportId });
             if (action.Equals("warn-user"))
@@ -93,10 +93,10 @@ namespace OnlyFundsWeb.Controllers
         public IActionResult Add(int? postid, string desc)
         {
             if (postid == null)
-                return NotFound();
+                return View("Error");
             Post post = postRepo.GetPostById(postid.Value);
             if (post == null)
-                return NotFound();
+                return View("Error");
             PostReport report = new PostReport
             {
                 ReportId = reportRepo.GetMaxReportId() + 1,

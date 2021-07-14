@@ -69,7 +69,6 @@ namespace OnlyFundsWeb.Controllers
         public ActionResult ChangePassword(string username)
         {
             User user = userRepository.GetUserByName(username);
-
             return View("PasswordChange", user);
         }
 
@@ -127,13 +126,13 @@ namespace OnlyFundsWeb.Controllers
         {
             if (username == null)
             {
-                return NotFound();
+                return View("Error");
             }
 
             var user = userRepository.GetUserByName(username);
             if (user == null)
             {
-                return NotFound();
+                return View("Error");
             }
             return View(user);
         }
@@ -209,13 +208,6 @@ namespace OnlyFundsWeb.Controllers
         public ActionResult ConfirmOTP(string otp)
         {
 
-            /*if (TempData["Attempts"] == null)
-            {
-                TempData["Attempts"] = 3;
-            }*/
-            //--------
-
-            //-----------
             int attempt = int.Parse(TempData["Attempts"].ToString());
 
             if (attempt == 0)
@@ -249,13 +241,13 @@ namespace OnlyFundsWeb.Controllers
         {
             if (username == null)
             {
-                return NotFound();
+                return View("Error");
             }
 
             var user = userRepository.GetUserByName(username);
             if (user == null)
             {
-                return NotFound();
+                return View("Error");
             }
             return View(user);
         }
@@ -268,7 +260,7 @@ namespace OnlyFundsWeb.Controllers
         {
             if (!username.Equals(user.Username))
             {
-                return NotFound();
+                return View("Error");
             }
 
             User oldUser = userRepository.GetUserByName(username);
@@ -309,7 +301,7 @@ namespace OnlyFundsWeb.Controllers
             }
             catch
             {
-                return View();
+                return View("Error");
             }
         }
         public ActionResult Logout()

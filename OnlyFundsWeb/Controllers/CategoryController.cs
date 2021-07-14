@@ -93,7 +93,7 @@ namespace OnlyFundsWeb.Controllers
             }
             catch
             {
-                return View();
+                return View("Error");
             }
         }
     }
