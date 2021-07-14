@@ -1,4 +1,5 @@
 ﻿@model ErrorViewModel
+@using Microsoft.AspNetCore.Http;
 @{
     ViewData["Title"] = "Error";
 }
@@ -24,7 +25,18 @@
                 Don't worry, it's not your fault, this is probably because our developers
                 are sleeping now and can't process your request.
             </p>
-            <a href="#">Back to homepage</a>
+            @{
+                string url;
+                if (Context.Session.GetString("user") != null)
+                {
+                    url = Url.Action("Index", "Home");
+                }
+                else
+                {
+                    url = Url.Action("Success", "User");
+                }
+            }
+            <a href="@url">Back to homepage</a>
         </div>
     </div>
 </body>
