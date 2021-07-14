@@ -125,8 +125,7 @@ function validate(parameter) {
         }
     }
 }
-
-document.getElementById('register-btn').addEventListener('submit', event => {
+document.getElementById('register-form').addEventListener('submit', event => {
     const isError = document.querySelectorAll("span.error");
     console.log(isError);
     if (isError.length == 0) {
@@ -135,7 +134,7 @@ document.getElementById('register-btn').addEventListener('submit', event => {
     }
     else {
         alert('There is(are) invalid input(s), try again!');
-        returnToPreviousPage();
+        event.preventDefault();
         return false;
     }
 });

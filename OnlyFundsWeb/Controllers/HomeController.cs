@@ -44,6 +44,7 @@ namespace OnlyFundsWeb.Controllers
             HttpContext.Session.SetString("CategoryList", categoryString);
 
             ViewBag.end = end;
+            ViewBag.currentPage = page;
             return View(postList);
         }
 

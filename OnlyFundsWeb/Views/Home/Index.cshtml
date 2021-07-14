@@ -6,10 +6,11 @@
 @{
     ViewData["Title"] = "Home Page";
     Layout = "_UnAuthenticatedUserLayout";
+    int currentPage = ViewBag.currentPage;
 }
 
 <div class="text-center">
-    <h1>Welcome To OnlyFunds</h1>
+    <h1 style="color: #ff75c1; font-weight: bold">Welcome To OnlyFunds</h1>
     <div class="container w-75">
         <div class="row pt-4 mb-4 text-center">
             <h4>Recent Posts</h4>
@@ -19,14 +20,21 @@
                 foreach (var post in Model)
                 {
                     <div class="col-12 d-flex justify-content-center" style="height: 15rem;">
-                        <div class="card w-75 mb-5">
-                            <div class="card-header fw-bold">
-                                @post.PostTitle -
-                                @post.UploaderUsername -
-                                @post.UploadDate.Value.ToString("dd/MMM/yyyy")
+                        <div class="card w-75 mb-5 shadow">
+                            <div class="card-header p-2" style="text-align: left;">
+                                <span class=" fw-bold">
+                                    @post.PostTitle
+                                </span>
+                                by
+                                <span class="fw-bold" style="text-decoration: none; color: black;">
+                                    @post.UploaderUsername
+                                </span>
+                                <span style="position: absolute; right: 1rem;">
+                                    @post.UploadDate.Value.ToString("dd/MMM/yyyy")
+                                </span>
                             </div>
                             <!-- If user is not allowed to see the post -->
-                            <div class="card-body border">
+                            <div class="card-body border p-2" style="font-size: 18px; text-align: left">
                                 @post.PostDescription
                             </div>
                             <div class="card-footer text-center p-1">
@@ -42,11 +50,56 @@
         </div>
         <nav aria-label="Page navigation example" class="text-center font-weight-bold mx-auto">
             <ul class="pagination justify-content-center">
+                @if (currentPage == 1)
+                {
+                    <li class="page-item">
+                        <span style="font-weight: bold" class="page-link">
+                            <i class="fas fa-angle-double-left"></i>
+                        </span>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item">
+                        <a style="font-weight: bold" asp-action="Index" asp-controller="Home" asp-route-page="@(currentPage-1)" class="page-link">
+                            <i class="fas fa-angle-double-left"></i>
+                        </a>
+                    </li>
+                }
                 @for (int index = 1; index <= ViewBag.end; index++)
                 {
-                    <a asp-action="Index" asp-controller="Home" asp-route-page="@index" class="page-link">
-                        @index
-                    </a>
+                    if (index == currentPage)
+                    {
+                        <li class="page-item active">
+                            <span style="font-weight: bold" class="page-link">
+                                @index
+                            </span>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="page-item">
+                            <a style="font-weight: bold" asp-action="Index" asp-controller="Home" asp-route-page="@index" class="page-link">
+                                @index
+                            </a>
+                        </li>
+                    }
+                }
+                @if (currentPage == ViewBag.end)
+                {
+                    <li class="page-item">
+                        <span style="font-weight: bold" class="page-link">
+                            <i class="fas fa-angle-double-right"></i>
+                        </span>
+                    </li>
+                }
+                else
+                {
+                    <li>
+                        <a style="font-weight: bold" asp-action="Index" asp-controller="Home" asp-route-page="@(currentPage+1)" class="page-link">
+                            <i class="fas fa-angle-double-right"></i>
+                        </a>
+                    </li>
                 }
             </ul>
         </nav>

@@ -63,6 +63,7 @@ namespace OnlyFundsWeb.Controllers
             HttpContext.Session.SetString("CategoryList", categoryString);
             ViewBag.User = user;
             ViewBag.end = end;
+            ViewBag.currentPage = page;
             return View("Success",postList);
         }
         public ActionResult ChangePassword(string username)
@@ -165,7 +166,16 @@ namespace OnlyFundsWeb.Controllers
                         ViewBag.Message = "Username existed";
                         return View();
                     }
-                    user.AvatarUrl = Utilities.UploadAvatar(AvatarUrl, env, user.Username);
+
+                    if (AvatarUrl == null)
+                    {
+                        user.AvatarUrl = "Avatar.png";
+                    }
+                    else
+                    {
+                        user.AvatarUrl = Utilities.UploadAvatar(AvatarUrl, env, user.Username);
+
+                    }
                     TempData["newAccount"] = JsonSerializer.Serialize(user);
                 }
                 return RedirectToAction(nameof(ConfirmOTP));
@@ -189,19 +199,23 @@ namespace OnlyFundsWeb.Controllers
             TempData["otp"] = otp;
             emailSender.sendEmail(subject, body, newUser.Email);
             ViewBag.Message = $"Sit back and & Relax! While we verify your Email address: {newUser.Email}";
-            TempData["Attempts"] = 3;
+            //-----
+            TempData["Attempts"] = 4;
+            //----------
             return View();
         }
         [HttpPost]
         [RequestFormLimits(MultipartBodyLengthLimit = 104857600)]
         public ActionResult ConfirmOTP(string otp)
         {
-            /*
-            if (TempData["Attempts"] == null)
+
+            /*if (TempData["Attempts"] == null)
             {
                 TempData["Attempts"] = 3;
-            }
-            */
+            }*/
+            //--------
+
+            //-----------
             int attempt = int.Parse(TempData["Attempts"].ToString());
 
             if (attempt == 0)
@@ -223,8 +237,8 @@ namespace OnlyFundsWeb.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewBag.Message = $"Sit back and & Relax! While we verify your Email address: {newUser.Email}";
-            ViewBag.Attempts = $"{attempt} attempts left";
             attempt--;
+            ViewBag.Attempts = $"{attempt} attempts left";
             TempData["Attempts"] = attempt;
             return View();
         }
@@ -262,7 +276,10 @@ namespace OnlyFundsWeb.Controllers
             {
                 if (AvatarUrl != null)
                 {
-                    Utilities.DeleteFile(oldUser.AvatarUrl, env, "images");
+                    if (!oldUser.AvatarUrl.Equals("Avatar.png"))
+                    {
+                        Utilities.DeleteFile(oldUser.AvatarUrl, env, "images");
+                    }
                     user.AvatarUrl= Utilities.UploadAvatar(AvatarUrl, env, user.Username);
                 }
                 else

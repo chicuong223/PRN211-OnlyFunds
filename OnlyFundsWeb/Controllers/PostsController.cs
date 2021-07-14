@@ -328,12 +328,12 @@ namespace OnlyFundsWeb.Controllers
             try
             {
                 postRepository.DeletePost(id);
-                return RedirectToAction(nameof(PostList), new { username = HttpContext.Session.GetString("user") });
+                return RedirectToAction(nameof(GetPostByUser), new { username = HttpContext.Session.GetString("user") });
             }
             catch (Exception ex)
             {
                 ViewBag.error = ex.Message;
-                return View();
+                return View("Error");
             }
         }
 

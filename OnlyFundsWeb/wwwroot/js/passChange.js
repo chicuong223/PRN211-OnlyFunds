@@ -67,7 +67,7 @@ function validate(param) {
     }
 }
 
-document.getElementById('report').addEventListener('submit', event => {
+document.getElementById('pass-change').addEventListener('submit', event => {
     const isError = document.querySelectorAll("span.error");
     console.log(isError);
     if (isError.length == 0) {
@@ -77,5 +77,6 @@ document.getElementById('report').addEventListener('submit', event => {
     else {
         alert('There is(are) invalid input(s), try again!');
         event.preventDefault();
+        return false;
     }
 });

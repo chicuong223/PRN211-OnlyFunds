@@ -9,6 +9,7 @@
 @{
     User user = ViewBag.User;
     Layout = "_userLayout";
+    int currentPage = ViewBag.currentPage;
 }
 @model IEnumerable<BusinessObjects.Post>
 
@@ -24,9 +25,9 @@
     <div class="row">
         <div class="col-12 d-flex w-75 align-items-center mx-auto">
             <div class='col-lg-7'>   
-                <form method="post" action="#search-function">
+                <form method="post">
                     <div class="input-group input-group-sm" id="search-input">
-                        <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" class="form-control" placeholder="Search...">
+                        <input autocomplete="off" type="text" name="SearchString" value="@ViewData["CurrentFilter"]" class="form-control" placeholder="Search...">
                         <button onclick="location.href = '@Url.Action("Success", "User", new {searchString = @ViewData["CurrentFilter"]})'" class="input-group-text" id="basic-addon2" type="submit">
                             <i class="fas fa-search"></i>
                         </button>
@@ -52,42 +53,98 @@
             </div>  
         </div>       
     </div>
-    <div class="row pt-4 mb-4 text-center">
-        <h4>Recent Posts</h4>
+    <div class="row pt-3 mb-3 text-center">
+        <h3>Recent Posts</h3>
     </div>
     <div class="row">
         @{
+            if (@Model.ToArray().Length == 0)
+            {
+                <h1>No post here !!</h1>
+            }
             foreach (var post in Model)
-                {
-                    <div class="col-12 d-flex justify-content-center" style="height: 15rem;">
-                        <div class="card w-75 mb-5">
-                            <div class="card-header fw-bold">
-                                @post.PostTitle -
-                                <a asp-action="GetPostByUser" asp-controller="Posts" asp-route-username="@post.UploaderUsername">@post.UploaderUsername</a>
-                                 -
+            {
+                <div class="col-12 d-flex justify-content-center" style="height: 15rem;">
+                    <div class="card w-75 mb-5 shadow">
+                        <div class="card-header p-2">
+                            <span class=" fw-bold">
+                                @post.PostTitle
+                            </span>
+                            by
+                            <span class="fw-bold">
+                                <a style="text-decoration: none; color: black;" asp-action="GetPostByUser" asp-controller="Posts" asp-route-username="@post.UploaderUsername">@post.UploaderUsername</a>
+                            </span>
+                            <span style="position: absolute; right: 1rem;">
                                 @post.UploadDate.Value.ToString("dd/MMM/yyyy")
-                            </div>
-                            <!-- If user is not allowed to see the post -->
-                            <div class="card-body border">
-                                @post.PostDescription
-                            </div>
-                            <div class="card-footer text-center p-1">
-                                <a asp-controller="Posts" asp-action="Details" asp-route-id="@post.PostId" class=" link-post">
-                                    <span>See more</span>
-                                    <i class="fas fa-angle-double-right"></i>
-                                </a>
-                            </div>
+                            </span>
+                        </div>
+                        <!-- If user is not allowed to see the post -->
+                        <div class="card-body border p-2" style="font-size: 18px;">
+                            @post.PostDescription
+                        </div>
+                        <div class="card-footer text-center p-1">
+                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@post.PostId" class=" link-post">
+                                <span>See more</span>
+                                <i class="fas fa-angle-double-right"></i>
+                            </a>
                         </div>
                     </div>
-                }
+                </div>
+            }
         }
     </div>
     <nav aria-label="Page navigation example" class="text-center font-weight-bold mx-auto">
         <ul class="pagination justify-content-center">
+            @if (currentPage == 1)
+            {
+                <li class="page-item">
+                    <span style="font-weight: bold" class="page-link">
+                        <i class="fas fa-angle-double-left"></i>
+                    </span>
+                </li>
+            }
+            else
+            {
+                <li class="page-item">
+                    <a style="font-weight: bold" asp-action="Success"  asp-route-page="@(currentPage-1)" class="page-link">
+                        <i class="fas fa-angle-double-left"></i>
+                    </a>
+                </li>
+            }
             @for (int index = 1; index <= ViewBag.end; index++)
             {
+                if (index == currentPage)
+                {
+                    <li class="page-item active">
+                        <span style="font-weight: bold" class="page-link">
+                            @index
+                        </span>
+                    </li>
+                }
+                else
+                {
+                    <li class="page-item">
+                        @*moi sua*@
+                        <a style="font-weight: bold" asp-action="Success" asp-route-page="@index" class="page-link">
+                            @index
+                        </a>
+                    </li>
+                }
+            }
+            @if (currentPage == ViewBag.end)
+            {
+                <li class="page-item">
+                    <span style="font-weight: bold" class="page-link">
+                        <i class="fas fa-angle-double-right"></i>
+                    </span>
+                </li>
+            }
+            else
+            {
                 <li>
-                    <a class="page-link" asp-action="Success" asp-route-page="@index">@index</a>
+                    <a style="font-weight: bold" asp-action="Success" asp-route-page="@(currentPage+1)" class="page-link">
+                        <i class="fas fa-angle-double-right"></i>
+                    </a>
                 </li>
             }
         </ul>

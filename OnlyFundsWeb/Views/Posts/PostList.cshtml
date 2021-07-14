@@ -21,11 +21,11 @@
             //--If list post == null
             if (!@Model.Any())
             {
-                <h1>Don't have any post here</h1>
+                <h1 style="font-weight: bold">Don't have any post here</h1>
             }
             if (cate != null)
             {
-                <h4>@cate.CategoryName Post</h4>
+                <h1 style="font-weight: bold">@cate.CategoryName Post</h1>
             }
         }
     </div>
@@ -35,9 +35,12 @@
             <div class="col-12 d-flex justify-content-center" style="height: 15rem;">
                 <div class="card w-75 mb-5">
                     <div class="card-header fw-bold">
-                        @item.PostTitle -
-                        @item.UploaderUsername -
-                        @item.UploadDate.Value.ToString("dd/MMM/yyyy")
+                        <span class="fw-bold" style="font-size: 24px; text-decoration: none; color: black;">
+                            @item.PostTitle by @item.UploaderUsername
+                        </span>
+                        <span class="float-end fw-bold" style="font-size: 24px;">
+                            @item.UploadDate.Value.ToString("dd/MMM/yyyy")
+                        </span>
                     </div>
                     <!-- If user is not allowed to see the post -->
                     <div class="card-body border">
@@ -74,7 +77,7 @@
                     @for (int index = 1; index <= ViewBag.end; index++)
                     {
                         <li>
-                            <a class="page-link" asp-action="GetPostByCategory" asp-route-categoryId="@cate.CategoryId" asp-route-page="@index">@index</a>
+                            <a class="page-link fw-bold" asp-action="GetPostByCategory" asp-route-categoryId="@cate.CategoryId" asp-route-page="@index">@index</a>
                         </li>
                     }
                 }
@@ -83,7 +86,7 @@
                     @for (int index = 1; index <= ViewBag.end; index++)
                     {
                         <li>
-                            <a class="page-link" asp-action="BookmarkedPosts" asp-route-username="@session" asp-route-page="@index">@index</a>
+                            <a class="page-link fw-bold" asp-action="BookmarkedPosts" asp-route-username="@session" asp-route-page="@index">@index</a>
                         </li>
                     }
                 }
@@ -92,7 +95,7 @@
                     @for (int index = 1; index <= ViewBag.end; index++)
                     {
                         <li>
-                            <a class="page-link" asp-action="GetPostByUser" asp-route-username="@ViewBag.user" asp-route-page="@index">@index</a>
+                            <a class="page-link fw-bold" asp-action="GetPostByUser" asp-route-username="@ViewBag.user" asp-route-page="@index">@index</a>
                         </li>
                     }
                 }
@@ -101,7 +104,7 @@
                     @for (int index = 1; index <= ViewBag.end; index++)
                     {
                         <li>
-                            <a class="page-link" asp-action="GetPostByUser" asp-route-username="@session" asp-route-page="@index">@index</a>
+                            <a class="page-link fw-bold" asp-action="GetPostByUser" asp-route-username="@session" asp-route-page="@index">@index</a>
                         </li>
                     }
                 }
