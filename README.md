@@ -1,7 +1,6 @@
 # OnlyFunds Project
 
 This is the minimal version of [this project](https://github.com/chicuong223/OnlyFunds-Maven). The subscription functionality is removed
-
 <br>
 This project is the capstone project for PRN211 - Cross-platform programming with .NET
 
