@@ -1,6 +1,7 @@
 ﻿using BusinessObjects;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
@@ -10,61 +11,83 @@ using Microsoft.AspNetCore.Http;
 
 using DataAccess.IRepository;
 using DataAccess.Repository;
+using OnlyFundsWeb.Helpers;
+using System.Linq;
 
 namespace OnlyFundsWeb.Controllers
 {
     public class PostsController : Controller
     {
-        IWebHostEnvironment webHostEnvironment;
-        private IPostRepository postRepository = new PostRepository();
-        private IUserRepository userRepository = new UserRepository();
-        private ICategoryRepository categoryRepository = new CategoryRepository();
+        IWebHostEnvironment env;
+        private IPostRepository postRepository = null;
+        private IUserRepository userRepository = null;
+        private ICategoryRepository categoryRepository =null;
+        private IPostCategoryMapRepository postCategoryMapRepository = null;
+        private ICommentRepository cmtRepository = null;
+        private IPostLikeRepository postLikeRepository = null;
+        private ICommentLikeRepository commentLikeRepository = null;
+        private IBookmarkRepository bookmarkRepository = null;
         public PostsController(IWebHostEnvironment env)
         {
-            this.webHostEnvironment = env;
-        }
-        private string UploadFile(IFormFile file)
-        {
-            if (file == null || file.Length < 0)
-            {
-                return "";
-            }
-            string wwwPath = webHostEnvironment.WebRootPath;
-            string path = Path.Combine(wwwPath, "postfiles");
-            if (!Directory.Exists(path))
-            {
-                Directory.CreateDirectory(path);
-            }
-            string fileName = Path.GetFileName(file.FileName);
-            using (FileStream stream = new FileStream(Path.Combine(path, fileName), FileMode.Create))
-            {
-                file.CopyTo(stream);
-            }
-            return fileName;
+            this.env = env;
+            postRepository = new PostRepository();
+            userRepository = new UserRepository();
+            categoryRepository = new CategoryRepository();
+            postCategoryMapRepository = new PostCategoryMapRepository();
+            cmtRepository = new CommentRepository();
+            postLikeRepository = new PostLikeRepository();
+            commentLikeRepository = new CommentLikeRepository();
+            bookmarkRepository = new BookmarkRepository();
         }
         // GET: PostsController
         public ActionResult PostList()
         {
             return View();
         }
-
+        public ActionResult BookmarkedPosts(int? page)
+        {
+            string username = HttpContext.Session.GetString("user");
+            if (username == null)
+            {
+                return RedirectToAction("Index", "User");
+            }
+            if (page == null)
+            {
+                page = 1;
+            }
+            var postList = bookmarkRepository.GetPostsByBookmark(username, page.Value);
+            int pageSize = 3;
+            int count = bookmarkRepository.CountBookMarkPost(username);
+            int end = count / pageSize;
+            if (count % 3 != 0)
+            {
+                end = end + 1;
+            }
+            User user = userRepository.GetUserByName(username);
+            //----
+            ViewBag.IsBookMarkedPage = true;
+            //------
+            ViewBag.User = user;
+            ViewBag.end = end;
+            return View("PostList", postList);
+        }
         public ActionResult GetPostByUser(string username, int? page)
         {
             try
             {
                 if (username == null)
                 {
-                    return NotFound();
+                    return View("Error");
                 }
 
                 User user = userRepository.GetUserByName(username);
                 if (user == null)
                 {
-                    return NotFound();
+                    return View("Error");
                 }
                 if (page == null)
                     page = 1;
-                IEnumerable<Post> postList = postRepository.GetPostByUser(user, page.Value);
+                var postList = postRepository.GetPostByUser(user, page.Value);
                 int pageSize = 3;
                 int count = postRepository.CountPostByUser(user);
                 int end = count / pageSize;
@@ -83,22 +106,107 @@ namespace OnlyFundsWeb.Controllers
             }
         }
 
+        public ActionResult GetPostByCategory(int categoryId, int? page)
+        {
+            try
+            {
+                if (categoryId == 0)
+                {
+                    return View("Error");
+                }
+
+                Category category = categoryRepository.GetCategoryById(categoryId);
+                if (category == null)
+                {
+                    return View("Error");
+                }
+                if (page == null)
+                {
+                    page = 1;
+                }
+                IEnumerable<Post> postList = postCategoryMapRepository.FilterPostByCategory(categoryId, page.Value);
+                ViewBag.Category = category;
+                int pageSize = 3;
+                int count = postRepository.CountPostByCategory(category);
+                int end = count / pageSize;
+                if (count % 3 != 0)
+                {
+                    end = end + 1;
+                }
+
+                ViewBag.end = end;
+                return View("PostList", postList);
+            }
+            catch (Exception e)
+            {
+                ViewBag.error = e.Message;
+                return View("Error");
+            }
+        }
         // GET: PostsController/Details/5
         public ActionResult Details(int? id)
         {
             try
             {
-                if(id == null)
+                string username = HttpContext.Session.GetString("user");
+                if (id == null)
                 {
-                    return NotFound();
+                    return View("Error");
                 }
                 Post post = postRepository.GetPostById(id.Value);
                 if (post == null)
-                    return NotFound();
+                    return View("Error");
+                //-------------
+                IEnumerable<Comment> cmt = cmtRepository.GetCommentsByPost(post.PostId);
+                List<User> cmtUsers = new List<User>();
+                if (cmt != null)
+                {
+                    foreach (var comment in cmt)
+                    {
+                        IEnumerable<BusinessObjects.CommentLike> commentLikeList =
+                            commentLikeRepository.GetCommentLikeByCommentId(comment.CommentId);
+                        foreach (var commentLike in commentLikeList)
+                        {
+                            comment.CommentLikes.Add(commentLike);
+                        }
+
+                        CommentLike checkCommentLiked =
+                            commentLikeRepository.CheckCommentLike(username, comment.CommentId);
+                    }
+                }
+                //-----------------
+                int postLike = postLikeRepository.CountPostLike(id.Value);
+                int postComment = cmt.Count();
+                PostLike checkPostLiked = postLikeRepository.CheckUserLike(username, id.Value);
+                
+                //-------------
+                foreach (Comment c in cmt)
+                {
+                    User user = userRepository.GetUserByName(c.Username);
+                    cmtUsers.Add(user);
+                }
+                /*if (username != null &&!username.Equals(post.UploaderUsername))
+                {
+                    
+                }*/
+                Bookmark bookmark = bookmarkRepository.GetBookmark(username, id.Value);
+                ViewBag.IsBookmarked = bookmark != null;
+                IReportRepository reportRepo = new ReportRepository();
+                IEnumerable<PostReport> reports = reportRepo.GetReportsByPost(post.PostId);
+                ViewBag.Reports = reports;
+                User currentUser = userRepository.GetUserByName(username);
+                ViewBag.CheckPostLiked = checkPostLiked;
+                ViewBag.maxCommentId = cmtRepository.GetMaxCommentId(); 
+                ViewBag.CurrentUser = currentUser;
+                ViewBag.CmtUsers = cmtUsers;
+                ViewBag.Comments = cmt;
+                ViewBag.PostLike = postLike;
+                ViewBag.PostComment = postComment;
                 return View(post);
             }
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine(e);
                 return RedirectToAction(nameof(PostList));
             }
         }
@@ -106,6 +214,7 @@ namespace OnlyFundsWeb.Controllers
         // GET: PostsController/Create
         public ActionResult Create()
         {
+            ViewBag.CategoryList = categoryRepository.GetCategories();
             if (HttpContext.Session.GetString("user") == null)
             {
                 return RedirectToAction("Index", "User");
@@ -117,54 +226,98 @@ namespace OnlyFundsWeb.Controllers
         [HttpPost]
         [RequestFormLimits(MultipartBodyLengthLimit = 104857600)]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormFile file, Post post)
+        public ActionResult Create(IFormFile file, Post post, int[] category)
         {
-            IEnumerable<Category> categoryList = categoryRepository.GetCategories(1);
-            TempData["CategoryList"] = categoryList;
             try
             {
-                string fileName = UploadFile(file);
+                if (string.IsNullOrWhiteSpace(post.PostTitle))
+                    throw new Exception("Title is required");
+                if (string.IsNullOrWhiteSpace(post.PostDescription))
+                    throw new Exception("Description is required");
+                string fileName = Utilities.UploadPostFile(file, env, post.PostId);
+                post.PostId = postRepository.GetMaxPostId() +1;
                 post.UploaderUsername = HttpContext.Session.GetString("user");
                 post.UploadDate = DateTime.Now;
                 post.FileUrl = fileName;
                 postRepository.InsertPost(post);
+                foreach (int catID in category)
+                {
+                    PostCategoryMap map = new PostCategoryMap
+                    {
+                        CategoryId = catID,
+                        PostId = post.PostId
+                    };
+                    postCategoryMapRepository.AddPostMap(map);
+                }
                 return RedirectToAction(nameof(GetPostByUser), new { username = post.UploaderUsername });
             }
             catch (Exception ex)
             {
                 ViewBag.error = ex.Message;
-                return View();
+                return View("Error");
             }
         }
 
         // GET: PostsController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult Edit(int? id)
         {
-            return View();
+            string username = HttpContext.Session.GetString("user");
+            if (username == null)
+                return RedirectToAction("Index", "User");
+            if (id == null)
+                return NotFound();
+            Post post = postRepository.GetPostById(id.Value);
+            if (post == null)
+                return NotFound();
+            ViewBag.CategoryList = categoryRepository.GetCategories();
+            if (!username.Equals(post.UploaderUsername))
+            {
+                ViewBag.Error = "You are not allowed to edit posts of others";
+                return View("Error");
+            }
+            return View(post);
         }
-
         // POST: PostsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Post post, IFormFile file, int[] cate)
         {
             try
             {
-                return RedirectToAction(nameof(PostList));
+                Post oldPost = postRepository.GetPostById(id);
+                if (oldPost == null)
+                    throw new Exception("Post not found");
+                post.UploaderUsername = oldPost.UploaderUsername;
+                post.UploadDate = oldPost.UploadDate;
+                if (file == null)
+                    post.FileUrl = oldPost.FileUrl;
+                else
+                {
+                    Utilities.DeleteFile(oldPost.FileUrl, env, "postfiles");
+                    post.FileUrl = Utilities.UploadPostFile(file, env, post.PostId);
+                }
+                IEnumerable<Category> postCatList = categoryRepository.GetCategoriesByPost(post.PostId);
+                foreach (var category in postCatList)
+                {
+                    postCategoryMapRepository.DeletePostMap(post, category);
+                }
+                foreach (int catID in cate)
+                {
+                    PostCategoryMap map = new PostCategoryMap
+                    {
+                        PostId = post.PostId,
+                        CategoryId = catID
+                    };
+                    postCategoryMapRepository.AddPostMap(map);
+                }
+                postRepository.UpdatePost(post);
+                return RedirectToAction(nameof(Details), new { id = post.PostId });
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                ViewBag.error = ex.Message;
+                return View("Error");
             }
-        }
-
-        // GET: PostsController/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null) return NotFound();
-            var post = postRepository.GetPostById(id.Value);
-            if (post == null) return NotFound();
-            return View(post);
         }
 
         // POST: PostsController/Delete/5
@@ -175,12 +328,12 @@ namespace OnlyFundsWeb.Controllers
             try
             {
                 postRepository.DeletePost(id);
-                return RedirectToAction(nameof(PostList), new { username = HttpContext.Session.GetString("user") });
+                return RedirectToAction(nameof(GetPostByUser), new { username = HttpContext.Session.GetString("user") });
             }
             catch (Exception ex)
             {
                 ViewBag.error = ex.Message;
-                return View();
+                return View("Error");
             }
         }
 

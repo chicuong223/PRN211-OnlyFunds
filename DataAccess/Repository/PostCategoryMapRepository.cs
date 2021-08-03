@@ -8,7 +8,7 @@ using DataAccess.IRepository;
 
 namespace DataAccess.Repository
 {
-    public class PostCategoryMapRepository :IPostCategoryMapRepository
+    public class PostCategoryMapRepository : IPostCategoryMapRepository
     {
         public IEnumerable<Post> FilterPostByCategory(int categoryId, int pageIndex) =>
             PostCategoryMapDAO.Instance.FilterPostByCategory(categoryId, pageIndex);
@@ -18,5 +18,8 @@ namespace DataAccess.Repository
 
         public PostCategoryMap GetPostMap(int postId, int categoryId) =>
             PostCategoryMapDAO.Instance.GetPostMap(postId, categoryId);
+
+        public void DeletePostMap(Post post, Category category) =>
+            PostCategoryMapDAO.Instance.DeletePostMap(post, category);
     }
 }

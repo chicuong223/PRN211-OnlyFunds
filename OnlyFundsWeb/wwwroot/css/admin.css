@@ -39,3 +39,8 @@ td,th {
     right: 0;
     bottom: 0;
 }
+
+div > a {
+    text-decoration: none;
+    color: inherit;
+}

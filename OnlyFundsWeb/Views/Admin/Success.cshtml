@@ -1,12 +1,238 @@
-﻿@{
-    Layout = null;
+﻿@using Microsoft.AspNetCore.Http
+@using BusinessObjects
+@using DataAccess
+@using DataAccess.Repository
+@using System.Collections
+@model IEnumerable<BusinessObjects.PostReport>
+@{
+    Layout = "_adminLayout";
+    Admin admin = ViewBag.admin;
+    IEnumerable<User> userlist = (IEnumerable<User>)ViewBag.userList;
 }
 <html>
 <head>
     <title>Login success</title>
+    <link rel="stylesheet" href="~/css/admin.css">
 </head>
 <body>
-<h1>@ViewBag.User</h1>
-<a asp-action="List" asp-controller="User">To user List</a>
+    <div class="container w-75">
+        <div class="row gx-5 pb-4 border-bottom">
+            <div class="col-3 my-auto d-flex justify-content-end">
+                <img src="images/Avatar.png" alt="" class="avatar rounded-circle">
+            </div>
+            <div class="col-9 my-auto">
+                <div class="name"><span class="fw-bold">Staff name:</span> <span>@admin.FirstName @admin.LastName</span></div>
+                <div class="email"><span class="fw-bold">Staff email:</span> <span>@admin.Email</span></div>
+            </div>
+        </div>
+
+        <div class="row gx-5 pb-4 pt-4 border-bottom">
+            <div class="col-lg-3 d-flex justify-content-center">
+                <a class="box w-100 border border-primary" id="box-primary" name="filterAll">
+                    <div class="body text-center my-auto">
+                        <i class="fas fa-file-alt fa-2x"></i>
+                        <div class="text fw-bold">Total reports: </div>
+                        <div class="reports">@Model.Count()</div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3 d-flex justify-content-center">
+                <a class="box w-100 border border-success" id="box-success" name="filterSolved">
+                    <div class="body text-center my-auto">
+                        <i class="fas fa-file-alt fa-2x"></i>
+                        <div class="text fw-bold">Reports solved: </div>
+                        <div class="reports">@Model.Count(r => r.IsSolved)</div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3 d-flex justify-content-center">
+                <a class="box w-100 border border-warning" id="box-warning" name="filterPending">
+                    <div class="body text-center my-auto">
+                        <i class="fas fa-file-alt fa-2x"></i>
+                        <div class="text fw-bold">Reports pending: </div>
+                        <div class="reports">@Model.Count(r => !r.IsSolved)</div>
+                    </div>
+                </a>
+            </div>
+            <div class="col-lg-3 d-flex justify-content-center">
+                <a class="box w-100 border border-danger" id="box-danger" name="toggleAccount">
+                    <div class="body text-center my-auto">
+                        <i class="fas fa-file-alt fa-2x"></i>
+                        <div class="text fw-bold">Accounts total: </div>
+                        <div class="reports">@userlist.Count()</div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="row gx-5 pt-4 pb-4 text-center">
+            @*Begin div for search *@
+            <div class="col-md-6 ms-auto">
+                @* Search input *@
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control" placeholder="Search for username.." id="search-user">
+                </div>
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control" placeholder="Search for reports by username.." id="search-report">
+                </div>
+
+
+            </div>
+            @* End search *@
+
+            <div class="col-12">
+                <table class="table table-striped border" id="report">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Username</th>
+                            <th scope="col">Post's name</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (var report in Model)
+                            {
+                                <tr id="@report.ReportId" class=@(report.IsSolved ? "Solved" : "Pending")>
+                                    <th class="text-truncate" scope="row">@report.ReportId</th>
+                                    <td class="text-truncate"><a class="td-link"></a>@report.ReportDescription</td>
+                                    <td class="text-truncate"><a class="td-link"></a>@report.ReporterUsername</td>
+                                    <!-- Từ post id -> post name -->
+                                    <td class="text-truncate"><a class="td-link"></a>@report.Post.PostTitle</td>
+                                    <!-- Solve rồi chữ xanh chưa solve chữ đỏ -->
+                                    @{
+                                        <td class="text-success ">
+                                            <a class="td-link"></a>@(@report.IsSolved == true ? "Solved" : "Pending")
+                                        </td>
+                                    }
+                                    <!-- <td class="text-danger"><a href="#report-details" class="td-link"></a>Not solved</td> -->
+                                    <td><a class="td-link"></a>@report.ReportDate.Value.ToString("dd/MMM/yyyy")</td>
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+
+
+                <table id="account" class="table table-striped border">
+
+                    <thead>
+                        <tr>
+                            <th scope="col">First name</th>
+                            <th scope="col">Last name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Username</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (var user in userlist)
+                            {
+                                <tr>
+                                    <td class="text-truncate"><a class="td-link"></a>@user.FirstName</td>
+                                    <td class="text-truncate"><a class="td-link"></a>@user.LastName</td>
+                                    <!-- Từ post id -> post name -->
+                                    <td class="text-truncate"><a class="td-link"></a>@user.Email</td>
+                                    <!-- Solve rồi chữ xanh chưa solve chữ đỏ -->
+                                    <td class="text-success"><a class="td-link"></a>@user.Username</td>
+                                    <!-- <td class="text-danger"><a href="#report-details" class="td-link"></a>Not solved</td> -->
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+
+        $("a[name='filterAll']").click(function () {
+            $("table#report").show();
+            $("tbody tr").show();
+            $("table#account").hide();
+            $("input#search-user").hide();
+            $("input#search-report").show();
+        });
+
+        $("a[name='filterPending']").click(function () {
+            $("table#report").show();
+            $("tbody tr:not(.Pending)").hide();
+            $("tbody tr.Pending").show();
+            $("table#account").hide();
+            $("input#search-user").hide();
+            $("input#search-report").show();
+
+        });
+
+        $("a[name='filterSolved']").click(function () {
+            $("table#report").show();
+            $("tbody tr:not(.Solved)").hide();
+            $("tbody tr.Solved").show();
+            $("table#account").hide();
+            $("input#search-user").hide();
+            $("input#search-report").show();
+
+        });
+
+        $("table#account").hide();
+        $("input#search-user").hide();
+        $("a[name='toggleAccount']").click(function () {
+            $("input#search-report").hide();
+            $("input#search-user").show();
+            $("table#account").show();
+            $("tbody tr").show();
+            $("table#report").hide();
+        });
+
+        $("tbody tr.Pending").click(function() {
+            var id = this.id;
+            window.location.href = '@Url.Action("Details", "Report")/'+id;
+        });
+
+        $("input#search-user").keyup(function() {
+            var input, filter, tr, td, i, txtValue;
+            input = $("input#search-user");
+            filter = $(input).val();
+            tr = $("table#account tbody tr");
+            for (i = 0; i < tr.length; i++) {
+                td = $(tr[i]).closest('tr').find('td:nth-child(4)');
+                if (td) {
+                    txtValue = $(td).html();
+                    if (txtValue.indexOf(filter) > -1) {
+                        $(tr[i]).show();
+                    } else {
+                        $(tr[i]).hide();
+                    }
+                }
+            }
+        });
+
+        $("input#search-report").keyup(function () {
+            var input, filter , tr, td, i, txtValue;
+            input = $("input#search-report");
+            filter = $(input).val();
+            tr = $("table#report tbody tr");
+            for (i = 0; i < tr.length; i++) {
+                td = $(tr[i]).closest('tr').find('td:nth-child(3)');
+                if (td) {
+                    txtValue = $(td).html();
+                    if (txtValue.indexOf(filter) > -1) {
+                        $(tr[i]).show();
+                    } else {
+                        $(tr[i]).hide();
+                    }
+                }
+            }
+        });
+
+    });
+</script>

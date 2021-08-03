@@ -11,9 +11,15 @@ namespace DataAccess.IRepository
     {
         IEnumerable<Post> GetPostByUser(User user, int pageIndex);
         int CountPostByUser(User user);
+        int CountPostByCategory(Category category);
         void InsertPost(Post post);
         void DeletePost(int postId);
         Post GetPostById(int postId);
-        IEnumerable<Post> SearchPostsByTitle(string title);
+        IEnumerable<Post> SearchPostsByTitle(string title, int pageIndex);
+        IEnumerable<Post> GetAllPost(int pageIndex);
+        int GetMaxPostId();
+        int CountAllPost();
+        int CountSearchPost(string searchString);
+        void UpdatePost(Post editedPost);
     }
 }

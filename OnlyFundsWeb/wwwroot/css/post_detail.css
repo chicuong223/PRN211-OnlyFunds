@@ -2,40 +2,86 @@ a {
     text-decoration: none;
     color: black;
 }
-li {
+
+/*.comment-body li {
+    display: inline-block;
+}*/
+#commentIcon li {
     display: inline-block;
 }
-a[id*="author-link"]:hover {
+
+a[id="author-link"]:hover {
     color: black;
     text-decoration: underline;
 }
-img[alt*="avatar"] {
+
+img[id="avatar"] {
     width: 40px;
     height: 40px;
     border-radius: 50%;
+    overflow: hidden;
 }
+
 .comment, .comment-input {
+    position: relative;
     clear: both;
 }
+
+.comment:after {
+    content: " ";
+    display: table;
+    clear: both;
+}
+
 .comment-ava {
     width: 50px;
-    height: 50px;
+    height: 20%;
+    overflow: hidden;
 }
+
 .comment-body {
     max-width: 90%;
 }
+
 .comment-input {
     width: 100%;
     margin-bottom: 10px;
 }
-.comment-text input {
-    width: 90%;
+
+.comment-text {
+    vertical-align: baseline;
 }
+
+.comment-text input {
+    width: 83%;
+    height: 2rem;
+}
+
+.comment-text button {
+    width: 7%;
+    height: 2rem;
+}
+
 .comment-text input:focus {
-    outline:0px !important;
-    -webkit-appearance:none;
+    outline: 0px !important;
+    -webkit-appearance: none;
     box-shadow: none !important;
 }
+
 .comment-ava, .comment-body, .comment-input {
     float: left;
+}
+
+ul.p-0 {
+    margin-bottom: 0;
+}
+
+.line {
+    position: absolute;
+    left: 0.95rem;
+    background-color: black;
+    bottom: 0;
+    max-height: 100%;
+    top: 45px;
+    border: 1px solid black;
 }

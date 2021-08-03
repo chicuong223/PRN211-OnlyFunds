@@ -1,125 +1,75 @@
-﻿@using System.Collections
-@using BusinessObjects
+﻿@using Microsoft.AspNetCore.Http;
+@using DataAccess.Repository;
+@using DataAccess.IRepository;
+@using BusinessObjects;
+@using System.Collections
+@{
+    IEnumerable<Category> cateList = ViewBag.CategoryList;
+}
 @model BusinessObjects.Post
 
 @{
     ViewData["Title"] = "Create";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "_userLayout";
 }
-<!DOCTYPE html>
-<html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Write Post</title>
-    <style>
-        ul {
-            -moz-column-count: 3;
-            -moz-column-gap: 10px;
-            -webkit-column-count: 3;
-            -webkit-column-gap: 10px;
-            column-count: 3;
-            column-gap: 10px;
-            list-style: none;
-        }
-
-        .list-group-item {
-            border: none;
-        }
-    </style>
 </head>
-<hr />
 <body>
-    <h1>Create a new post</h1>
-
-    <div class="w-75 mx-auto my-5">
+    <div class="w-50 mx-auto my-auto">
+        <h1 class="w-100 text-center">Create a new post</h1>
         <form asp-action="Create" method="POST" enctype="multipart/form-data" id="postForm">
             <div class="form-group">
-                <label asp-for="PostTitle" class="label-form fw-bold">Title</label>@*<span class="text-danger">*</span><span class="error text-danger ms-3" id="titleError">Error</span>*@
-                <input type="text" asp-for="PostTitle" id="title" placeholder="Max 30 characters" class="form-control" /><@*span class="error text-danger" id="titleError">Error</span>*@
+                <label asp-for="PostTitle" class="label-form fw-bold">Title</label><span class="text-danger">*</span>
+                <input type="text" asp-for="PostTitle" id="title" placeholder="Max 30 characters" class="form-control" required="" />
             </div>
-            <div class="form-group">
-                <label for="desc" class="label-form fw-bold">Description</label><span class="text-danger">*</span><span class="error text-danger ms-3" id="descError">Error</span>
-                <textarea asp-for="PostDescription" rows="10" cols="100" placeholder="Max 1000 characters" class="form-control"></textarea><span class="error text-danger" id="descError">${descError}</span>
+            <div class="form-group mt-2">
+                <label for="desc" class="label-form fw-bold">Description</label><span class="text-danger">*</span>
+                <textarea asp-for="PostDescription" rows="10" cols="100" placeholder="Max 1000 characters" class="form-control" style="resize: none" required=""></textarea>
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label asp-for="FileUrl" class="label-form fw-bold">Attachment</label>
-                <input type="file" asp-for="FileUrl" class="form-control" />
+                <input type="file" name="file" asp-for="FileUrl" class="form-control" />
             </div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label for="catList" class="fw-bold">Categories</label>
-                <ul id="catList">
-                    @foreach (var category in TempData["CategoryList"] as IEnumerable<Category>)
+                <ul id="catList" style="padding-left: 0;
+                                        width: 50%; 
+                                        display: flex; 
+                                        list-style: none; 
+                                        justify-content: space-between;">
+                    @foreach (var category in cateList)
                     {
                         <li>
-                            <label asp-for="PostCategoryMaps">@category.CategoryName</label>
-                            <input type="checkbox" class="form-check-input" value="@category.CategoryId" id="@category.CategoryId" name=""/>
+                            <input type="checkbox" class="form-check-input" value="@category.CategoryId" id="@category.CategoryId" name="category" />
+                            <label class="form-check-label" for="@category.CategoryId" asp-for="PostCategoryMaps">@category.CategoryName</label>
                         </li>
                     }
-                    @*<c:forEach var="cat" items="${catList}">
-                            <li>
-                                <label for="${cat.categoryId}">${cat.categoryName}</label>
-                                <input type="checkbox" class="form-check-input" value="${cat.categoryId}" id="${cat.categoryId}" name="cat" />
-                            </li>
-                        </c:forEach>*@
-
                 </ul>
             </div>
         </form>
         <form asp-action="Cancel" method="POST" id="cancelForm">
-            <input type="hidden" name="cancel" />
+            <input asp-action="Success" asp-controller="User" type="hidden" name="cancel" />
         </form>
         <div class="text-center">
-            <input class="btn btn-success mx-5 rounded-pill" type="submit" value="Post" form="postForm" />
-            <input class="btn btn-danger mx-5 rounded-pill" type="submit" value="Cancel" form="cancelForm" />
+            <input style="width: 100px;" class="btn btn-success mx-5" type="submit" value="Post" form="postForm" />
+            <a style="width: 100px;" class='btn btn-danger' value="Cancel" onclick="onClickHandled()">Cancel</a>
         </div>
     </div>
-
     <div>
-        <a asp-action="PostList">Back to List</a>
     </div>
-    <script defer src="scripts/post_form_script.js"></script>
+    <script>
+        function onClickHandled() {
+            var x = confirm("Are you sure?");
+            if (x) {
+                window.history.back(-1);
+            } else return false;
+        }
+    </script>
 </body>
 
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
-
-@*<div class="col-md-4">
-        <h2>@ViewBag.error</h2>
-        <form asp-action="Create" method="post" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="PostId" class="control-label"></label>
-                <input asp-for="PostId" class="form-control" />
-                <span asp-validation-for="PostId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PostTitle" class="control-label"></label>
-                <input asp-for="PostTitle" class="form-control" />
-                <span asp-validation-for="PostTitle" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PostDescription" class="control-label"></label>
-                <input asp-for="PostDescription" class="form-control" />
-                <span asp-validation-for="PostDescription" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="FileUrl" class="control-label"></label>
-                <input asp-for="FileUrl" class="form-control" type="file" name="file" />
-                <span asp-validation-for="FileUrl" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UploaderUsername" class="control-label"></label>
-                <select asp-for="UploaderUsername" class="form-control" asp-items="ViewBag.UploaderUsername"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="UploadDate" class="control-label"></label>
-                <input asp-for="UploadDate" class="form-control" />
-                <span asp-validation-for="UploadDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>*@

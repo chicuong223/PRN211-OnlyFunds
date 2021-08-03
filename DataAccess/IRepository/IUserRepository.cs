@@ -16,6 +16,7 @@ namespace DataAccess.IRepository
         void AddUser(User user);
         void UpdateUser(User user);
         void DeleteUser(string username);
+        void ChangePassword(User user, string newPassword);
         IEnumerable<User> GetUsers(int pageIndex);
     }
 }

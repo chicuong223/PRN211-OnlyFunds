@@ -1,29 +1,114 @@
 ﻿@model IEnumerable<BusinessObjects.Post>
-
+@using Microsoft.AspNetCore.Http
+@using BusinessObjects
 @{
     ViewData["Title"] = "Index";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Category cate = ViewBag.Category;
+    string session = Context.Session.GetString("user");
+    if (session == null)
+    {
+        Layout = "_UnAuthenticatedUserLayout";
+    }
+    else
+    {
+        Layout = "_userLayout";
+    }
 }
-
-<h1>Posts</h1>
-
-@foreach (var item in Model)
-{
-    <div class="border rounded my-3 w-50 mx-auto">
-        <a asp-action="Details" asp-route-id="@item.PostId">
-            <div>
-                <p class="border-bottom p-3 text-break">@item.PostTitle</p>
-                <div class="overflow-auto">
-                    <p class="p-3 text-break">@item.PostDescription</p>
+<div class="container w-75">
+    <div class="row pt-4 mb-4 text-center">
+        
+        @{
+            //--If list post == null
+            if (!@Model.Any())
+            {
+                <h1 style="font-weight: bold">Don't have any post here</h1>
+            }
+            if (cate != null)
+            {
+                <h1 style="font-weight: bold">@cate.CategoryName Post</h1>
+            }
+        }
+    </div>
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-12 d-flex justify-content-center" style="height: 15rem;">
+                <div class="card w-75 mb-5">
+                    <div class="card-header fw-bold">
+                        <span class="fw-bold" style="font-size: 24px; text-decoration: none; color: black;">
+                            @item.PostTitle by @item.UploaderUsername
+                        </span>
+                        <span class="float-end fw-bold" style="font-size: 24px;">
+                            @item.UploadDate.Value.ToString("dd/MMM/yyyy")
+                        </span>
+                    </div>
+                    <!-- If user is not allowed to see the post -->
+                    <div class="card-body border">
+                        @item.PostDescription
+                    </div>
+                    <div class="card-footer text-center p-1">
+                        @{
+                            if (session == null)
+                            {
+                                <a asp-controller="User" asp-action="Index" asp-route-id="@item.PostId" class=" stretched-link link-post">
+                                    <span>See more</span>
+                                    <i class="fas fa-angle-double-right"></i>
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Posts" asp-action="Details" asp-route-id="@item.PostId" class=" stretched-link link-post">
+                                    <span>See more</span>
+                                    <i class="fas fa-angle-double-right"></i>
+                                </a>
+                            }
+                        }
+                    </div>
                 </div>
             </div>
-        </a>
+        }
     </div>
 
-}
-<div class="text-center font-weight-bold">
-    @for (int index = 1; index <= ViewBag.end; index++)
-    {
-        <a asp-action="GetPostByUser" asp-route-username="@ViewBag.user" asp-route-page="@index">@index</a>
-    }
+    <nav aria-label="Page navigation example" class="text-center font-weight-bold mx-auto">
+        <ul class="pagination justify-content-center">
+            @{
+                if (cate != null)
+                {
+                    @for (int index = 1; index <= ViewBag.end; index++)
+                    {
+                        <li>
+                            <a class="page-link fw-bold" asp-action="GetPostByCategory" asp-route-categoryId="@cate.CategoryId" asp-route-page="@index">@index</a>
+                        </li>
+                    }
+                }
+                else if (ViewBag.IsBookMarkedPage != null)
+                {
+                    @for (int index = 1; index <= ViewBag.end; index++)
+                    {
+                        <li>
+                            <a class="page-link fw-bold" asp-action="BookmarkedPosts" asp-route-username="@session" asp-route-page="@index">@index</a>
+                        </li>
+                    }
+                }
+                else if (ViewBag.user != null)
+                {
+                    @for (int index = 1; index <= ViewBag.end; index++)
+                    {
+                        <li>
+                            <a class="page-link fw-bold" asp-action="GetPostByUser" asp-route-username="@ViewBag.user" asp-route-page="@index">@index</a>
+                        </li>
+                    }
+                }
+                else
+                {
+                    @for (int index = 1; index <= ViewBag.end; index++)
+                    {
+                        <li>
+                            <a class="page-link fw-bold" asp-action="GetPostByUser" asp-route-username="@session" asp-route-page="@index">@index</a>
+                        </li>
+                    }
+                }
+            }
+        </ul>
+    </nav>
 </div>

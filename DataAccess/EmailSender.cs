@@ -11,6 +11,7 @@ namespace DataAccess
     {
         private readonly string fromEmail = "swpacckhoi@gmail.com";
         private readonly string fromPassword = "Swpacc1!";
+        //port server cua gmail
         private readonly int port = 587;
         public bool sendEmail(string subject, string body, params string[] receipients)
         {

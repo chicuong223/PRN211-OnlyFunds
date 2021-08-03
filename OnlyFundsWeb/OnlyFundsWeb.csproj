@@ -5,13 +5,28 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Pages\**" />
+    <Content Remove="Pages\**" />
+    <EmbeddedResource Remove="Pages\**" />
+    <None Remove="Pages\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="wwwroot\css\.vs\ProjectSettings.json" />
+    <Content Include="wwwroot\css\.vs\tasks.vs.json" />
+    <Content Include="wwwroot\css\.vs\VSWorkspaceState.json" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include="appsettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="wwwroot\css\.vs\css\config\applicationhost.config" />
+    <None Include="wwwroot\css\.vs\slnx.sqlite" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,7 +44,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Pages\" />
+    <Folder Include="wwwroot\css\.vs\css\v16\" />
   </ItemGroup>
 
 </Project>

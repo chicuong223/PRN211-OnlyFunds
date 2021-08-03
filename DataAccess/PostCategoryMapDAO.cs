@@ -41,9 +41,11 @@ namespace DataAccess
                 using var context = new PRN211_OnlyFunds_CopyContext();
                 SqlConnection con = (SqlConnection)context.Database.GetDbConnection();
                 string SQL =
-                    "SELECT * FROM Post WHERE PostId IN (SELECT PostId FROM PostCategoryMap WHERE CategoryId = @CategoryId)";
+                    $"SELECT * FROM (SELECT ROW_NUMBER() OVER(ORDER BY PostId DESC) AS r," +
+                    $" * FROM Post WHERE PostId in (select PostId from PostCategoryMap where CategoryId= {categoryId})) as x " +
+                    $"WHERE x.r between @index * 3 - (3 - 1) AND 3 * @index";
                 SqlCommand cmd = new SqlCommand(SQL, con);
-                cmd.Parameters.AddWithValue("@CategoryId", categoryId);
+                cmd.Parameters.AddWithValue("@index", pageIndex);
                 if (con.State == ConnectionState.Closed)
                 {
                     con.Open();
@@ -54,12 +56,12 @@ namespace DataAccess
                 {
                     while (reader.Read())
                     {
-                        int postID = reader.GetInt32(0);
-                        string title = reader.GetString(1);
-                        string desc = reader.GetString(2);
-                        string fileURL = reader.GetString(3);
-                        string uploaderUsername = reader.GetString(4);
-                        DateTime date = reader.GetDateTime(5);
+                        int postID = reader.GetInt32(1);
+                        string title = reader.GetString(2);
+                        string desc = reader.GetString(3);
+                        string fileURL = reader.GetString(4);
+                        string uploaderUsername = reader.GetString(5);
+                        DateTime date = reader.GetDateTime(6);
                         Post post = new Post
                         {
                             PostId = postID,
@@ -117,6 +119,23 @@ namespace DataAccess
             }
 
             return map;
+        }
+        public void DeletePostMap(Post post, Category category)
+        {
+            try
+            {
+                using var context = new PRN211_OnlyFunds_CopyContext();
+                PostCategoryMap map = GetPostMap(post.PostId, category.CategoryId);
+                if (map == null)
+                    return;
+                context.PostCategoryMaps.Remove(map);
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                throw new Exception(ex.Message);
+            }
         }
 
     }

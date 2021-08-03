@@ -1,0 +1,46 @@
+﻿@{
+    ViewData["Title"] = "ConfirmOTP";
+    Layout = null;
+}
+<head>
+    <link rel="stylesheet" href="~/css/Navbar.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
+          crossorigin="anonymous">
+</head>
+<div class="container w-50 mt-5">
+    @{//<a asp-action="ConfirmOTP">Resend OTP</a>
+    }
+    <div class="card">
+        <header class="card-header">
+            <div class="alert alert-success" role="alert">
+                @ViewBag.Message <br />
+                Enter the OTP below when you have received it through your email!
+            </div>
+            @if (@ViewBag.Attempts is not null)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @ViewBag.Attempts
+                </div>
+            }
+
+        </header>
+        <div class="card-body">
+            <form asp-action="ConfirmOTP">
+                <div class="row">
+                    <div class="mb-3 row">
+                        <div class="col-sm-3">
+                            <label for="otp" class="form-label">OTP number</label>
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="otp" aria-describedby="idHelp" name="otp">
+                        </div>
+                    </div>
+                    <div class="mb-3 col-12">
+                        <input value="Confirm" type="submit" id="confirm" name="confirm" class="btn btn-success" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

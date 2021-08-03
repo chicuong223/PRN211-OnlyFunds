@@ -69,7 +69,8 @@ namespace DataAccess
             try
             {
                 using var context = new PRN211_OnlyFunds_CopyContext();
-                bookmark = context.Bookmarks.Where(b => b.PostId == postId && b.Username.Equals(username)).Single();
+                //bookmark = context.Bookmarks.Where(b => b.PostId == postId && b.Username.Equals(username)).Single();
+                bookmark = context.Bookmarks.SingleOrDefault(b => b.PostId == postId && b.Username.Equals(username));
             }
             catch (Exception ex)
             {
@@ -90,8 +91,8 @@ namespace DataAccess
                     + "(SELECT ROW_NUMBER() OVER(ORDER BY PostId) as [row], * \n"
                     + "FROM Post WHERE PostId IN( \n"
                     + "SELECT PostId FROM Bookmark \n"
-                    + "WHERE Username = @username" 
-                    +" )) as x \n"
+                    + "WHERE Username = @username"
+                    + " )) as x \n"
                     + "WHERE x.[row] BETWEEN @index * 3 - (3 - 1) AND 3 * @index";
                 SqlCommand cmd = new SqlCommand(SQL, con);
                 cmd.Parameters.AddWithValue("@username", username);
@@ -130,6 +131,23 @@ namespace DataAccess
                 throw new Exception(ex.Message);
             }
             return posts;
+        }
+
+        public int CountBookMarkPost(string username)
+        {
+            var bookMarkList = new List<Bookmark>();
+            try
+            {
+                using var context = new PRN211_OnlyFunds_CopyContext();
+                bookMarkList = context.Bookmarks.Where(b => b.Username.Equals(username)).ToList();
+                int counts = bookMarkList.Count();
+                return counts;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }

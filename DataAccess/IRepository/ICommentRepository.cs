@@ -14,6 +14,7 @@ namespace DataAccess.IRepository
         void EditComment(Comment editedCmt);
         Comment GetComment(int cmtId);
         IEnumerable<Comment> GetCommentsByPost(int postId);
+        int GetMaxCommentId();
 
     }
 }
